@@ -1,0 +1,57 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CWObituary>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Funeral Homes</h2>
+
+<section class="panel">
+    <header class="panel-heading">
+        <span class="pull-right">
+            <a href="@Url.Action("AddFuneralHome")" class=" btn btn-success">Add new home</a>
+        </span>
+    </header>
+    <table class="table table-hover dataTable data-table">
+        <thead>
+            <tr>
+                <th class="no-sort"></th>
+                <th>Funeral Home</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th class="no-sort">Birthdate</th>
+                <th>Deathdate</th>
+                <th>Age</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="p-team">
+                            <img alt="image" class="" src="http://@item.PictureURL">
+                    </td>
+                    <td>
+                        <h4>@item.CWFuneralHome.Name</h4> 
+                    </td>
+                    <td class="p-name">
+                        <h4>@item.FirstName</h4>
+                    </td>
+                    <td class="p-team">
+                     @item.LastName
+                    </td>
+                    <td>@item.BirthDate</td>
+                    <td>@item.DeathDate</td>
+                    <td>@item.Age</td>
+                    <td>
+                        <a href="@Url.Action("Delete", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</section>

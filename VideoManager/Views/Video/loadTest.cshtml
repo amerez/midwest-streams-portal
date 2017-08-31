@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "loadTest";
+}
+@Scripts.Render("~/bundles/jquery")
+<h2>loadTest</h2>
+<h1 id="start" class="button">Start The Test</h1>
+<h2>File Name</h2><input type="text" id="filename" />
+<script>
+    
+    $(document).ready(function () {
+        $('#start').click(function () {
+            callServer();
+        });
+        function callServer() {
+            $token = $('input[name="__RequestVerificationToken"]').val();
+            var test = $('THolder');
+
+            var userFileName = $('#filename').val();
+            var postData = { filename: userFileName };
+            var postUrl = "/video/loadtest";
+            //var postData = { username: "us" };
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                //crossDomain:true,
+                //timeout:3000,
+                //contentType: "application/json: charset=utf-8",
+                //headers: { __RequestVerificationToken: $token },
+                data: postData
+            })
+            posting.done(function (json, responseText, jsonResponse) {
+                alert(jsonResponse.responseText);
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                //alert(JSON.parse(jqXHR.responseText));
+                alert(errorThrown);
+            });
+
+            return false;
+        };
+    });
+</script>

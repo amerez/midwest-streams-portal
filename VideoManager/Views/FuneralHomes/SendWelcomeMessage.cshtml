@@ -1,0 +1,45 @@
+﻿@using VideoManager.Models;
+@using Microsoft.AspNet.Identity;
+@model VideoManager.Models.Data.FuneralHome
+@{
+    ViewBag.Title = "Manage Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Send Welcome Message to @Model.Name </h2>
+
+<div class="row">
+        <div class="col-md-offset-2 col-md-10">
+            <div id="sendWelcomeMessage" class="btn btn-default">Send Welcome Message</div>
+        </div>
+   
+</div>
+    <div class="row" style="margin-top:25px;">
+        <div class="col-md-offset-2 col-md-10">
+            <div id="resetPassword" class="btn btn-primary">Send Password Reset</div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sendWelcomeMessage").click(function () {
+                var postUrl = "/FuneralHomes/SendWelcomeEmail";
+                var postData = {id: @Model.Id};
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    data: postData
+                });
+                posting.done(function(){
+                    alert("Welcome Message Sent");
+                })
+                posting.success(function(){
+                    alert("Welcome Message Sent");
+                })
+            });
+        });
+    </script>
+}

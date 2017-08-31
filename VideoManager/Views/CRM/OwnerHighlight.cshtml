@@ -1,0 +1,527 @@
+﻿@model VideoManager.Models.Data.CRMOwnerContact
+@{
+    ViewBag.Title = "ProfileHighlight";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+<style>
+    #ContactNotes {
+        color: black;
+    }
+
+    .fb-name {
+        color: white;
+    }
+
+    .info-panel-title {
+        font-weight: bold;
+    }
+
+    .Overdue {
+        background-color: rgba(241, 80, 80, 0.76);
+        color: black;
+    }
+
+    .editbtn {
+        background: #FF6C60 !important;
+        font-weight: bold;
+        color: white;
+        margin-top: 15px;
+    }
+
+    #stars i {
+        color: #39b2a9;
+        font-size: 30px;
+        cursor: pointer;
+        padding-left: 4px;
+    }
+
+    .existingstarrr {
+        margin-top: -14px;
+    }
+
+        .existingstarrr i {
+            color: #39b2a9;
+            font-size: 14px;
+            padding-left: 2px;
+        }
+</style>
+<section id="main-content">
+    <section class="wrapper site-min-height">
+
+        <!-- page start-->
+        <div class="row">
+            <div class="col-md-9">
+
+                <h5>Has been contacted @Model.NumberOfContacts times</h5>
+                <section class="panel">
+                    <div class="cover-photo">
+                        <div class="fb-timeline-img">
+                            <img src="~/Content/crm/img/DefaultCover.jpg" />
+                        </div>
+                        <div class="fb-name">
+                            <h2>@Model.FirstName @Model.LastName <br /> @Model.ContactPosition</h2>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="profile-thumb">
+                            @if (Model.FacebookId == null)
+                            {
+                                <img src="~/Content/crm/img/defaultAvatar.jpg" />
+                            }
+                            else
+                            {
+                                <img alt="image" class="" src="https://graph.facebook.com/@Model.FacebookId/picture?type=normal">
+                            }
+                        </div>
+                        <a href="#" class="fb-user-mail">@Model.Email</a><br />
+                        <i class="fa fa-phone"></i>@Model.PhoneNumber
+                    </div>
+                </section>
+
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <div class="col-lg-6">
+                                            <h4 class="info-panel-title">General Info</h4>
+                                            <p>@Model.GeneralNotes</p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <h4 class="info-panel-title">Family Info</h4>
+                                            <p>@Model.FamilyInfo</p>
+                                            <h4 class="info-panel-title">Interests</h4>
+                                            <p>@Model.Interests</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4>First Contact</h4>
+                                        <strong>Orgin:</strong> @Model.OrginOfContact<br />
+                                        <strong>First Contact:</strong> @Model.FirstContactedDate.ToShortDateString()<br />
+                                        <strong>First Contacted By:</strong> @Model.FirstContactedByUserName<br />
+                                        <strong>First Contact Notes</strong> @Model.FirstContactNotes
+                                        @{
+                                            string overDueCssClass = "";
+                                            string overDueText = "";
+
+                                            if (Model.NextContactDate < DateTime.Now)
+                                            {
+                                                overDueCssClass = "Overdue";
+                                                overDueText = "-Overdue";
+                                            }
+                                            <div class="next-contact-wrap @overDueCssClass">
+                                                <h4>Next Contact @overDueText</h4>
+                                                <strong>Date:</strong> @Model.NextContactDate.ToShortDateString()<br />
+                                                <strong>User:</strong> @Model.NextContactByUserName<br />
+                                                <strong>Type:</strong> @Model.NextContactType<br />
+                                                <strong>Notes</strong> @Model.NextContactNotes
+                                                <a href="@Url.Action("UpdateNextContact", new{id=Model.Id})" class="pull-right"><i class="fa fa-pencil"></i></a>
+                                            </div>
+                                        }
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="panel profile-info">
+                    <form>
+                        <textarea id="ContactNotes" class="form-control input-lg p-text-area" rows="2" placeholder="Did you reach out to @Model.FirstName? Tell us about it!"></textarea>
+                    </form>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <select class="form-control" id="ContactType">
+                                    <option value="0">Email</option>
+                                    <option value="1">Phone</option>
+                                    <option value="2">ThankYou</option>
+                                    <option value="3">InPersonMeeting</option>
+                                    <option value="4">Webinar</option>
+                                    <option value="5">Text</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="stars" class="starrr"></div>
+                            </div>
+                            <button id="postComment" class="btn btn-danger pull-right" style="margin-right:15px">Post</button>
+                        </div>
+                    </footer>
+                </section>
+                @foreach (var comment in Model.CRMContactHistory)
+                {
+                    List<VideoManager.Models.ApplicationUser> adminUsers = ViewBag.AdminComments;
+                    VideoManager.Models.ApplicationUser commentUsers = adminUsers.Where(a => a.UserName == comment.LastContactedByUserName).FirstOrDefault();
+                    <section class="panel">
+                        <div class="panel-body">
+                            @if (comment.LastContactedByUserName == User.Identity.Name)
+                            {
+                                <div class="btn top pull-right delete-post" data-commentid="@comment.Id"><i class="fa fa-times-circle"></i></div>
+                            }
+                            <div class="fb-user-thumb">
+                                <img src="https://graph.facebook.com/@commentUsers.FacebookId/picture?type=normal" />
+                            </div>
+                            <div class="fb-user-details">
+                                <h3><a href="#" class="#">@commentUsers.FirstName @commentUsers.LastName</a></h3>
+                                <p>@comment.LastContactedDate Via:@comment.ContactType</p>
+                                @if (comment.PostRating != 0)
+                                {
+                                    <div class="starrr existingstarrr" data-rating='@comment.PostRating'></div>
+                                }
+                            </div>
+                            <div class="clearfix"></div>
+                            <p class="fb-user-status">
+                                @comment.LastContactNotes
+                            </p>
+                            <div class="fb-status-container fb-border fb-gray-bg">
+
+                                <ul class="fb-comments">
+                                    @foreach (var history in comment.CRMContactHistoryComments)
+                                    {
+                                        VideoManager.Models.ApplicationUser historyUser = adminUsers.Where(a => a.UserName == history.UserName).FirstOrDefault();
+                                        <li>
+                                            @if (history.UserName == User.Identity.Name)
+                                            {
+                                                <div class="btn top pull-right delete-comment" data-commentid="@history.Id"><i class="fa fa-times-circle"></i></div>
+                                            }
+                                            <a href="#" class="cmt-thumb">
+                                                <img src="https://graph.facebook.com/@historyUser.FacebookId/picture?type=normal" />
+                                            </a>
+                                            <div class="cmt-details">
+                                                <a href="#">@history.UserName</a>
+                                                <span> @history.Comment </span>
+                                                <p>@history.CommentDate - <a class="like-link" data-commentid="@comment.Id">Like</a></p>
+                                                @if (history.UsersWhoLiked != null)
+                                                {
+                                                    string outputLikeString = "";
+                                                    string likedString = "";
+                                                    foreach (var userLike in history.UsersWhoLiked)
+                                                    {
+                                                        likedString = likedString + userLike.FirstName + ", ";
+                                                    }
+                                                    string usersWhoLiked = likedString.Substring(0, likedString.Length - 2);
+                                                    if (history.UsersWhoLiked.Count > 1)
+                                                    {
+                                                        outputLikeString = usersWhoLiked + " like this";
+                                                    }
+                                                    else
+                                                    {
+                                                        outputLikeString = usersWhoLiked + " likes this";
+                                                    }
+                                                    <p>@outputLikeString</p>
+                                                }
+
+                                            </div>
+                                        </li>
+                                    }
+
+                                    <li>
+                                        <a href="#" class="cmt-thumb">
+                                            <img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />
+                                        </a>
+                                        <div class="cmt-form">
+                                            <textarea data-commentid="@comment.Id" class="form-control comment-submit" placeholder="Write a comment..." name=""></textarea>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="clearfix"></div>
+
+                            </div>
+
+                        </div>
+                    </section>
+                }
+
+
+
+            </div>
+            <div class="col-md-3">
+                <div class="fb-timeliner">
+                    <h2 class="recent-highlight">Twitter Feed</h2>
+                    <a class="twitter-timeline" href="https://twitter.com/AndrewYaggie" data-widget-id="663977137167163393">Tweets by @@AndrewYaggie</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                    <a href="@Url.Action("EditContact", new{id=Model.Id})" class="btn btn-block editbtn">Edit @Model.FirstName's Profile</a>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- page end-->
+    </section>
+</section>
+@section scripts
+    {
+    <script src="~/Content/crm/assets/starr/starrplugin.js"></script>
+    <script src="~/Content/crm/js/jquery.pulsate.min.js"></script>
+    <script>
+        var currentPostRating = 0;
+        $(document).ready(function () {
+            $('#postComment').click(function () {
+                $(this).pulsate({
+                    color: "#d9534f",
+                    repeat: false
+                });
+            });
+            $("#postComment").click(function () {
+                var commentNotes = $("#ContactNotes").val();
+                var contactId = @Model.Id;
+                var contactType = $("#ContactType").val();
+                sendPostToServer(contactId, commentNotes, contactType);
+            });
+            $(".comment-submit").keyup(function(e){
+                if((e.keyCode || e.which) == 13) { //Enter keycode
+                    var commentId = $(this).attr("data-commentid");
+                    var comment = $(this).val();
+                    var previousCommentObj = $(this).parent().parent();
+                    sendCommentToServer(commentId, comment, previousCommentObj);
+                    $(this).val("");
+                }
+            });
+            $(".like-link").click(function () {
+                var commentId = $(this).attr("data-commentid");
+                sendLikeToServer(commentId);
+            });
+            $(".delete-comment").dblclick(function(){
+                var comId =  $(this).attr("data-commentid");
+                var commentObj = $(this).parent();
+                deleteComment(comId, commentObj);
+            });
+            $(".delete-post").dblclick(function(){
+                var postId =  $(this).attr("data-commentid");
+                var commentObj = $(this).parent().parent();
+                deletePost(postId, commentObj);
+            });
+        });
+        function sendPostToServer(contactId, notes, contactType)
+        {
+            var postData = { ContactId: contactId, notes: notes, contactType: contactType, postRating: currentPostRating, isOwner:"true"};
+            var postUrl = "/CRM/AddContactHistory";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(responseText=="success")
+                { var result = json.result;
+                    console.log("result: "+result);
+                    if(result=="Success")
+                    {
+                        var comment = json.comment;
+                        currentPostRating = 0;
+                        var commentId = json.commentId;
+                        var contactType = json.contactType;
+                        console.log(comment);
+                        constructPost(comment, contactType, commentId);
+                    }
+                    else
+                    {
+                        alert("Error Submitting Post");
+                        console.log(json);
+                    }
+
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function deleteComment(commentId, objectToDelete)
+        {
+            var postData = { CommentId: commentId};
+            var postUrl = "/CRM/DeleteComment";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    objectToDelete.remove();
+                }
+                else
+                {
+                    alert("Error Deleting Comment");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function deletePost(commentId, objectToDelete)
+        {
+            var postData = { CommentId: commentId};
+            var postUrl = "/CRM/DeletePost";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    objectToDelete.remove();
+                }
+                else
+                {
+                    alert("Error Deleting Post");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function sendCommentToServer(commentId, comment, previousCommentObj)
+        {
+            var postData = { CommentId: commentId, Comment: comment};
+            var postUrl = "/CRM/AddContactComment";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    constructComment(comment, previousCommentObj)
+                }
+                else
+                {
+                    alert("Error Submitting Comment");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function sendLikeToServer(commentId)
+        {
+            var postData = { CommentHistoryId: commentId};
+            var postUrl = "/CRM/AddCommentLike";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function constructPost(comment, contactType, commentId)
+        {
+            var html = '<section class="panel">'+
+                            '<div class="panel-body">'+
+                                '<div class="fb-user-thumb">'+
+            '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+            '</div>'+
+            '<div class="fb-user-details">'+
+            '<h3><a href="#" class="#">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</a></h3>'+
+            '<p>Just now via:'+contactType+'</p>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '<p class="fb-user-status">'+
+            comment+
+            '</p>'+
+            '<div class="fb-status-container fb-border fb-gray-bg">'+
+
+            '<ul class="fb-comments">'+
+            '<li>'+
+            '<a href="#" class="cmt-thumb">'+
+            '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+            '</a>'+
+            '<div class="cmt-form">'+
+            '<textarea data-commentid="'+commentId+'" class="form-control comment-submit" placeholder="Write a comment..." name=""></textarea>'+
+            '</div>'+
+            '</li>'+
+            '</ul>'+
+            '<div class="clearfix"></div>'+
+            '</div>'+
+            '</div>'+
+            '</section>';
+            $(".profile-info").after(html);
+            $("#ContactNotes").val("");
+            $(".comment-submit").keyup(function(e){
+                if((e.keyCode || e.which) == 13) { //Enter keycode
+                    var commentId = $(this).attr("data-commentid");
+                    var comment = $(this).val();
+                    $(this).focusout();
+                    sendCommentToServer(commentId, comment);
+                }
+            });
+        }
+        function constructComment(comment, previousCommentObj)
+        {
+            var htmlComment = '<li>'+
+                                            '<a href="#" class="cmt-thumb">'+
+                                                '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+                                            '</a>'+
+                                               '<div class="cmt-details">'+
+                                                    '<a href="#">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</a>'+
+                                                    '<span> '+comment+'</span>'+
+                                                    '<p>Just Now - <a class="like-link" data-commentid="1">Like</a></p>'+
+                                                '</div>'+
+                                        '</li>';
+
+            previousCommentObj.before(htmlComment);
+        }
+        $( document ).ready(function() {
+
+            $('#stars').on('starrr:change', function(e, value){
+                $('#count').html(value);
+                console.log("star val: "+value)
+                currentPostRating = value;
+            });
+
+            $('#stars-existing').on('starrr:change', function(e, value){
+                $('#count-existing').html(value);
+            });
+        });
+    </script>
+
+
+
+}

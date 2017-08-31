@@ -1,0 +1,171 @@
+﻿@model VideoManager.Models.Data.CRMContact
+
+@{
+    ViewBag.Title = "DeleteContact";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>DeleteContact</h2>
+
+<h3>Are you sure you want to delete @Model.FirstName @Model.LastName from the CRM</h3>
+<div>
+    <h4>This change is irreversable!</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CRMFuneralHome.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CRMFuneralHome.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GeneralNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeneralNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrginOfContact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrginOfContact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstContactedByUserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstContactedByUserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstContactNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstContactNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstContactedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstContactedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NextContactByUserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NextContactByUserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NextContactDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NextContactDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NextContactNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NextContactNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfContacts)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfContacts)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NextContactType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NextContactType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactPosition)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactPosition)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "ContactList")
+        </div>
+    }
+</div>

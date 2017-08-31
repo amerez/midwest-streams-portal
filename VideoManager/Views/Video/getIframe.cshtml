@@ -1,0 +1,53 @@
+﻿@model VideoManager.Models.Data.Video
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Midwest Streams</title>
+
+    <link href="~/Content/bootstrap-viewing.css" rel="stylesheet" />
+    <link href="~/Content/landing-page.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="~/Scripts/mediaelementplayer.css" rel="stylesheet" />
+    
+</head>
+<body>
+
+
+                        @if (!string.IsNullOrEmpty(Model.ConvertedFilePath))
+                        {
+                            
+                           <!-- <iframe src="@("//player.vimeo.com/video/" + Model.VimeoId ?? "" + "?title=0&amp;byline=0&amp;portrait=0")" width="750" height="422" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"></iframe>-->
+                             <video width="640" height="360" src="@("https://portal.midweststreams.com/uploadedfiles"+Model.ConvertedFilePath)" type="video/mp4"
+                                   id="player1" poster="../../Content/images/videoPlaceHolder.jpg"
+	                        controls="controls" autoplay preload="none"></video>
+                        }
+                        else
+                        {
+                           <h1>Video Coming Soon</h1>
+                        }
+
+
+
+
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/mediaelement-and-player.min.js"></script>
+
+
+
+
+</body>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<VideoManager.Models.Data.FuneralHome>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Funeral Homes</h2>
+
+<table class="table service-table">
+	<thead>
+		
+		<tr>
+			<th>
+				Home
+			</th>
+			<th>
+				Location
+			</th>
+			<th>
+				Contact
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Owner)
+			</th>
+            <th>
+                Last Login
+            </th>
+			<th>
+				@Html.DisplayNameFor(model => model.PaymentStatus)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	@foreach (var item in Model) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.City), @Html.DisplayFor(modelItem => item.State)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Email)
+			</td>
+			<td>
+				@if (item.Owner != null)
+				{
+					@Html.DisplayFor(modelItem => item.Owner.Name)
+				}
+			</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastLogin)
+            </td>
+			<td>
+				@Html.DisplayFor(modelItem => item.PaymentStatus)
+			</td>
+			<td>
+                <div class="row icon-top-row">
+                    <a href="@Url.Action("Settings", new { id=item.Id })"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+                    <a href="@Url.Action("Edit", new { id=item.Id })"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></a>
+                    <a href="@Url.Action("Index", "Services", new { id=item.Id })"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"></span></a>
+                </div>
+                <div class="row icon-bottom-row">
+                    <a href="@Url.Action("SetPassword", new { id=item.Id })"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                    <a href="@Url.Action("SendWelcomeMessage", new { id=item.Id })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>
+                    <a href="@Url.Action("Delete", new { id=item.Id })"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                </div>
+			</td>
+		</tr>
+		
+		   }
+
+	</table>
+<br/>
+	<a href="/funeralhomes/create" class="btn btn-default">Add a new home</a>
+	

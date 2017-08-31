@@ -1,0 +1,299 @@
+﻿@model VideoManager.Models.Data.EditCRMFuneralHomeViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+@section styles
+{
+    <link href="~/Content/crm/css/jquery.steps.css" rel="stylesheet" />
+}
+@section Scripts
+{
+    <script src="~/Content/crm/js/jquery.steps.min.js"></script>
+    <script src="~/Content/crm/js/jquery.validate.min.js"></script>
+    <script src="~/Content/crm/js/jquery.stepy.js"></script>
+    <script src="~/Content/crm/js/bootstrap-validator.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var form = $(".wizard-validation-form");
+            form.validate({
+                errorPlacement: function errorPlacement(error, element) {
+                    element.after(error);
+                }
+            });
+            form.children("div").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    form.validate().settings.ignore = ":disabled,:hidden";
+                    return form.valid();
+                },
+                onFinishing: function (event, currentIndex) {
+                    form.validate().settings.ignore = ":disabled";
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    alert("Submitted!");
+                    $("#createNewFuneralHome").click();
+                }
+            });
+
+            $(".ownershipTypeDD").change(function () {
+                var ownershipType = $(this).val();
+                //Ownership type of 1 is a chain ownership
+                if (ownershipType == 1) {
+                    //Hide owner firstname and last name and show the dropdown
+                    $(".owners").addClass("hidden");
+                    $(".chainOwner").removeClass("hidden");
+                }
+                else {
+                    $(".owners").removeClass("hidden");
+                    $(".chainOwner").addClass("hidden");
+                }
+            });
+
+        });
+    </script>
+
+
+}
+<h2>Edit</h2>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <!--progress bar start-->
+        <section class="panel">
+            <header class="panel-heading">
+                Enter a new funeral home
+            </header>
+            <div class="panel-body">
+                @Html.ValidationSummary();
+                @using (Html.BeginForm("Edit", "CRM", FormMethod.Post, new { @class = "wizard-validation-form" }))
+                {
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model=>model.PrimaryCRMContactId)
+                    @*<form id="wizard-validation-form" action="#">*@
+                    <div>
+                        <h3>Location</h3>
+                        <section>
+
+                            <div class="form-group clearfix">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control required" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.Address2, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <h3>Contact Information</h3>
+                        <section>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control email" } })
+                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.FuneralHomeNumber, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.FuneralHomeNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.FuneralHomeNumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.Website, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.Website, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.WebsiteProvider, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EnumDropDownListFor(model => model.WebsiteProvider, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.WebsiteProvider, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.BannerImage, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.EditorFor(model => model.BannerImage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.BannerImage, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </section>
+                        <h3>Technology Info</h3>
+                        <section>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group" style="margin-left:5px">
+                                        @Html.EditorFor(model => model.HasCamera, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.HasCamera, "", new { @class = "text-danger" })
+                                        Has Camera
+                                    </div>
+                                    <div class="form-group" style="margin-left:5px">
+                                        @Html.EditorFor(model => model.IsRecording, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.IsRecording, "", new { @class = "text-danger" })
+                                        Is Recording
+                                    </div>
+                                    <div class="form-group" style="margin-left:5px">
+                                        @Html.EditorFor(model => model.HasMemorialFolders, new { htmlAttributes = new { @class = "" } })
+                                        @Html.ValidationMessageFor(model => model.HasMemorialFolders, "", new { @class = "text-danger" })
+                                        Has Memorial Folders
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.WebcastingHistoryNotes, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.TextAreaFor(model => model.WebcastingHistoryNotes, new { @class = "form-control", rows = "5" })
+                                            @Html.ValidationMessageFor(model => model.WebcastingHistoryNotes, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        @Html.LabelFor(model => model.PDFNotes, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                        <div class="col-lg-10">
+                                            @Html.TextAreaFor(model => model.PDFNotes, new { @class = "form-control", rows = "5" })
+                                            @Html.ValidationMessageFor(model => model.PDFNotes, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                @Html.LabelFor(model => model.PDFPublishingSoftware, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EnumDropDownListFor(model => model.PDFPublishingSoftware, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PDFPublishingSoftware, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </section>
+                        <h3>Owner</h3>
+                        <section>
+                            <div class="form-group clearfix">
+                                @Html.LabelFor(model => model.OwnershipType, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EnumDropDownListFor(model => model.OwnershipType, htmlAttributes: new { @class = "form-control ownershipTypeDD" })
+                                    @Html.ValidationMessageFor(model => model.OwnershipType, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix chainOwner hidden">
+                                <label class="control-label col-lg-1">Corporate Owner</label>
+                                <div class="col-lg-10">
+                                    @Html.DropDownListFor(model => model.CRMOwnerId, new SelectList(ViewBag.OwnerList, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CRMOwnerId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix owners">
+                                @Html.LabelFor(model => model.OwnerFirstName, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EditorFor(model => model.OwnerFirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.OwnerFirstName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix owners">
+                                @Html.LabelFor(model => model.OwnerLastName, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EditorFor(model => model.OwnerLastName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.OwnerLastName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                @Html.LabelFor(model => model.EstimatedCallsPerYear, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EditorFor(model => model.EstimatedCallsPerYear, new { htmlAttributes = new { @class = "form-control required" } })
+                                    @Html.ValidationMessageFor(model => model.EstimatedCallsPerYear, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                @Html.LabelFor(model => model.LeadWarmth, htmlAttributes: new { @class = "control-label col-lg-1" })
+                                <div class="col-lg-10">
+                                    @Html.EnumDropDownListFor(model => model.LeadWarmth, new { htmlAttributes = new { @class = "form-control required" } })
+                                    @Html.ValidationMessageFor(model => model.LeadWarmth, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" class="btn btn-default" id="createNewFuneralHome" />
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                }
+                @*</form>*@
+
+            </div>
+        </section>
+
+
+    </div>
+
+
+</div>

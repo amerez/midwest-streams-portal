@@ -1,0 +1,24 @@
+﻿@model VideoManager.Models.ViewModels.OrderDownloadViewModel
+@{
+    ViewBag.Title = "Order Download";
+    Layout = "~/Views/Shared/_LayoutNoNav.cshtml";
+}
+@section styles
+{
+<style>
+    .header-buy{
+        font-size: 45px !important;
+    }
+    .buy{
+        float:right;
+    }
+    </style>
+}
+<div class="jumbotron"><h1 class="header-buy">Succesfully purchased a digital download</h1>
+
+<p style="font-weight: 400">An email was sent with a secure download link. Or you can click the button below to begin your download.</p>
+    <a class="btn btn-success header-buy" href="@Url.Action("Download", "Services", new { id = Model.ServiceId, bought = true, stripeId = Model.StripeId })">Download</a>
+
+    </div>
+
+

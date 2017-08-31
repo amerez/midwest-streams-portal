@@ -1,0 +1,134 @@
+﻿@model IEnumerable<VideoManager.Models.Data.PDF>
+@{
+    ViewBag.Title = "PDFViewer";
+    Layout = "~/Views/Shared/_LayoutNoStyle.cshtml";
+}
+
+@section styles
+{
+    <style>
+        body, html {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            margin-top: 2px;
+        }
+
+        .no-scroll {
+            overflow-y: hidden;
+            height: 800px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .wrapper {
+            height: 772px;
+            overflow: hidden;
+     text-align:center;
+        }
+
+        .background {
+            width: 100%;
+        }
+
+        .displayedPdf {
+            position: absolute;
+            top: 10px;
+        }
+
+        .pdfList {
+            list-style: none;
+            width:1010px;
+            display: inline-block;
+        }
+  .col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+    </style>
+}
+
+<div class="background">
+
+
+    <div class="row">
+        <div class="col-lg-3 col-lg-offset-5">
+            @if (Model.FirstOrDefault().Service.FuneralHome.Setting.LogoPath != null)
+            {
+                <img style="margin-left:-9%"  src="@System.Configuration.ConfigurationManager.AppSettings["poratalPath"]/FuneralHomes/getLogo/@Model.FirstOrDefault().Service.FuneralHome.Id" class="img-responsive" />
+                @*<img style="margin-left:-9%" src="http://portal.midweststreams.com/FuneralHomes/getLogo/2" />*@
+            }
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-lg-12 wrapper">
+        
+            @if (ViewBag.DisplaySingle == true)
+            {
+                <embed src="@System.Configuration.ConfigurationManager.AppSettings["portalPath"]/PDFs/DisplayPdf/@Model.FirstOrDefault().ServiceId?IgnoreCount=true" width=1000px height=1800px>
+
+            }
+            else
+            {
+
+                <ul class="pdfList">
+                    @foreach (var pdf in Model)
+                    {
+                        <li>
+
+                                <object data="@System.Configuration.ConfigurationManager.AppSettings["portalPath"]/PDFs/DisplayPdf/@pdf.ServiceId" width=1000px height=1800px type="application/pdf">
+                                    <embed src="@System.Configuration.ConfigurationManager.AppSettings["portalPath"]/PDFs/DisplayPdf/@pdf.ServiceId" width=1000px height=1800px type="application/pdf" />
+                                </object>
+                           
+                        </li>
+                    }
+                </ul>
+            }
+
+        </div>
+    </div>
+
+</div>
+@section scripts
+ {
+    <script>
+        $.backstretch("../../Content/images/bg.jpg", { speed: 1050 });
+    </script>
+
+    @if (ViewBag.DisplaySingle != true)
+    {
+        <script>
+            $(document).ready(function () {
+                var MaxPdfs = $(".pdfList li").length;
+                var globalTime = 0;
+                var currentPdf = 1;
+                $("ul li:not(:first)").css("visibility", "hidden");
+                var repeater;
+                function changePdf() {
+                    globalTime++;
+                    var count = 1;
+                    $("li").each(function () {
+                        if (count == currentPdf) {
+                            $(this).css({ opacity: 0, visibility: "visible" }).animate({ opacity: 1 }, 'slow');
+                            $("li").not(this).css({ opacity: 1, visibility: "hidden" }).animate({ opacity: 0 }, 'slow');
+                            $("li").not(this).removeClass("displayedPdf");
+                            $(this).addClass("displayedPdf");
+                            if (currentPdf < MaxPdfs) {
+                                currentPdf = count + 1;
+                                //Break out of loop once all logic is done
+                                return false;
+                            }
+                            else {
+                                currentPdf = 1;
+                            }
+                        }
+                        count++;
+                    });
+                    repeater = setTimeout(changePdf, 10000);
+                }
+                setTimeout(changePdf, 5000);
+
+            });
+        </script>
+    }
+}

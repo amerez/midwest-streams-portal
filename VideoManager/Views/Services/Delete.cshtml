@@ -1,0 +1,86 @@
+﻿@model VideoManager.Models.Data.Service
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="deleteHeader">Delete</h2>
+
+<p class="instructions">Are you sure you want to delete this service?</p>
+<div>
+
+
+
+    @{
+        if (User.IsInRole("Admin"))
+        {
+            <h3>
+                @Html.DisplayFor(model => model.FuneralHome.Name)
+            </h3>
+
+        }
+
+    }
+
+
+
+
+    <table class="service-table delete-table">
+        <thead>
+            <tr>
+                <th class="name-box">Name</th>
+                <th>Birthday</th>
+                <th>Date of Death</th>
+                <th>Date of Service</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+
+
+                <td class="side-border">
+                    @Html.DisplayFor(model => model.FirstName) &nbsp; @Html.DisplayFor(model => model.LastName)
+                </td>
+                <td class="deleteTableCell">
+                    @Html.DisplayFor(model => model.Birthday)
+
+                </td>
+                <td class="deleteTableCell">
+
+                    @Html.DisplayFor(model => model.DeathDay)
+                </td>
+                <td class="deleteTableCell">
+                    @Html.DisplayFor(model => model.ServiceDate)
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+
+
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        if (User.IsInRole("FuneralHomeOwner"))
+        {
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index/"+Model.FuneralHomeId)
+            </div>
+        }
+        else
+        {
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+
+    }
+</div>
+

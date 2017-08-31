@@ -1,0 +1,92 @@
+﻿@model VideoManager.Models.LoginViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Home Page";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Midwest Streams</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <style>
+        body {
+            background: url("/Content/rsz_60h.jpg");
+            margin: 0;
+            padding:0;
+        }
+
+        .jumbotron {
+            background-color: rgba(255, 255, 255, .45);
+            border-radius: 0 0 10px 10px !important;
+        }
+
+        .loginForm {
+            background-color: rgba(34, 34, 34, .4);
+            margin-top: 5em;
+            border-radius: 5px;
+            color: white;
+        }
+    </style>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Start Connecting Families</h1>
+
+        </div>
+        <div class="col-lg-5 col-lg-offset-3 loginForm">
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Enter your credentials</h4>
+                    <hr />
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Log in" class="btn btn-default" />
+                        </div>
+                    </div>
+
+                }
+            </section>
+        </div>
+    </div>
+
+    </body>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+<script language="javascript" type="text/javascript" src="/Scripts/backstretch.js"></script>
+<script>
+    $.backstretch("/Content/rsz_60h.jpg", { speed: 150 });
+</script>
+
+    }
+</html>

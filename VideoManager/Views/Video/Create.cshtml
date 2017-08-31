@@ -1,0 +1,194 @@
+﻿@model VideoManager.Models.Data.Video
+
+@{
+    ViewBag.Title = "Create Service";
+}
+
+
+<style>
+    .form-group-margin {
+        height: 34px;
+    }
+
+    .panel-primary > .panel-heading {
+        color: #ffffff;
+        background-color: #393939;
+        border-color: #393939;
+    }
+
+    .panel-primary {
+        border-color: #393939;
+    }
+
+    .color-container {
+        margin-top: 25px;
+    }
+    .userInfo{
+       
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container color-container">
+        <div class="row">
+
+            @Html.ValidationSummary(true)
+
+            <div class="col-lg-6">
+                <div class="panel panel-primary uploadPanels">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Deceased Information</h3>
+                    </div>
+                    <div class="panel-body" style="text-align:center">
+                        <div class="bs-example form-horizontal">
+                            <fieldset>
+                                <div class="form-group form-group-margin">
+                                    @Html.LabelFor(model => model.ServiceDate, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ServiceDate, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ServiceDate)
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-margin">
+                                    @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FirstName)
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-margin">
+                                    @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.LastName)
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-margin">
+                                    @Html.LabelFor(model => model.Birthday, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Birthday)
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-margin">
+                                    @Html.LabelFor(model => model.DeathDay, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.DeathDay, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DeathDay)
+                                    </div>
+                                </div>
+
+  
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 userInfo hide">
+                <div class="panel panel-primary uploadPanels">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">User Information</h3>
+                    </div>
+                    <div class="panel-body" style="text-align:center">
+                        <div class="bs-example form-horizontal">
+                            <fieldset>
+                                <div class="form-group hide">
+                                    @Html.Label("FamilyEmail", "Family Email", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.Editor("FamilyEmail", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessage("FamilyEmail")
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    @Html.Label("Family Username", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.Editor("FamilyUsername", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessage("FamilyUsername")
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    @Html.Label("Family Password", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.Editor("FamilyPassword", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessage("FamilyPassword")
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    @Html.Label("Viewing Username", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.Editor("ViewingUsername", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessage("ViewingUsername")
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    @Html.Label("Viewing Password", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.Editor("ViewingPassword", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessage("ViewingPassword")
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <div class="panel panel-primary uploadPanels">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Obituary</h3>
+                        </div>
+                        <div class="panel-body" style="text-align:center">
+
+                            @Html.TextAreaFor(model => model.Obituary, new { @class = "form-control", style = "min-height:200px; max-width:100%; width:100%; margin-left:10px; margin-right:10px;" })
+                            @Html.ValidationMessageFor(model => model.Obituary)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-lg-offset-5 col-lg-1">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                </div>
+                <div class="col-lg-1">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script language="javascript" type="text/javascript" src="/Scripts/backstretch.js"></script>
+    @*<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
+        <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+        @Scripts.Render("~/bundles/uploadjs")*@
+    <script>
+        $.backstretch("/Content/images/bails.jpg");
+        //$(function () {
+        //    $('#fileupload').fileupload({
+        //        dataType: 'json',
+
+        //        done: function (e, data) {
+        //            $.each(data.result.files, function (index, file) {
+        //                $('<p/>').text(file.name).appendTo(document.body);
+        //            });
+        //        }
+        //    });
+        //});
+    </script>
+}

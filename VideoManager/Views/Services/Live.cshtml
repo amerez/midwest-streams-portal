@@ -1,0 +1,31 @@
+﻿@model VideoManager.Models.Data.Service
+@{
+    ViewBag.Title = "Live";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Welcome to our live stream beta program!</h2>
+<p>We have created a live stream for you. However you still need to start the live stream. The stream will stop after 3 hours of being started. So be sure to only start the stream a few minutes before the service starts.</p>
+<p>We sent you an email with the link to start the stream. You can also start the stream by clicking the button below.</p>
+<button class="btn btn-info">Start Live Stream</button>
+@*@Html.ActionLink("Start Stream", "startlivestream", new { id = Model.Id, token = Model.LiveStream.StartStreamAccessToken }, new { @class = "btn btn-info" })*@
+<div class="row">
+    @{
+        string colOffset = "2";
+        if (User.IsInRole("Viewing"))
+        {
+            colOffset = "4";
+        }
+    }
+    <div class="col-lg-10 col-lg-offset-@colOffset viewing-video-container">
+
+            @{Html.RenderPartial("~/Views/Services/_ViewLiveStreamPartial.cshtml", Model.LiveStream);}
+
+    
+
+    </div>
+</div>
+
+
+
+

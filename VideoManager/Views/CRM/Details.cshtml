@@ -1,0 +1,243 @@
+﻿@model VideoManager.Models.Data.CRMFuneralHome
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CRMFuneralHome</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FuneralHome.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FuneralHome.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PrimaryCRMContact.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PrimaryCRMContact.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AddressConfirmed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddressConfirmed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FuneralHomeNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FuneralHomeNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Website)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasCamera)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HasCamera)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsRecording)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsRecording)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WebcastingHistoryNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WebcastingHistoryNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WebsiteProvider)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WebsiteProvider)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasMemorialFolders)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HasMemorialFolders)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PDFPublishingSoftware)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PDFPublishingSoftware)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PDFNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PDFNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OwnershipType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OwnershipType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OwnerFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OwnerFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OwnerLastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OwnerLastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CRMOwnerId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CRMOwnerId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstimatedCallsPerYear)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstimatedCallsPerYear)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasAUserLogin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HasAUserLogin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DevHome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DevHome)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

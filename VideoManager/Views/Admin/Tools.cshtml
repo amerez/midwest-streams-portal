@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Tools";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Tools</h2>
+
+<p>Render Template Virtual Machine Name</p>
+<input id="renderName" type="text"/>
+
+<p>Resource Group Name</p>
+<input id="rgn" type="text" />
+<button id="createRenderTemplate">Create Render Template</button>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function()
+        {
+            $("#createRenderTemplate").click(function () {
+                var renderName = $("#renderName").val();
+                var resourceGroupName = $("#rgn").val();
+                sendInfoToServer(renderName, resourceGroupName)
+            })
+        })
+      function sendInfoToServer(renderName, resourceGroupName) {
+            alert("sending to server");
+
+            var postUrl = "/admin/CreateRenderVM";
+
+
+            var postData = { vmName: renderName, resourceGroupName: resourceGroupName};
+
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                alert("Succesfully Created VM");
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+
+
+                alert("error:"+errorThrown);
+                console.log("textStatus:" + textStatus);
+                console.log("errorThrown:" + errorThrown);
+            });
+
+            return false;
+        };
+      </script>
+}

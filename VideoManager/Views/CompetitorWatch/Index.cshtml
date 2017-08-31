@@ -1,0 +1,85 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CWFuneralHome>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Funeral Homes</h2>
+
+<section class="panel">
+    <header class="panel-heading">
+        <span class="pull-right">
+            <a href="@Url.Action("AddFuneralHome")" class=" btn btn-success">Add new home</a>
+        </span>
+    </header>
+    <table class="table table-hover dataTable data-table">
+        <thead>
+            <tr>
+                <th>Funeral Home Name</th>
+                <th class="no-sort">Contact</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="p-name">
+                        <h4>@item.Name</h4>
+                        <small>@item.City, @item.State</small>
+                    </td>
+                    <td class="p-team">
+                        <a href="@item.Website">@item.Website</a>
+                        <br />@item.FuneralHomeNumber
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-xs getObits" data-funeral-home-id="@item.Id"><i class="fa fa-link"></i> Get Obits</button>
+                        <a href="@Url.Action("Delete", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</section>
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function(){
+            $(".getObits").click(function(){
+                var homeId = $(this).attr("data-funeral-home-id");
+                var postData = { CWFuneralHomeId: homeId };
+                var postUrl = "/CompetitorWatch/GetObituaries";
+                var orignalBUttonObject = $(this);
+
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    data: postData
+                });
+                posting.done(function (json, responseText, jsonResponse) {
+                    console.log(json);
+                    console.log(responseText);
+                    if(responseText=="success")
+                    { var result = json.result;
+                        console.log("result: "+result);
+                        if(result=="success")
+                        {
+                            alert("Success");
+                        }
+                        else
+                        {
+                            alert("Error Getting Obits");
+                            console.log(json);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+}

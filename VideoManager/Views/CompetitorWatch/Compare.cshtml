@@ -1,0 +1,198 @@
+﻿
+@model VideoManager.Models.ViewModels.CompareViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+
+<section id="main-content">
+    <section class="wrapper">
+        <!--state overview start-->
+        <div class="row state-overview">
+            <div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol terques">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <div class="value">
+                        <h1 class="count">
+                           @string.Format("{0:n2}", Model.AvgMonthlyCalls)
+                        </h1>
+                        <p>Avg services per month</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol red">
+                        <i class="fa fa-video-camera"></i>
+                    </div>
+                    <div class="value">
+                        <h1 class=" count2">
+                            @string.Format("{0:n0}", Model.AvgAge)
+                        </h1>
+                        <p>Customer Average Age</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol yellow">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                    <div class="value">
+                        <h1 class=" count3">
+                            @string.Format("{0:n2}", Model.CompetitorMonthlyCalls)
+                        </h1>
+                        <p>Competitor Avg Calls</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol blue">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                    <div class="value">
+                        <h1 class=" count4">
+                            @string.Format("{0:n0}", Model.CompetitorAvgAge)
+                        </h1>
+                        <p>Competitor Avg Age</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!--state overview end-->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <!--custom chart start-->
+                <div class="border-head">
+                    <h3>Services Per Month</h3>
+                </div>
+                <div class="custom-bar-chart">
+                    @if (Model.CompetiveLineChartMonthly == "No Data")
+                    {
+                        <h2>No Analytics Available</h2>
+                    }
+                    else
+                    {
+                        <select id="data-selection-for-line">
+                            <option value="months">Month</option>
+                            <option value="year">Year</option>
+                            <option value="days">Day</option>
+                        </select>
+                        <div id="wijlinechart">
+                        </div>
+                    }
+                    <!--custom chart end-->
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+@section Scripts
+{
+    <!--Theme-->
+<link href="http://cdn.wijmo.com/themes/aristo/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+
+<!--Wijmo Widgets CSS-->
+<link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20151.69.min.css" rel="stylesheet" type="text/css" />
+<link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20152.78.min.css" rel="stylesheet" type="text/css" />
+<!--Wijmo Widgets JavaScript-->
+<script src="http://cdn.wijmo.com/jquery.wijmo-open.all.3.20151.69.min.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20151.69.min.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/interop/wijmo.data.ajax.3.20151.69.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/jquery.wijmo-open.all.3.20152.78.min.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20152.78.min.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/interop/wijmo.data.ajax.3.20152.78.js" type="text/javascript"></script>
+<script id="scriptInit" type="text/javascript">
+    $(document).ready(function () {
+        $("#data-selection-for-line").change(function () {
+            var currentSerries = [];
+            if (this.value == "year") {
+                currentSerries = [];
+                title = "Yearly Views";
+
+
+            }
+            if (this.value == "months") {
+                currentSerries = [@Html.Raw(Model.CompetiveLineChartMonthly)];
+                title = "Monthly Views";
+            }
+            if (this.value == "days") {
+                currentSerries = [];
+                title = "Daily Views";
+            }
+            $("#wijlinechart").wijlinechart({
+                header: {
+                    text: title
+                },
+                seriesList: currentSerries
+            });
+
+            $("#wijlinechart").wijlinechart("redraw", "true");
+        });
+
+        //var yArray = [80, 101, 76, 54, 60, 35, 78, 90, 132, 100];
+        //xArray =[new Date("7/1/2015"), new Date("7/2/2015"), new Date("7/3/2015"), new Date("7/4/2015"), new Date("7/5/2015"), new Date("7/6/2015"), new Date("7/7/2015"), new Date("7/8/2015"),new Date("7/9/2015"), new Date("7/10/2015")];
+
+
+        var title = "Monthly Views"
+        var monthlySeriesArray = @Html.Raw(Model.CompetiveLineChartMonthly);
+
+
+
+        $("#wijlinechart").wijlinechart({
+            showChartLabels: false,
+            hint: {
+                content: function () {
+                    return this.y;
+                }
+            },
+            legend:{
+                compass:"north",
+                orientation: "horizontal"
+            },
+            axis: {
+                y: { labels: { style: { rotation: -45 } } },
+                x: { labels: { style: { rotation: -45 } } }
+            },
+            seriesList: monthlySeriesArray
+        });
+        var resizeTimer = null;
+        $(window).resize(function () {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(function () {
+                var jqLine = $("#wijlinechart"),
+            width = jqLine.width(),
+            height = jqLine.height();
+                if (!width || !height) {
+                    window.clearTimeout(resizeTimer);
+                    return;
+                }
+                jqLine.wijlinechart("redraw", width, height);
+            }, 1250);
+        });
+    })
+</script>
+}
+
+@section Styles
+{
+<style>
+    .custom-bar-chart {
+        height: 310px;
+    }
+
+        .custom-bar-chart select {
+            margin-top: -15px;
+        }
+
+    #main-content {
+        margin-left: 105px;
+    }
+</style>
+}

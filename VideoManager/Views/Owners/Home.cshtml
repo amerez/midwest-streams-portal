@@ -1,0 +1,108 @@
+﻿@model IEnumerable<VideoManager.Models.ViewModels.OwnerIndexViewModel>
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Funeral Homes</h2>
+
+<table class="table service-table">
+	<thead>
+
+		<tr>
+			<th>
+				Home Name
+			</th>
+			<th>
+				Location
+			</th>
+			<th>
+				Number of total services
+			</th>
+			<th>
+				Services in the past month
+			</th>
+			<th>
+				Video Views
+			</th>
+			<th>
+				PDF Views
+			</th>
+			<th>
+				Payment Status
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.HomeName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.City), @Html.DisplayFor(modelItem => item.State)
+			</td>
+			<td>
+				<p>@Html.DisplayFor(modelItem => item.TotalServices)</p>
+                <p>Videos:<span style="font-weight:bold">@item.NumberOfVideos</span></p>
+                <p>PDFs:<span style="font-weight:bold">@item.NumberOfPdfs</span></p>
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.MonthlyServices)
+			</td>
+			<td>
+                @Html.DisplayFor(modelItem => item.VideoViews)
+			</td>
+			<td>
+                @Html.DisplayFor(modelItem => item.PDFViews)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.HasPaid)
+			</td>
+			<td>
+				<a href="@Url.Action("Index", "Services", new { id = item.Id })"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span></a>
+				<a href="@Url.Action("Edit", "FuneralHomes", new { id = item.Id })"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+				<a href="@Url.Action("Delete", "FuneralHomes", new { id = item.Id })"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+			</td>
+		</tr>
+
+	}
+
+</table>
+<br />
+    @if (ViewBag.totalVideoViews != 0 && ViewBag.totalPDFViews != 0 && ViewBag.totalVideoViews != null && ViewBag.totalPDFViews != null)
+    {
+<div class="row">
+    <div class="col-lg-3 analytics">
+        <h4>Total Video Views</h4>
+        @ViewBag.totalVideoViews
+    </div>
+    <div class="col-lg-3 analytics">
+        <h4>Total PDF Views</h4>
+        @ViewBag.totalPDFViews
+    </div>
+    <div class="col-lg-3 analytics">
+        <h4>30-Day PDF Views</h4>
+        @ViewBag.monthPDFViews
+    </div>
+    <div class="col-lg-3 analytics">
+        <h4>30-Day Video Views</h4>
+        @ViewBag.monthVideoViews
+    </div>
+
+</div>
+        if (ViewBag.VideoConversion != null && ViewBag.PDFConversion != null)
+        {
+<div class="row">
+    <div class="col-lg-3 col-lg-offset-3 analytics">
+        <h4>Total Services</h4>
+        @ViewBag.totalServices
+    </div>
+    <div class="col-lg-3 analytics">
+        <h4>30-Day Servies</h4>
+        @ViewBag.monthServices
+    </div>
+</div>
+        }
+    }

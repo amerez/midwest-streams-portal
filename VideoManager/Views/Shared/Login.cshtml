@@ -1,0 +1,33 @@
+﻿@model VideoManager.Models.LoginViewModel
+
+@{
+    
+    ViewBag.Title = "Log in";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1 class="text-center login-title">Start Connecting Families</h1>
+
+        <div class="col-sm-6 col-md-6 col-md-offset-3 login-box">
+	<div class="account-wall">
+		@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin", role = "form" }))
+		{
+			@Html.AntiForgeryToken()
+		
+			@Html.ValidationSummary(true)
+
+			<span class="dark-blue login-text">Username</span>
+			@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.UserName)
+			<span class="dark-blue login-text">Password</span>
+			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Password)
+
+			<button class="btn btn-lg btn-primary btn-block" type="submit">
+				Sign in
+			</button>
+		}
+	</div>
+			</div>
+

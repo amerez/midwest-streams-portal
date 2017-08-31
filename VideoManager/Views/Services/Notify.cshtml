@@ -1,0 +1,99 @@
+﻿@model VideoManager.Models.ViewModels.NotifyViewModel
+
+	@{
+		ViewBag.Title = "Edit";
+		Layout = "~/Views/Shared/_Layout.cshtml";
+	}
+
+	<h2>Notify @Model.FirstName @Model.LastName's family</h2>
+
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		@Html.HiddenFor(f=>f.FirstName)
+		@Html.HiddenFor(f=>f.LastName)
+		<div class="row">
+			<div class="uploader-form">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label>Family Contact Email</label>
+						@Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "family@email.com" } })
+						@Html.ValidationMessageFor(model => model.ContactEmail)
+					</div>
+					<div class="form-group">
+						<label>From Email</label>
+						@Html.EditorFor(model => model.FromEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "funeraldirector@yourfuneralhome.com" } })
+						@Html.ValidationMessageFor(model => model.FromEmail)
+					</div>
+					<div class="row form-group notifyFamilyName">
+							<label>Family Contact Name</label>
+							@Html.EditorFor(model => model.ContactName, new { htmlAttributes = new { @class = "form-control notifyFamilyName", placeholder = "First Name Last Name" } })
+							@Html.ValidationMessageFor(model => model.ContactName)
+					</div>
+					<div class="row form-group">
+						<div class="col-xs-4">
+							<br />
+							@Html.CheckBoxFor(model => model.IsSecured, new { htmlAttributes = new { @class = "form-control"} })
+							<label for="inputLastName">Is Secured</label>
+						</div>
+						<div class="col-xs-8">
+							<br /><p>*Note if secured a login will be emailed to the email address above</p>
+						</div>
+					</div>
+                    <div class="form-group" id="service-link-container">
+                        <label>@Html.LabelFor(model=>model.ServiceUrl)</label>
+                        @Html.EditorFor(model => model.ServiceUrl, new { htmlAttributes = new { @class = "form-control", placeholder = "www.funeralhome.com/obituary/service.html" } })
+                        @Html.ValidationMessageFor(model => model.ServiceUrl)
+                    </div>
+				</div>
+				<div class="col-lg-6">
+					<label for="obit">Message</label>
+					@Html.TextAreaFor(model => model.Message, new { @class = "form-control", rows = "9" })
+					@Html.ValidationMessageFor(model => model.Message)
+				</div>
+
+			</div>
+		</div>
+		<button class="btn btn-lg btn-primary btn-block notifySubmit" type="submit">Send</button>
+	}
+
+    @if (User.IsInRole("FuneralHomeOwner"))
+    { 
+	    <div class="notifyCancel">
+		    @Html.ActionLink("Cancel", "Index/"+Model.Id)
+	    </div>
+    }
+    else
+    {
+        <div class="notifyCancel">
+            @Html.ActionLink("Cancel", "Index")
+        </div>
+    }
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var loadCheckValue = $("#IsSecured").prop('checked');
+            if (loadCheckValue == true)
+            {
+                $("#service-link-container").hide();
+                $("#ServiceUrl").val("passValidation");
+
+            }
+            $("#IsSecured").change(function () {
+                var checkValue = $("#IsSecured").prop('checked');
+                if(checkValue == true)
+                {
+                    $("#service-link-container").slideUp();
+                    setTimeout(function () { $("#ServiceUrl").val("."); }, 500);
+                }
+                else
+                {
+                    $("#ServiceUrl").val("");
+                    $("#service-link-container").slideDown();
+                }
+            });
+        });
+    </script>
+}

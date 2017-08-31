@@ -1,0 +1,93 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CRMOwner>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Contacts</h2>
+
+<section class="panel">
+    <header class="panel-heading">
+        <span class="pull-right">
+            <a href="@Url.Action("AddOwner")" class=" btn btn-success">Add new owner</a>
+        </span>
+    </header>
+    <table class="table table-hover dataTable data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th class="no-sort">Location</th>
+                <th>Primary Contact</th>
+                <th class="text-center">Esitmated # Homes</th>
+                <th class="text-center"># homes in CRM</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td class="p-name">
+
+                        <h4>@item.Name</h4>
+                    </td>
+                    <td>
+                        @item.City
+                        <br/>
+                        @item.State
+                    </td>
+                    <td>
+                        @if(item.PrimaryCRMOwnerContact!=null)
+                        {
+                            <text><h5>@item.PrimaryCRMOwnerContact.FirstName @item.PrimaryCRMOwnerContact.LastName</h5>
+                        @item.PrimaryCRMOwnerContact.PhoneNumber
+                        <br />
+                        @item.PrimaryCRMOwnerContact.Email
+                        </text>
+                        }
+                    </td>
+                    <td class="text-center">
+                  @item.EstimatedNumberOfHomes
+                    </td>
+                    <td class="text-center">
+                        @if(item.CRMFuneralHomes!=null)
+                        {
+                            string funeralHomeCount = item.CRMFuneralHomes.Count().ToString();
+                            <text>@funeralHomeCount</text>
+                        }
+                        else
+                        {
+                            <text>0</text>
+                        }
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("EditOwner", new { id = item.Id })" class="btn btn-primary btn-xs call"><i class="fa fa-pencil"></i> Edit </a>
+                        <a href="@Url.Action("DeleteOwner", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</section>
+
+@section styles
+{
+    <link href="~/Content/crm/assets/calendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/crm/assets/calendar/fullcalendar.css" rel="stylesheet" />
+    <style>
+        .table-urgent {
+            background-color: rgba(158, 55, 55, 0.86) !important;
+            color: rgb(0, 0, 0);
+        }
+
+        .table-today {
+            background-color: rgba(50, 202, 187, 0.65) !important;
+            color: #594EE8;
+        }
+    </style>
+}

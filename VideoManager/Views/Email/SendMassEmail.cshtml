@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Send Mass Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .dataTables_length {
+display: block;
+margin-top:20px;
+margin-bottom:-50px;
+}
+    .dataTables_filter
+    {
+        margin-top:10px;
+    }
+</style>
+@model VideoManager.Models.ViewModels.MassEmailViewModel
+
+
+<h2>Send Mass Email</h2>
+<a href="/Email/EditGenericTemplate" class="btn btn-lg btn-danger btn-block" style="margin-bottom: 10px">Use Template</a>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="uploader-form">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label>From Email</label>
+                    @Html.EditorFor(model => model.FromEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "shane@midweststreams.com" } })
+                    @Html.ValidationMessageFor(model => model.FromEmail)
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label>@Html.LabelFor(model => model.Subject)</label>
+                    @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "Taco" } })
+                    @Html.ValidationMessageFor(model => model.Subject)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="uploader-form">
+    <div class="col-lg-12">
+        <label>HTML</label>
+        @Html.TextAreaFor(model => model.Html, new { @class = "form-control htmltextarea", rows = "9" })
+        @Html.ValidationMessageFor(model => model.Html)
+    </div>    
+        </div>
+    </div>
+    <div class="clearfix" style="margin-top:15px"></div>
+    <div class="row">
+        <div class="col-lg-6"><input id="toEmail" type="text" placeholder="Test Address"/></div>
+        <div class="col-lg-4"><div id="sendTest" class="btn btn-primary">Send Test</div></div>
+    </div>
+    <h2>Currently not working email will be sent to all homes</h2>
+<table class="service-table table email-table">
+    <thead>
+        <tr>
+            <th class="col-md-1" id="include">Include</th>
+            <th class="col-md-5 name-box">
+               Name
+            </th>
+            <th class="col-md-6 centerBox">
+               Email Address
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Homes != null)
+        {
+            for (int i = 0; i < Model.Homes.Count; i++ )
+            {
+                  <tr>
+                      <td class="centerBox">
+                          @Html.CheckBoxFor(modelItem => Model.Homes[1].isSelected)
+                      </td>
+                    <td class="">
+                        @Html.DisplayFor(modelItem => Model.Homes[1].Name)
+                    </td>
+                      <td class="">
+                          @Html.DisplayFor(modelItem => Model.Homes[1].EmailAddress)
+                      </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+            <button class="btn btn-lg btn-primary btn-block notifySubmit" type="submit">Send</button>
+            
+}
+
+            <div class="notifyCancel">
+                @Html.ActionLink("Cancel", "Index")
+            </div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var allSelected = false;
+            $("#include").click(function () {
+                
+                if(allSelected==false)
+                {
+                    var checkboxes = $(":checkbox");
+                    $(checkboxes).prop('checked', true);
+                    allSelected = true;
+                }
+                else
+                {
+                    var checkboxes = $(":checkbox");
+                    $(checkboxes).prop('checked', false);
+                    allSelected = false;
+                }
+            });
+            $("#sendTest").click(function () {
+                var toEmail = $("#toEmail").val();
+               
+                var HTML = $(".htmltextarea").val();
+
+                var postData = { toInput: toEmail, html: HTML };
+                var postUrl = "/Email/SendTestEmail";
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    data: postData
+                });
+                posting.done(function () {
+                    alert("Test Email Sent");
+                });
+            });
+
+        });
+    </script>
+}

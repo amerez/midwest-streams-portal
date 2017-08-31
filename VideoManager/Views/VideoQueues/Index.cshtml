@@ -1,0 +1,100 @@
+﻿@model VideoManager.Models.ViewModels.AzureControlCenterViewModel
+@{
+    ViewBag.Title = "AzureControlCenter";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Azure Video Control Center</h2>
+
+<table class="table table-hover dataTable data-table">
+    <thead>
+        <tr>
+            <th>Video Id</th>
+            <th>Resource Group Name</th>
+            <th>VM Name</th>
+            <th>Azure Blob Name</th>
+            <th>Status</th>
+            <th>VideoQ Id</th>
+          
+            <td></td>
+        </tr>
+    </thead>
+    @foreach (var item in Model.VideosInQue)
+    {
+        <tr>
+            <td>@item.VideoId</td>
+            <td>@item.ResourceGroupName</td>
+            <td>@item.VMName</td>
+            <td>@item.BlobPath</td>
+            <td>@item.VideoStatus.ToString()</td>
+            <td>@item.Id</td>
+
+            <td><a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-default btn-xs call"><i class="fa fa-folder"></i> Edit </a>
+                <a href="@Url.Action("Delete", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+            </td>
+        </tr>
+    }
+</table>
+<a href="@Url.Action("Create")" class="btn btn-success"><i class="fa fa-pencil"></i> Create </a>
+<div class="row">
+    <div class="uploader-form">
+        <div class="col-lg-6">
+         <h2>Re-Upload Files To Azure(Files Located in RawVideoFiles Folder)</h2> 
+            <div class="form-group">
+                <label>File Names(Seperated by comma)</label>
+                <input type="text" class="form-control" id="FileNames" />
+            </div>
+            <div class="form-group">
+                <label>Azure Container</label>
+                <select id="VideoContainerSelect">
+                    <option value="1">videos</option>
+                    <option value="2">videos-in-queue</option>
+                </select>
+            </div>
+            <button class="btn btn-danger" id="startConversion">Start Uploading</button>
+        </div>
+
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#startConversion").click(function () {
+                var fileNames = $("#FileNames").val();
+                var videoContainer = $("#VideoContainerSelect option:selected").text();
+                sendInfoToServer(fileNames, videoContainer);
+            });
+        });
+
+        function sendInfoToServer(fileNames, videoContainer) {
+            alert("sending to server");
+
+            //var postUrl = "/video/uploaddetails/"+serviceId;
+            var postUrl = "/videoQueues/UploadFilesToAzure";
+
+
+            var postData = { fileNames: fileNames, container: videoContainer };
+
+            var posting = $.ajax({
+                url: postUrl,
+                //url: 'http://demo.midweststreams.com/api/serviceUpload',
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                alert("Trying, you will get an email if it fails.");
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+
+
+                alert("error:"+errorThrown);
+                console.log("textStatus:" + textStatus);
+                console.log("errorThrown:" + errorThrown);
+            });
+
+            return false;
+        };
+    </script>
+}

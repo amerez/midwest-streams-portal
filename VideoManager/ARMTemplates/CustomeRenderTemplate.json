@@ -1,0 +1,68 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/VM_IP.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Basic_A3"
+    },
+    "adminUserName": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "networkInterfaceId": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-30",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType": "Windows",
+            "name": "RenderMachineImage-osDisk.26b3c075-1f17-4947-89c2-59a83cb38ac5.vhd",
+            "createOption": "FromImage",
+            "image": {
+              "uri": "https://armrenderdisks312.blob.core.windows.net/system/Microsoft.Compute/Images/armrendervhd/RenderMachineImage-osDisk.26b3c075-1f17-4947-89c2-59a83cb38ac5.vhd"
+            },
+            "vhd": {
+              "uri": "https://armrenderdisks312.blob.core.windows.net/vmcontainere3d6f843-46e5-4645-a3e3-d993b91b95f2/osDisk.e3d6f843-46e5-4645-a3e3-d993b91b95f2.vhd"
+            },
+            "caching": "ReadWrite"
+          }
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[parameters('networkInterfaceId')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://armrenderdiag213.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": 0
+      },
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "centralus",
+      "name": "[parameters('vmName')]"
+    }
+  ]
+}

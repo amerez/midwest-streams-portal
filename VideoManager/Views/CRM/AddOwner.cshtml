@@ -1,0 +1,151 @@
+﻿@model VideoManager.Models.ViewModels.AddCRMOwnerViewModel
+
+@{
+    ViewBag.Title = "Add Owner";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Add Owner</h2>
+
+
+
+<section class="panel">
+    <header class="panel-heading">
+        Add Funeral Home Owner
+    </header>
+    <div class="panel-body">
+      @using(Html.BeginForm())
+        {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.FirstFuneralHomeId);
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.Name)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-university"></i>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control"} })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.PhoneNumber)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-phone"></i>
+                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.Address1)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-building"></i>
+                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control"} })
+                            @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.Address2)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-building"></i>
+                            @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.City)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-building"></i>
+                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.State)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-building"></i>
+                            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.ZipCode)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-building"></i>
+                            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.EstimatedNumberOfHomes)</label>
+                        <div class="iconic-input">
+                            <i class="fa fa-question"></i>
+                            @Html.EditorFor(model => model.EstimatedNumberOfHomes, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EstimatedNumberOfHomes, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+          <div class="row">
+              <header class="panel-heading">
+                  <h2>Owner Contact</h2>
+              </header>
+              <div class="col-lg-6">
+                  <div class="form-group">
+                      <label>@Html.LabelFor(model => model.PrimaryContactFirstName)</label>
+                      <div class="iconic-input">
+                          <i class="fa fa-user"></i>
+                          @Html.EditorFor(model => model.PrimaryContactFirstName, new { htmlAttributes = new { @class = "form-control" } })
+                          @Html.ValidationMessageFor(model => model.PrimaryContactFirstName, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label>@Html.LabelFor(model => model.PrimaryContactLastName)</label>
+                      <div class="iconic-input">
+                          <i class="fa fa-user"></i>
+                          @Html.EditorFor(model => model.PrimaryContactLastName, new { htmlAttributes = new { @class = "form-control" } })
+                          @Html.ValidationMessageFor(model => model.PrimaryContactLastName, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label>@Html.LabelFor(model => model.ContactPosition)</label>
+                      <div class="iconic-input">
+                          @Html.EnumDropDownListFor(model => model.ContactPosition, new { htmlAttributes = new { @class = "form-control" } })
+                          @Html.ValidationMessageFor(model => model.ContactPosition, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-6">
+             
+                  <div class="form-group">
+                      <label>@Html.LabelFor(model => model.PrimaryContactEmail)</label>
+                      <div class="iconic-input">
+                          <i class="fa fa-envelope"></i>
+                          @Html.EditorFor(model => model.PrimaryContactEmail, new { htmlAttributes = new { @class = "form-control" } })
+                          @Html.ValidationMessageFor(model => model.PrimaryContactEmail, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label>@Html.LabelFor(model => model.FirstContactedDate)</label>
+                      <div class="iconic-input">
+                          <i class="fa fa-user"></i>
+                          @Html.EditorFor(model => model.FirstContactedDate, new { htmlAttributes = new { @class = "form-control" } })
+                          @Html.ValidationMessageFor(model => model.FirstContactedDate, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+              </div>
+          </div>
+   
+    <button type="submit" class="btn btn-default right">Create</button>
+        }
+
+    </div>
+</section>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

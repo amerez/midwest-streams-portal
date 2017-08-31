@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Midwest Streams</title>
+    <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    @*<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">*@
+    <link href="~/Content/jQueryUI/theme/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="~/Content/tooltipster.css" rel="stylesheet" />
+
+
+
+
+    @RenderSection("styles", required: false)
+
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @if (Request.IsAuthenticated)
+                {
+                    <a class="navbar-brand" href="https://portal.midweststreams.com"><img width="55" src="~/Content/images/MWS_Logo_Light.png" /></a>
+                }
+                else
+                {
+                    <a class="navbar-brand" href="https://www.midweststreams.com"><img width="55" src="~/Content/images/MWS_Logo_Light.png" /></a>
+                }
+            </div>
+
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+                @if (!User.IsInRole("Viewing"))
+                {
+                    <ul class="mobile-nav">
+                        @if (!User.IsInRole("FuneralHomeOwner"))
+                        {
+                            @Html.MenuItem("Upload New Service", "Manage", "Services")
+                            @Html.MenuItem("All Services", "Index", "Services")
+                            @Html.MenuItem("Help Center", "Contact", "Home")
+                        }
+                        else
+                        {
+                            @Html.MenuItem("Funeral Home List", "Home", "Owners")
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            @Html.MenuItem("Homes", "Index", "FuneralHomes")
+                            @Html.MenuItem("Owners", "Index", "Owners")
+                            @Html.MenuItem("Logins", "Index", "Account")
+                            @Html.MenuItem("Email", "SendMassEmail", "Email")
+                            @Html.MenuItem("Analytics", "Index", "Analytics")
+                            @Html.MenuItem("CRM", "Dashboard", "Analytics")
+                        }
+                    </ul>
+                }
+            </div>
+
+        </div>
+    </nav>
+
+
+    <div class="container container-mws">
+        @if (Request.IsAuthenticated)
+        {
+            <div class="row">
+                @if (!User.IsInRole("Viewing"))
+                {
+                    <div class="col-lg-3" id="menu-tutorial">
+                        <ul class="nav nav-list bs-docs-sidenav main-nav">
+                            @if (!User.IsInRole("FuneralHomeOwner"))
+                            {
+                                @Html.MenuItem("Upload New Service", "Manage", "Services")
+                                @Html.MenuItem("All Services", "Index", "Services")
+                                @Html.MenuItem("Analytics", "Index", "Analytics")   
+                                @Html.MenuItem("Help Center", "Contact", "Home")
+                              
+                            }
+                            else
+                            {
+                                @Html.MenuItem("Funeral Home List", "Home", "Owners")
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @Html.MenuItem("Homes", "Index", "FuneralHomes")
+                                @Html.MenuItem("Owners", "Index", "Owners")
+                                @Html.MenuItem("Logins", "Index", "Account")
+                                @Html.MenuItem("Email", "SendMassEmail", "Email")
+                              
+                                @Html.MenuItem("CRM", "ContactList", "CRM")
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="col-lg-9">
+                    <div class="content-container">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @RenderBody()
+            </div>
+        }
+
+
+    </div>
+    <div class="footer navbar-fixed-bottom">
+        <p>&copy; @DateTime.Now.Year - Midwest Streams</p>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/plugins")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/Site.js"></script>
+
+    <script>
+        $.backstretch("../../Content/images/bg.jpg", { speed: 1050 });
+
+        //Sortable Table
+        $(document).ready(function () {
+            $('.table').DataTable({
+                "searching": true,
+                "paging": true,
+                "pagingType": "full",
+                "info": false,
+                "pageLength": 6,
+                //"order":[[1, "asc"]]
+                "aaSorting": [],
+                "stateSave": true,
+                "aoColumnDefs": [{
+                    "bSortable": false,
+                    "aTargets": ["no-sort"]
+                }]
+            });
+            //Click Row on table and take them to correct service
+            $('tr[data-href]').on("click", function () {
+                document.location = $(this).data('href');
+            });
+
+            //Tool Tips
+            $('#securedToolTip').tooltipster({
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Secure This Service</h2><p>Click this box if you will not be putting the video on your obituary page.<br/>Instead we will send the family a secure link to the service video.</p></div>')
+            });
+            $('#videoTitleToolTip').tooltipster({
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Choose a title for your video</h2><p>By default we will title your service "First Name Last Name\'s Service."<br/>If this is a different type of video (i.e. Prayer Service or Time of Sharing)<br/>you can choose a different title here. </p><img src="../../Content/images/videoTitle.jpg" width="300"/></div>')
+            });
+            $('#contactEmailToolTip').tooltipster({
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Contact Email</h2><p>For "secured" services we will send the family a secured link to<br/>the service video. The family can then forward that<br/>link to whoever they choose. </p></div>')
+            });
+            $('#TotalVideoViewsToolTip').tooltipster({
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Why is this number different than the analytics on the main page?</h2><p>This is our new analytics code. These analytics filter out spam, and short video views. These analytics do not include any views before June 1st 2015.</p></div>')
+            });
+
+
+        });
+    </script>
+    @{
+        if (ViewBag.DisplayTutorial == true)
+        {
+
+            <script src="~/Scripts/jquery.joyride-2.1.js"></script>
+            <script>
+                //Tutorials
+                $(window).load(function () {
+                    $('#joyRideTipContent').joyride({
+                        autoStart: true,
+                        postStepCallback: function (index, tip) {
+                            if (index == 2) {
+
+                            }
+                        },
+                        postRideCallback: function () {
+                            turnOffTutorials();
+                        },
+                        modal: false,
+                        expose: true
+                    });
+
+                });
+                function turnOffTutorials() {
+                    var checkValue = false;
+                    var postData = { displayTutorial: checkValue };
+                    var postUrl = "/FuneralHomes/ToggleTutorial";
+                    var posting = $.ajax({
+                        url: postUrl,
+                        type: "POST",
+                        dataType: "json",
+                        traditional: true,
+                        data: postData
+                    });
+                }
+            </script>
+        }
+    }
+    <script>
+        //$.backstretch("/Content/images/winterBench.jpg", { speed: 150 });
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-52631408-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+    @*Purechat*@
+    @{
+        if (User.IsInRole("FuneralHome"))
+        {
+            <script type='text/javascript' data-cfasync='false'>window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({ c: '66a7f875-487d-4c86-b5e4-7a88fa2ded92', f: true }); done = true; } }; })();</script>
+            <script>
+                var operatorJoined = false;
+                purechatApi.on('chatbox:ready', function () {
+                    purechatApi.set('visitor.name', '@User.Identity.Name'); // Sets the visitor name to "Joe Doe" 
+                }); 
+            </script>
+        }
+
+    }
+
+</body>
+
+</html>

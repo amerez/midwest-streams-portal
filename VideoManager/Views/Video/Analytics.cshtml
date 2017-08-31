@@ -1,0 +1,71 @@
+﻿@model IEnumerable<VideoManager.Models.Data.Analytic>
+
+@{
+    ViewBag.Title = "GlobalAnalytics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Analytics</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="service-table table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IPAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Stop)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VideoId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Duration)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Completed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlayCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IPAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Start)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Stop)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VideoId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Duration)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Completed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PlayCount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateDate)
+        </td>
+
+    </tr>
+}
+
+</table>

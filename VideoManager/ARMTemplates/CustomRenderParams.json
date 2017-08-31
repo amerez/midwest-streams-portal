@@ -1,0 +1,22 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "106-devHome-RenderMachine"
+        },
+        "vmSize": {
+            "value": "Basic_A3"
+        },
+
+        "adminUsername": {
+            "value": "MWS"
+        },
+        "adminPassword": {
+            "value": "Models4Wive$"
+        },
+        "networkInterfaceId": {
+            "value": "106-devHome-NIC"
+        }
+    }
+}

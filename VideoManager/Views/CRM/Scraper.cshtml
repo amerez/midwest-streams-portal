@@ -1,0 +1,106 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CRMContact>
+@{
+    ViewBag.Title = "Scraper";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+@if (ViewBag.ProfileList == true)
+{
+    if (Model.Count() > 0)
+    {
+        string Fname = Model.FirstOrDefault().CRMFuneralHome.Name;
+        <h2>All contacts for @Fname</h2>
+    }
+    else
+    {
+        <h2>There are no contacts to display</h2>
+    }
+
+}
+else
+{
+    <h2>Intelligently Gathered Data</h2>
+    <h4>**If a contact already exists in the CRM we will ignore them while gathering the data</h4>
+}
+<div class="directory-info-row">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-sm-6">
+                <div class="panel">
+                    <div class="panel-body">
+                        @{
+            string cssClass = "deleteContact";
+            if (ViewBag.ProfileList == true)
+            {
+                cssClass = "deleteContactdblclick";
+            }
+            <div class="btn top pull-right @cssClass" data-contactid="@item.Id"><i class="fa fa-times-circle fa-lg"></i></div>
+                        }
+                       
+                        <div class="media">
+                            <a class="pull-left" href="@Url.Action("ProfileHighlight", new{id=@item.Id})">
+                                <img class="thumb media-object" src="@item.ScreenScrappedImage" alt="">
+                            </a>
+                            <div class="media-body">
+                                <h4>@item.FirstName @item.LastName<span class="text-muted small"> - @item.ContactPosition</span></h4>
+                                 <h6>@item.Email</h6>
+                                <div class="col-lg-10">
+                                    <p>@Html.Raw(item.ScreenScrappedBio)</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+              $(".deleteContact").click(function () {
+                var comId = $(this).attr("data-contactId");
+                var commentObj = $(this).parent().parent().parent();
+                deleteContact(comId, commentObj);
+            });
+         $(".deleteContactdblclick").dblclick(function () {
+                var comId = $(this).attr("data-contactId");
+                var commentObj = $(this).parent().parent().parent();
+                deleteContact(comId, commentObj);
+            });
+            
+           
+        });
+        function deleteContact(contactId, objectToDelete) {
+            var postData = { id: contactId };
+            var postUrl = "/CRM/DeleteContactScraper";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if (json.result == 'success') {
+                    objectToDelete.remove();
+                }
+                else {
+                    alert("Error Deleting Contact");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+    </script>
+  
+}

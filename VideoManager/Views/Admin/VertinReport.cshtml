@@ -1,0 +1,25 @@
+﻿@model IEnumerable<VideoManager.Models.ViewModels.VertinReportViewModel>
+@{
+    ViewBag.Title = "VertinReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Vertin Report</h2>
+
+<table>
+    <tr>
+    <th>Name</th>
+    <th>Video Count</th>
+    <th>PDF Count</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.FuneralHome.Name</td>
+            <td>@item.VideoCount</td>
+            <td>@item.PDFCount</td>
+        </tr>
+    }
+
+</table>
+

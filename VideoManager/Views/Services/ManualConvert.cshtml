@@ -1,0 +1,166 @@
+﻿@model VideoManager.Models.Data.Service
+@{
+    ViewBag.Title = "ManualConvert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Admin Video Details</h2>
+<h2>Service For @Model.FirstName @Model.LastName</h2>
+<h2>Funeral Home: @Model.FuneralHome.Name</h2>
+<h2>Service ID: @Model.Id</h2>
+
+@if(Model.Video!=null)
+{
+    <h3>Current Video Information</h3>
+   <text> Display File Name: @Model.Video.DisplayFileName<br/>
+          Video Status: @Model.Video.Status <br/>
+          Video Duration: @Model.Video.Duration<br/>
+          User Entered Start Point: @Model.Video.Start<br />
+          User Entered End Point: @Model.Video.Stop<br />
+          Raw File Path: @Model.Video.FilePath<br />
+          Converted File Path: @Model.Video.ConvertedFilePath
+          <h3>Performance Metrics</h3>
+          Upload Start Time: @Model.Video.UploadStartTime<br />
+          Upload End TIme: @Model.Video.UploadEndTime<br />
+          Time Spent Uploading: @Model.Video.TimeUploading<br />
+          Time in Que: @Model.Video.TimeInQue<br />
+          Time Converting: @Model.Video.TimeEncoding<br />
+          Time from upload to embed code: @Model.Video.TotalProcessTime<br />
+          Raw File Size: @Model.Video.TotalRawFileSize<br/>
+          Converted File Size: @Model.Video.ConvertedFileSize<br/>
+          FFMpeg Compression Reduction: @(Model.Video.TotalRawFileSize - Model.Video.ConvertedFileSize)
+         
+</text>
+}
+else
+{
+<h3>There is currently no video associated with this service</h3>
+}
+<div class="row">
+    <div class="uploader-form">
+        <div class="col-lg-6">
+            Manual Conversion Tool
+            <p>Service Id: <span id="model-id">@Model.Id</span></p>
+            <div class="form-group">
+                <label>Start Point</label>
+                <input type="text" class="form-control" id="StartPoint" />
+            </div>
+            <div class="form-group">
+                <label>End Point</label>
+                <input type="text" class="form-control" id="EndPoint" />
+            </div>
+            <div class="form-group">
+                <label>File Name(s)</label>
+                <input type="text" class="form-control" id="FileNames"/>
+            </div>
+            <button class="btn btn-danger" id="startConversion">Start Converting</button>
+        </div>
+     </div>
+ </div>
+<br/>
+<div class="row">
+    <div class="panel col-lg-6">
+        <div class="panel-heading">
+            <h2>Generate Thumbnail</h2>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Thumbnail generated at X seconds</label>
+                <input type="text" class="form-control" id="thumbnailSeconds" />
+
+            </div>
+            <button id="generateThumbnail" class="btn btn-default">Generate Thumbnail</button>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#startConversion").click(function () {
+                var fileNames = $("#FileNames").val();
+                var endPoint = $("#EndPoint").val();
+                var startPoint = $("#StartPoint").val();
+                var serviceId = $("#model-id").text();
+                sendInfoToServer(fileNames, startPoint, endPoint, serviceId);
+            });
+            $("#generateThumbnail").click(function () {
+                var seconds = $("#thumbnailSeconds").val();
+                sendThumbnailToServer(seconds);
+            });
+        });
+
+        function sendInfoToServer(fileNames, videoIn, videoEnd, serviceId) {
+            alert("sending to server");
+
+            if (isNaN(videoIn)) {
+
+                videoIn = 0;
+            }
+            if (isNaN(videoEnd)) {
+
+                videoEnd = 0;
+            }
+
+            //var postUrl = "/video/uploaddetails/"+serviceId;
+            var postUrl = "/video/uploaddetailsmulti/" + serviceId;
+
+
+            var postData = { fileurls: fileNames, inpoint: videoIn, outpoint: videoEnd };
+
+            var posting = $.ajax({
+                url: postUrl,
+                //url: 'http://demo.midweststreams.com/api/serviceUpload',
+                type: "POST",
+                dataType: "json",
+                //crossDomain:true,
+                //timeout:3000,
+                //contentType: "application/json: charset=utf-8",
+                //headers: { __RequestVerificationToken: $token },
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                alert("Success. You might want double check the server to ensure the video is processing");
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+
+
+                alert("error:"+errorThrown);
+                console.log("textStatus:" + textStatus);
+                console.log("errorThrown:" + errorThrown);
+            });
+
+            return false;
+        };
+
+
+        function sendThumbnailToServer(seconds) {
+            var serviceId = $("#model-id").text();
+            //var postUrl = "/video/uploaddetails/"+serviceId;
+            var postUrl = "/video/generateThumbnail/" + serviceId;
+
+
+            var postData = { seconds: seconds };
+
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                alert("Thumbnail sucessfully generated");
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+
+
+                alert("error:" + errorThrown);
+                console.log("textStatus:" + textStatus);
+                console.log("errorThrown:" + errorThrown);
+            });
+
+            return false;
+        };
+    </script>
+}
+   

@@ -1,0 +1,929 @@
+﻿@using Microsoft.AspNet.Identity
+@model VideoManager.Models.Data.Service
+
+
+@{
+    ViewBag.Title = "Uploader";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Hey future developer! The video upload code refrences the <video> tag for the upload process. If you ever add videos to this page it could screw things up with the uploader.
+}
+
+@section styles
+{
+    <link href="~/Content/fileupload/jquery.fileupload.css" rel="stylesheet" />
+    <link href="~/Content/fileupload/jquery.fileupload-ui.css" rel="stylesheet" />
+    <link href="~/Content/Styles/SocialStyles.css" rel="stylesheet" />
+    <style>
+        /* Styles for validation helpers*/
+
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+
+        .btnz {
+            display: block;
+            float: left;
+            padding: 10px 15px;
+            border: none;
+            background-color: #ececec;
+            text-decoration: none;
+            font-size: 18px;
+            color: #FFF;
+        }
+
+        .facebook {
+            background-color: #3b5998;
+        }
+
+        .btnz:hover {
+            color: #efefef;
+        }
+    </style>
+}
+
+
+
+@if (Model == null)
+{
+    <h2>Create Service</h2>
+}
+else
+{
+    if (Model.FirstName == null)
+    {
+        <h2>Create Service</h2>
+    }
+    else
+    {
+        <h2>Edit Service</h2>
+    }
+
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    if (ViewBag.FuneralHomeId == null)
+    {
+        <text>
+            @Html.HiddenFor(model => model.FuneralHomeId)
+        </text>
+    }
+    @Html.HiddenFor(model => model.VideoId)
+    @Html.HiddenFor(model => model.ViewingUserId)
+    @Html.HiddenFor(model => model.Obituary);
+    @Html.HiddenFor(model => model.ViewingPassword);
+
+    <div class="row">
+        <div class="uploader-form">
+
+            <div class="col-lg-6">
+                @{
+    if (ViewBag.FuneralHomeId != null)
+    {
+        <div class="form-group">
+            Funeral Home
+            @Html.DropDownList("FuneralHomeId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.FuneralHomeId, "", new { @class = "text-danger" })
+        </div>
+    }
+                }
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName)
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Thomas" } })
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName)
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Jefferson" } })
+                    @Html.ValidationMessageFor(model => model.LastName)
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-xs-6">
+                        <label for="inputLastName">Date of Birth</label>
+                        @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", placeholder = "08/12/2014" } })
+                        @Html.ValidationMessageFor(model => model.Birthday)
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="inputLastName">Date of Death</label>
+                        @Html.EditorFor(model => model.DeathDay, new { htmlAttributes = new { @class = "form-control", placeholder = "08/12/2014" } })
+                        @Html.ValidationMessageFor(model => model.DeathDay)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-6">
+                        <label for="inputLastName">Service Date</label>
+                        @Html.EditorFor(model => model.ServiceDate, new { htmlAttributes = new { @class = "form-control", placeholder = "08/12/2014" } })
+                        @Html.ValidationMessageFor(model => model.ServiceDate)
+                    </div>
+                    <div class="col-xs-6">
+                        <br />
+                        @Html.CheckBoxFor(model => model.IsSecured, new { @class = "is-secured-cb" })
+                        <label for="inputLastName">Secured</label>
+                        <span class="glyphicon glyphicon-question-sign" id="securedToolTip" aria-hidden="true" title="If you do not wish to post this service on your website, click this check mark and we will email them a link that they can securely watch the service."></span>
+                    </div>
+
+                </div>
+                <div class="form-group family-contact-email" style="@((Model.ContactEmail == null) ? "display:none;" : "")">
+                    @Html.LabelFor(model => model.ContactEmail)  <span class="glyphicon glyphicon-question-sign" id="contactEmailToolTip" aria-hidden="true" title="We will send the family an email letting them know the service is avaliable online. This field is required on Secured Services."></span>
+                    @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "family@gmail.com" } })
+                    @Html.ValidationMessageFor(model => model.ContactEmail)
+                </div>
+
+
+
+
+
+                @{
+    if (Model != null && Model.Video != null && User.IsInRole("Admin"))
+    {
+        <div class="row form-group">
+            <div class="col-xs-6">
+                <label for="inputLastName">Status</label>
+                @Html.EnumDropDownListFor(model => model.Video.Status, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Video.Status)
+            </div>
+
+        </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label for="">Converted Path</label>
+                            @Html.EditorFor(model => model.Video.ConvertedFilePath, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Video.ConvertedFilePath)
+                        </div>
+                    </div>
+
+
+    }
+    if (User.IsInRole("Admin") && Model != null)
+    {
+        <div class="row form-group">
+            <a href="@Url.Action("ManualConvert", new{id=@Model.Id})" class="btn btn-default">Manually Start Conversion</a>
+        </div>
+    }
+                }
+            </div>
+            <div class="col-lg-6">
+                <label for="obit">Obituary</label>
+                @Html.TextAreaFor(model => model.Obituary, new { @class = "form-control", rows = "9" })
+                @Html.ValidationMessageFor(model => model.Obituary)
+            </div>
+            <div class="col-lg-6">
+                <label for="inputLastname">Video Title</label> <span class="glyphicon glyphicon-question-sign" id="videoTitleToolTip" aria-hidden="true" title="This will be the title of the video that is displayed to your users."></span>
+                @Html.EditorFor(model => model.VideoTitle, new { htmlAttributes = new { @class = "form-control", placeholder = "Thomas Jefferson Service " } })
+
+                @Html.ValidationMessageFor(model => model.VideoTitle, "Video Title cannot contain more than 35 characters")
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        @{
+    bool videoTitleValidated = true;
+        }
+        @if (Model != null && Model.VideoTitle != null)
+        {
+            if (Model.VideoTitle.Length > 50)
+            {
+                videoTitleValidated = false;
+            }
+        }
+
+
+        @if (Model != null && Model.FirstName != null && Model.LastName != null && videoTitleValidated == true)
+        {
+            if (Model.Video == null || Model.Video.Status == VideoManager.Models.Data.VideoStatus.UploadStarted || Model.Video.Status == VideoManager.Models.Data.VideoStatus.Created || Model.Video.Status == VideoManager.Models.Data.VideoStatus.UploadError || Model.Video.Status == null)
+            {
+                <div class="row">
+                    <div class="video-upload-container">
+                        <!--Displayed via jquery-->
+                        <div id="custom-progress-bar-container" style="display:none">
+                            <div class="col-lg-2">
+                                <h4>Video</h4>
+                                <span id="display-file-names"></span>
+                            </div>
+                            <div class="col-lg-10 custom-progress-bar-wrap">
+                                <div class="progress">
+                                    <span class="glyphicon glyphicon-ok-circle upload-done-circle" style="display: none"></span>
+                                    <div class="progress-bar progress-bar-info progress-bar-striped active" id="custom-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                        <span class="sr-only">20% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 add-files-group">
+                            Video
+                            <!--<a href="#videoModal" id="videoUpload" class="btn btn-lg btn-info btn-block" rel="modal:open">Add Video Files</a>-->
+                            <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">Add Video Files</a>
+
+                        </div>
+                        <div class="col-lg-8 add-files-group">
+                            All videos must be in a .mp4 format
+                         @{
+                            if (Model.FuneralHome.UserName == "devHome")
+                            {
+                                if (Model.LiveStream == null)
+                                {
+                                    <a href="@Url.Action("golive", new { ServiceId = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
+                                }
+
+                            }
+}
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            else
+            {
+
+                switch (Model.Video.Status)
+                {
+                    case VideoManager.Models.Data.VideoStatus.ConversionFinished:
+                        <text>
+                            <div class="video-upload-container">
+                                <h3 class="videoHeader">Video</h3><br />
+                                <div class="col-lg-2">
+
+                                    @Html.DisplayFor(model => model.Video.DisplayFileName)
+                                </div>
+                                <div class="col-lg-10">
+                                    <span class="glyphicon glyphicon-ok-circle"></span>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" id="custom-progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </text>
+                        break;
+                    case VideoManager.Models.Data.VideoStatus.ConversionStarted:
+                    <text>
+                        <div class="video-upload-container">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <h3 class="videoHeader">Video</h3><br>
+                                </div>
+                                <div class="col-lg-9">
+                                    <h2>Service Succesfully Uploaded</h2>
+                                    <p>Our servers are now processing the video</p>
+                                </div>
+                            </div>
+                        </div>
+                    </text>
+                        break;
+                    case VideoManager.Models.Data.VideoStatus.Error:
+                    <text>
+                        <div class="video-upload-container">
+
+                            <div class="error_message">
+                                <h2>Error</h2>
+                                <p>An error occured and we are currently trying to fix the issue. Please contact support if this issue is not resolved in 24 hours.</p>
+                            </div><h3 class="videoHeader">Video</h3>
+
+                            @Html.DisplayFor(model => model.Video.DisplayFileName)
+
+
+                        </div>
+                    </text>
+                        break;
+                    case VideoManager.Models.Data.VideoStatus.UploadStarted:
+                        //Usually a failed upload, allow user to reupload
+                        <text>
+                            <div class="row">
+                                <div class="video-upload-container">
+                                    <!--Displayed via jquery-->
+                                    <div id="custom-progress-bar-container" style="display:none">
+                                        <div class="col-lg-2">
+                                            <h4>Video</h4>
+                                            <span id="display-file-names"></span>
+                                        </div>
+                                        <div class="col-lg-10 custom-progress-bar-wrap">
+                                            <div class="progress">
+                                                <span class="glyphicon glyphicon-ok-circle upload-done-circle" style="display: none"></span>
+                                                <div class="progress-bar progress-bar-info progress-bar-striped active" id="custom-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                                    <span class="sr-only">20% Complete</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 add-files-group">
+                                        Video
+                                        <!--<a href="#videoModal" id="videoUpload" class="btn btn-lg btn-info btn-block" rel="modal:open">Add Video Files</a>-->
+                                        <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">Add Video Files</a>
+                                    </div>
+                                    <div class="col-lg-8 add-files-group">
+                                        All videos must be in a .mp4 format
+                                    </div>
+                                </div>
+                            </div>
+                        </text>
+                        break;
+
+
+                }
+
+
+            }
+			<!--Embed codes-->
+            <div class="row">
+                @if (Model.PDF == null)
+                {
+                    <div class="video-upload-container">
+                        <div class="col-lg-6">
+                            PDF
+                            <a href="@Url.Action("CreatePDF", new { id= Model.Id })" class="btn btn-lg btn-info btn-block" type="submit">ADD FUNERAL PROGRAM PDF</a>
+                            Following upload code will be generated allowing you to place the file on the obituary page on your website.
+                            File Format accepted: PDF
+                        </div>
+                    </div>
+                }
+                else
+                {
+
+
+                    string embedCode = "";
+                    string pdfDisplayRoute = "displaypdf";
+                    if (!Model.FuneralHome.Setting.SEOFriendlyPDF)
+                    {
+                        pdfDisplayRoute = "servepdf";
+                    }
+                    if (Model.FuneralHome.Setting.NewTabPdf == true)
+                    {
+                        embedCode = "<center><a href=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/pdfs/" + pdfDisplayRoute + "/" + Model.PDF.ServiceId + "\"target=\"_blank\"><img style=\"border:10px outset silver;width: 220px;\" src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/PDFs/displaythumbnail/" + Model.Id + "\" alt=\"" + Model.FirstName + " " + Model.LastName + " Memorial Folder\"><br />" + Model.PDF.TitleText + "</a></center>";
+                    }
+                    else
+                    {
+                        embedCode = "<center><a href=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/pdfs/" + pdfDisplayRoute + "/" + Model.PDF.ServiceId + "\" ><img style=\"border:10px outset silver;width: 220px;\" src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/PDFs/displaythumbnail/" + Model.Id + "\" alt=\"" + Model.FirstName + " " + Model.LastName + " Memorial Folder\"><br />" + Model.PDF.TitleText + "</a></center>";
+                    }
+                    if (Model.FuneralHome.Setting.WebsiteProvider == VideoManager.Models.Data.Enums.WebsiteProvider.Aurora)
+                    {
+                        embedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/pdfs/iframe/" + Model.PDF.ServiceId + "\" scrolling=\"no\" ></iframe>";
+                    }
+                    if (Model.FuneralHome.Setting.WebsiteProvider == VideoManager.Models.Data.Enums.WebsiteProvider.DJ)
+                    {
+                        embedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/pdfs/iframe/" + Model.PDF.ServiceId;
+                    }
+                    <div class="col-lg-6 embed-container">
+                        <h3>Copy this code to embed your PDF</h3>
+                        <textarea class="pdf-embed-code-container" rows="7">
+                            @embedCode
+                        </textarea>
+                        <a href="@Url.Action("CreatePdf", new { id=Model.Id })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a href="@Url.Action("Details", "PDF", new { id=Model.Id })"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+                        }
+                        <a href="@Url.Action("PDFViewer", "PDFs", new { SinglePDFId = Model.Id })"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+
+                        <div class="row">
+                            <div class="col-lg-8 embed-custom-column text-center">
+                                <a href="#" class="sc-btn sc--facebook button-padding" data-toggle="modal" data-target="#PDFModal">
+                                    <span class="sc-icon">
+                                        <svg viewBox="0 0 33 33" width="25" height="25" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M 17.996,32L 12,32 L 12,16 l-4,0 l0-5.514 l 4-0.002l-0.006-3.248C 11.993,2.737, 13.213,0, 18.512,0l 4.412,0 l0,5.515 l-2.757,0 c-2.063,0-2.163,0.77-2.163,2.209l-0.008,2.76l 4.959,0 l-0.585,5.514L 18,16L 17.996,32z"></path></g></svg>
+                                    </span>
+                                    <span class="sc-text">
+                                        Share on Facebook
+                                    </span>
+                                </a>
+                                <h3>Views</h3>
+                                @{
+                    var pageHits = Model.PDF.PageHits.ToString();
+                                }
+
+                                <span>@pageHits</span>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                }
+                @{
+
+                //string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+                //analytics
+                string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                if (Model.FuneralHome.Setting != null)
+                {
+                    switch (Model.FuneralHome.Setting.WebsiteProvider)
+                    {
+
+                        case VideoManager.Models.Data.Enums.WebsiteProvider.FuneralOne:
+                            {
+                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                                break;
+                            }
+                        case VideoManager.Models.Data.Enums.WebsiteProvider.Other:
+                            {
+                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                                break;
+                            }
+                        case VideoManager.Models.Data.Enums.WebsiteProvider.Aurora:
+                            {
+                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"360\" height=\"250\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                break;
+                            }
+                        case VideoManager.Models.Data.Enums.WebsiteProvider.Frazer:
+                            {
+                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" style=\"width: 103%; height: 400px;\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                break;
+                            }
+                        case VideoManager.Models.Data.Enums.WebsiteProvider.DJ:
+                            {
+                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id;
+                                break;
+                            }
+                        default:
+                            {
+                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"648\" height=\"400\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                break;
+                            }
+                    }
+
+                }
+
+                <div class="col-lg-6 embed-container">
+                    @if (Model.IsSecured == true)
+                    {
+                        if (Model.ViewingUser != null)
+                        {
+                            <h3>Video Credentials</h3>
+                            <div class="video-embed-code-container .video-embed-code-container-secured">
+                                *This service can be viewed at portal.midwesttreams.com
+                                <br />
+                                <span class="bold">Username:</span>  @Model.ViewingUser.UserName
+                                <br />
+                                <span class="bold">Password:</span>  @Model.ViewingPassword
+                            </div>
+                            <a href="#" class="btn btn-lg btn-info btn-block sharesecured-modal-button" data-toggle="modal" data-target="#ShareSecuredModal">Share Secured Link</a>
+                            <text>*If you would like to embed this video on your website uncheck the "Secured" checkbox and click "Save".</text>
+                        }
+                        else
+                        {
+                            <h3>Video Credentials</h3>
+                            <div class="video-embed-code-container .video-embed-code-container-secured">
+                                Once the video is ready the username and password will be displayed here
+                            </div>
+                        }
+
+
+                    }
+                    else
+                    {
+                        <h3>Copy this code to embed your video</h3>
+                        <textarea class="video-embed-code-container" rows="7">
+                            @videoEmbedCode
+                        </textarea>
+                        <br />
+                        if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                        {
+                            <a href="@Url.Action("View", new { id = Model.Id })"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                        }
+                        else
+                        {
+                            <p>*Once the video is done being processed we will automatically publish it on your webpage</p>
+                        }
+
+                        if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                        {
+
+                            var pageHits = Model.Video.Analytics.Count();
+
+                            <div class="col-lg-5 col-lg-offset-4 text-center">
+                                <a href="@Url.Action("Index","Analytics", new { id= Model.Id })" style="margin-bottom:18px; padding:5px;" class="btn btn-sm btn-info btn-block" type="submit">ADVANCED ANALYTICS</a>
+                                <h3>Views</h3>
+                                <span>@pageHits</span>
+                            </div>
+                        }
+
+                    }
+                </div>
+
+
+
+
+                }
+
+
+            </div>
+
+        }
+    </div>
+    <div class="row">
+        <div class="video-upload-container button-container">
+            <div class="col-lg-2">
+                @if (Model == null)
+                {
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+                }
+                else
+                {
+                    <button class="btn btn-lg btn-primary btn-block save-button" type="submit">Save</button>
+                }
+
+            </div>
+            <div class="col-lg-6">
+                @if (User.IsInRole("FuneralHomeOwner"))
+                {
+                    <a href="javascript:void(0);" onclick="history.go(-1);">Cancel</a>
+                }
+                else
+                {
+                    <a href="/Services">Cancel</a>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<!--Video Upload Modal-->
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog video-modal-dialog">
+        <div class="modal-content video-modal-content">
+            <div class="modal-header video-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Service Upload</h4>
+            </div>
+            <div class="modal-body video-modal-body">
+                <!--I removed alert-dismissable class from the div in the line below this -Joe-->
+                <div class="bootstrapAlertToggle alert alert-info" role="alert">
+                    <button class="btn btn-default" id="UiReset">Reset</button>
+                    <p id="instruction-header">Select Video Files:</p> <span id="instruction-text">Click the "Choose Video" button, and navigate to the video file of this service.</span>
+                </div>
+                <!-- The file upload form used as target for the file upload widget -->
+                <form id="fileupload" method="POST" enctype="multipart/form-data">
+                    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+                    <noscript><input type="hidden" name="redirect" value="http://blueimp.github.io/jQuery-File-Upload/"></noscript>
+                    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                    <div class="row fileupload-buttonbar hide">
+                        <div class="col-lg-7">
+                            <!-- The fileinput-button span is used to style the file input field as button -->
+                            <span class="btn btn-success fileinput-button">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>Add files...</span>
+                                <span class="hiddenfile">
+                                    <input type="file" name="filesold[]" multiple>
+                                </span>
+                            </span>
+                            <button type="submit" id="start-video-upload" class="btn btn-primary start">
+                                <i class="glyphicon glyphicon-upload"></i>
+                                <span>Start upload</span>
+                            </button>
+                            <button id="blueimpCancel" type="reset" class="btn btn-warning cancel">
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                <span>Cancel upload</span>
+                            </button>
+                            <button type="button" class="btn btn-danger delete">
+                                <i class="glyphicon glyphicon-trash"></i>
+                                <span>Delete</span>
+                            </button>
+                            <input type="checkbox" class="toggle">
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process"></span>
+                        </div>
+                        <!-- The global progress state -->
+                        <div class="col-lg-5 fileupload-progress fade">
+                            <!-- The global progress bar -->
+                            <div class="progress progress-striped active" id="blueimp-progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" id="blueimp-progress-bar" style="width:0%;"></div>
+                            </div>
+                            <!-- The extended global progress state -->
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- The table listing the files available for upload/download -->
+                    <div role="presentation" class=""><div class="files row-fluid modal-container videoRow"></div></div>
+                </form>
+
+                <div class="fileHolder">
+
+                    <!-- The template to display files available for upload -->
+                    <script id="template-upload" type="text/x-tmpl">
+
+                        {% for (var i=0, file; file=o.files[i]; i++) { %}
+                        <div class="template-upload fade videoContainer inline">
+                            <i class="glyphicon glyphicon-remove-circle delete-circle"></i>
+                            <span class="preview">
+                            </span>
+
+                            <div class="timeContainer"></div>
+
+                            <div>
+                                <p class="name">{%=file.name%}</p>
+                                <strong class="error text-danger"></strong>
+                            </div>
+                            <div>
+
+                            </div>
+                            <div>
+                                {% if (!i && !o.options.autoUpload) { %}
+                                <button class="btn btn-primary start" style="display:none">
+                                    <i class="glyphicon glyphicon-upload"></i>
+                                    <span>Start</span>
+                                </button>
+                                {% } %}
+                                {% if (!i) { %}
+                                <button class="btn btn-warning cancel" style="display:none">
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                    <span>Cancel</span>
+                                </button>
+                                {% } %}
+                            </div>
+                        </div>
+                        {% } %}
+                    </script>
+                </div>
+                <!--Here's the video uploader/editor stuff-->
+                <div class="form-group">
+                    <div class="controls col-md-12">
+                        <!--i changed this from col-md-6 to col-mid-12 -Joe-->
+                        <div class="form-group row form-inline time-container time-container-start">
+                            <p>We recommend starting the service as the casket is being pushed down the center.</p>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="inHours" placeholder="H" />
+                                <label class="block" for="inHours">Hours</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="inMinutes" placeholder="MM" />
+                                <label class="block" for="inMinutes">Minutes</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="inSeconds" placeholder="ss" />
+                                <label class="block" for="inMinutes">Seconds</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <button id="setIn" class="btn btn-default">Set Start</button>
+                            </div>
+                            <button id="setInDone" class="btn btn-primary" style="display: none;">Done with first video</button>
+                        </div>
+
+
+                        <div class="form-group row form-inline time-container time-container-end">
+                            <p>We recommend ending the service after the last song has finished playing</p>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="outHours" placeholder="H" />
+                                <label class="block" for="inHours">Hours</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="outMinutes" placeholder="MM" />
+                                <label class="block" for="inMinutes">Minutes</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <input type="text" class="form-control input-small time-input" id="outSeconds" placeholder="ss" />
+                                <label class="block" for="inMinutes">Seconds</label>
+                            </div>
+                            <div class="form-group inline-box-wrap">
+                                <button id="setOut" class="btn btn-danger">Set End</button>
+                            </div>
+
+                            <button id="setOutDone" class="btn btn-primary" style="display: none;">Done with last video</button>
+                        </div>
+
+                        <button id="startUpload" class="btn btn-primary startUpload" style="display: none;">Start Upload</button>
+                    </div>
+                </div>
+
+
+                <div id="secondsContainers" class="hide">
+                    <input type="text" id="videoIn" class="form-control " placeholder="0" />
+                    <input type="text" class="form-control" id="videoOut" placeholder="0" />
+                </div>
+                <div class="modal-footer video-modal-footer">
+                    <span class="btn btn-lg btn-default fileinput-button upload-next ">
+                        <span id="next-video-text">Choose Video File</span>
+                        <input type='file' name="files[]" id="nextVideo" onchange="UpDateFrontsideArray()" multiple>
+                    </span>
+                    <button type="button" id="videoFinish" style="display:none" class="btn btn-primary">This is my only video</button>
+                    <div class="row videoOrderRow">
+                        <div class="col-lg-1 col-lg-offset-5">
+                            <button type="button" id="videoOrder" style="display:none" class="btn btn-primary">Videos are in Correct Order</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@if (Model != null && Model.PDF != null)
+{
+    <!--PDF Share on Facebook Modal-->
+    <div class="modal fade" id="PDFModal" tabindex="-1" role="dialog" aria-labelledby="PDFModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="btn btn-primary pull-right" style="display:none;" id="ResetPDFFacebookModal">Back</button>
+                    <h4 class="modal-title modal-title-pdf">Share Memorial Folder On Facebook</h4>
+                    <p class="pdf-modal-instruction">*Click to edit the title or description</p>
+                </div>
+                <div class="modal-body pdf-modal-body">
+                    <div class="row">
+                        <div class="col-lg-3 facebook-img">
+                            <img class="img-responsive" src="@System.Configuration.ConfigurationManager.AppSettings["portalpath"]/PDFs/displaythumbnail/@Model.Id">
+                        </div>
+                        <div class="col-lg-9 facebook-text">
+                            @if (Model.PDF.FacebookTitle == null || Model.PDF.FacebookTitle == "")
+                            {
+                                <h4 class="facebook-modal-edit-title">@Model.FirstName @Model.LastName Memorial Folder</h4>
+                            }
+                            else
+                            {
+                                <h4 class="facebook-modal-edit-title">@Model.PDF.FacebookTitle</h4>
+                            }
+                            @if (Model.PDF.FacebookDescription == null || Model.PDF.FacebookDescription == "")
+                            {
+                                <p class="facebook-modal-edit-description">Please enter the first paragraph of the Memorial Folder here.</p>
+                            }
+                            else
+                            {
+                                <p class="facebook-modal-edit-description">@Model.PDF.FacebookDescription</p>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button class="btn btn-default" id="GetPDFFacebookLink">Get Facebook Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model != null && Model.Video != null && Model.IsSecured == true)
+{
+    <!--Share Secured Link Modal-->
+    <div class="modal fade" id="ShareSecuredModal" tabindex="-1" role="dialog" aria-labelledby="ShareSecuredModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title modal-title-pdf">Share secured link with others</h4>
+                    <p>*Enter the emails in the box below, separated by a comma. </p>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input type="text" style="width:100%" id="securedEmailList" />
+
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="ShareSecuredModalFooter">
+                        <p class="error_message" style="display:none" id="ShareSecuredErrorMessage">Invalid Email Address(es)</p>
+                        <button class="btn btn-default" id="sendSecuredEmail">Send Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts
+{
+
+
+
+
+    @if (Model != null)
+    {
+        <script>
+            var serviceIdSet = "@Model.Id";
+            @if(Model.PDF != null)
+            {
+                <text>
+            var PDFFacebookLink = "@System.Configuration.ConfigurationManager.AppSettings["portalPath"]/PDFs/Facebook/@Model.PDF.ServiceId";
+            </text>
+            }
+
+        </script>
+    }
+
+    <script>
+
+        var userName = "@(User.Identity.GetUserName().Replace(" ", ""))";
+
+
+
+
+    </script>
+    <script id="template-download">
+
+
+    </script>
+    <script id="template-download">
+
+    </script>
+
+    <!--PDF Facebook Editor Scripts-->
+    @if (Model.PDF != null)
+    {
+        <script src="~/Scripts/facebookPDF/Jeditable.js"></script>
+        <script src="~/Scripts/facebookPDF/EditFacebookDescription.js"></script>
+    }
+    @if (Model.Video != null)
+    {
+
+        <script src="~/JS/SendSecuredEmail.js"></script>
+
+    }
+
+    <script>
+        $(document).ready(function () {
+            $(".is-secured-cb").change(function () {
+
+                var checkValue = $(".is-secured-cb").prop('checked');
+                if (checkValue == true) {
+                    $(".family-contact-email").slideDown();
+                }
+                else {
+                    $(".family-contact-email").slideUp();
+                }
+            });
+            //Update VideoTitle in realtime
+            var firstNameVal = "";
+            var lastNameVal = "";
+            $("#FirstName, #LastName").keyup(function (e) {
+                var videoTitle = firstNameVal + ' ' + lastNameVal + "'s Service";
+
+                //Don't change the video if the user has already modified the video title
+                if (videoTitle == $("#VideoTitle").val() || $("#VideoTitle").val() == "") {
+                    firstNameVal = $("#FirstName").val();
+                    lastNameVal = $("#LastName").val();
+                    videoTitle = firstNameVal + ' ' + lastNameVal + "'s Service";
+                    $("#VideoTitle").val(videoTitle);
+                }
+                if (videoTitle.length > 35) {
+                    $("span[data-valmsg-for='VideoTitle']").show();
+                    $("span[data-valmsg-for='VideoTitle']").css("color", "#cclala");
+                }
+                else {
+                    $("span[data-valmsg-for='VideoTitle']").hide();
+                }
+            });
+
+        });
+
+    </script>
+
+    <script src="~/Content/js/tmpl.min.js"></script>
+
+
+    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+    <script src="~/Content/js/load-image.all.min.js"></script>
+    <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+    <script src="~/Content/js/canvas-to-blob.min.js"></script>
+    <!-- blueimp Gallery script -->
+    <script src="~/Content/js/jquery.blueimp-gallery.min.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="~/Content/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="~/Content/js/jquery.fileupload.js"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="~/Content/js/jquery.fileupload-process.js"></script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="~/Content/js/jquery.fileupload-image.js"></script>
+    <!-- The File Upload audio preview plugin -->
+    <script src="~/Content/js/jquery.fileupload-audio.js"></script>
+    <!-- The File Upload video preview plugin -->
+    <script src="~/Content/js/jquery.fileupload-video.js"></script>
+    <!-- The File Upload validation plugin -->
+    <script src="~/Content/js/jquery.fileupload-validate.js"></script>
+    <!-- The File Upload user interface plugin -->
+    <script src="~/Content/js/jquery.fileupload-ui.js"></script>
+    <!-- The main application script -->
+    <script src="~/JS/FileUpload.js">
+    </script>
+
+
+
+}
+
+
+
+
+
+
+
+

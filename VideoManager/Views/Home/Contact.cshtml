@@ -1,0 +1,145 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+@section styles
+{
+    <style>
+        .serviceContainer {
+            background-color: rgba(34, 34, 34, .8);
+            margin-top: 1em;
+            border-radius: 5px;
+            color: white;
+        }
+
+
+
+        /*Styles for the Slide Show*/
+        #slides {
+            display: none;
+            width: 89%;
+        }
+
+        .slideText img {
+            float: left;
+            width: 89%;
+        }
+
+        .slideText span {
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .caption {
+            position: absolute;
+            padding: 5px 20px 0 20px;
+            background: rgba(0,0,0,.5);
+            width: 595px;
+            font-size: 1.3em;
+            line-height: 1.33;
+            color: #fff;
+            border-top: 1px solid #000;
+            text-shadow: none;
+        }
+    </style>
+}
+
+
+<!-- style="width: 675px;" The container and the row have widths set because for some reason they were making the page extra wide, causing a horizontal scrollbar.-->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="contactContent">
+                <h1 class="QuestionsFeedback">Questions or Feedback</h1>
+                <br />
+
+                <p class="contactInfo">If you are having any issues, or would like to send us some feedback please let us know!</p>
+                <p class="contactInfo">Email us at <a href="mailto:support@midweststreams.com">support@midweststreams.com</a> or give us a call at <b>701-491-9016</b>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="tutorialContent">
+                <h1 class="QuestionsFeedback">Display Tutorials</h1>
+                <div class="contactInfo">
+                    @{if (ViewBag.DisplayTutorialCheckbox == true)
+                        {
+                            <input type="checkbox" id="displayTutorial" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="displayTutorial" />
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="QuestionsFeedback">Camera Setup Tutorial</h1>
+            <iframe src="https://portal.midweststreams.com/services/iframe/2158" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
+        </div>
+        </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="QuestionsFeedback">How to embed a memorial folder on your website</h1>
+            <iframe src="https://portal.midweststreams.com/services/iframe/5916" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+
+    <script>
+        $(document).ready(function () {
+            $("#displayTutorial").change(function () {
+                var checkValue = $("#displayTutorial").prop('checked');
+                var postData = { displayTutorial: checkValue };
+                var postUrl = "/FuneralHomes/ToggleTutorial";
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    data: postData
+                });
+                posting.success(function () {
+                    $(".tutorialContent").append('<p id="changes-saved-text">Changes saved</p>');
+                    setTimeout(function () { $("#changes-saved-text").remove(); }, 3000);
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        $(".cameraTutorial").collapse({
+            accordion: true,
+            open: function () {
+                this.addClass("open");
+                this.css({ height: this.children().outerHeight() });
+                $("#arrow").replaceWith('<i id= "arrow" class="fa fa-chevron-circle-up"></i>')
+            },
+            close: function () {
+                this.css({ height: "0px" });
+                this.removeClass("open");
+                $("#arrow").replaceWith('<i id ="arrow" class="fa fa-chevron-circle-down"></i>')
+            }
+        });
+    </script>
+
+ 
+}
+

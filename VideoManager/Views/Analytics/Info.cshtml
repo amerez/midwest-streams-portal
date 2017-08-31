@@ -1,0 +1,136 @@
+﻿@model VideoManager.Models.ViewModels.AnalyticInfoViewModel
+@{
+    ViewBag.Title = "Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles
+{
+    <style>
+        .analytics-header
+        {
+            text-align: center;
+        }
+            .analytics-header h1
+        {
+               font-size: 55px;
+               text-decoration: underline;
+        }
+    .analytics-box
+    {
+        border: solid 3px #4d9dc9;
+        background-color: #f9faf9;
+        margin-top: 30px;
+    }
+    .analytics-box-header
+    {
+        text-align: center;
+        background: #4d9dc9;
+        padding: 15px 0px;
+       
+    }
+    .analytics-box-header h4
+    {
+         font-weight: 600;
+        font-size:24px;
+    }
+    .analytics-box-sub-box
+    {
+        text-align: center;
+        padding: 5px;
+            margin: 10px 0px;
+    }
+    .analytics-box-subheader h5
+    {
+        font-size:20px;
+        text-decoration: underline;
+        color: #234d64;
+    }
+</style>
+}
+<div class="analytics-header">
+    <h1>Advanced Analytics</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="analytics-box">
+            <div class="analytics-box-header">
+                <h4>Service Average Views</h4>
+                <p>Based on age</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Under 40</h5>
+                    </div>
+                    @Model.AvgViews40
+                </div>
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">40-50</h5>
+                    </div>
+                    @Model.AvgViews50
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">50-60</h5>
+                    </div>
+                    @Model.AvgViews60
+                </div>
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Over 60</h5>
+                    </div>
+                    @Model.AvgViews70
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Average Views All Ages</h5>
+                        
+                    </div>
+                    @Model.AllServiceAvgViews
+                </div>
+        </div>
+    </div>
+        </div>
+    <div class="col-lg-6">
+        <div class="analytics-box">
+            <div class="analytics-box-header">
+                <h4>Funeral Stats</h4>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Most Funerals Occur on</h5>
+                    </div>
+                    @Model.PopularServiceDay
+                </div>
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Average Life Span</h5>
+                    </div>
+                    @Model.AvgAge
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Avg Days from death to service</h5>
+                    </div>
+                    @Model.DaysBetweenDeathAndService
+                </div>
+                <div class="col-lg-6 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Most Common Death Day</h5>
+                    </div>
+                    @Model.PopularDeathDay
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

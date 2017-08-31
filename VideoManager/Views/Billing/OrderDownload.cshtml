@@ -1,0 +1,58 @@
+﻿@model VideoManager.Models.ViewModels.OrderDownloadViewModel
+@{
+    ViewBag.Title = "Order Download";
+    Layout = "~/Views/Shared/_LayoutNoNav.cshtml";
+}
+@section styles
+{
+<style>
+    .header-buy{
+        font-size: 45px !important;
+    }
+    .buy{
+        float:right;
+    }
+    </style>
+}
+<div class="jumbotron"><h1 class="header-buy">Order a digital download of @Model.FirstName @Model.LastName's service</h1>
+    @{
+        if (Model.Errors != null)
+        {
+
+            <p>There was an error with the order. Your Credit Card was not charged. Please refresh the page and try again. Otherwise please contact support@@midweststreams.com Include the following error code in your email. Error Code: @Model.Errors</p>
+        }
+        else
+        {
+            <p style="font-weight: 800;">Download a digital video file $(9.99)</p>
+
+            <form action="/Billing/StripeResult" method="POST">
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                        data-key="pk_live_gznr3Ckw4VQELUG5ouTreXab"
+                        data-amount="999"
+                        data-name="Midwest Streams"
+                        data-description="Digital Download"
+                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                        data-locale="auto">
+                </script>
+                <input type="hidden" name="serviceId" value="@Model.ServiceId" />
+                <input type="hidden" name="firstName" value="@Model.FirstName" />
+                <input type="hidden" name="lastName" value="@Model.LastName" />
+            </form>
+
+        }
+    }
+
+
+
+    </div>
+
+
+
+
+
+@section scripts
+{
+    <script>
+
+    </script>
+}

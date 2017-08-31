@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - Midwest Streams</title>
+    <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
+	@Scripts.Render("~/bundles/modernizr")
+
+	
+	<link href="~/Content/bootstrap.css" rel="stylesheet" />
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="~/Content/jQueryUI/theme/jquery-ui.css" rel="stylesheet" />
+	<link href="~/Content/Site.css" rel="stylesheet" />
+	<link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+
+	
+
+	@RenderSection("styles", required: false)
+
+</head>
+<body>
+
+	<nav class="navbar navbar-default navbar-fixed-top navbar-custom" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><img width="55" src="~/Content/images/MWS_Logo_Light.png" /></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				@Html.Partial("_LoginPartial")
+				<ul class="mobile-nav">
+					@Html.MenuItem("Upload New Service", "Service", "Video")
+					@Html.MenuItem("All Services", "Index", "Services")
+					@Html.MenuItem("Help Center", "Contact", "Home")
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="container container-mws">
+			<div class="row">
+						@RenderBody()
+			</div>
+		
+
+		
+	</div>
+	<div class="footer navbar-fixed-bottom">
+		<p>&copy; @DateTime.Now.Year - Midwest Streams</p>
+	</div>
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@Scripts.Render("~/bundles/plugins")
+	@RenderSection("scripts", required: false)
+	<script src="~/Scripts/Site.js"></script>
+	<script>
+		$.backstretch("../../Content/images/bg.jpg", { speed: 1050 });
+		$(document).ready(function () {
+			$('.table').DataTable({
+				"searching": true,
+				"paging": true,
+				"pagingType": "full",
+				"info": false,
+				"pageLength": 6,
+				"aoColumnDefs": [{
+					"bSortable": false,
+					"aTargets": ["no-sort"]
+				}]
+			});
+		});
+	</script>
+	<script>
+		//$.backstretch("/Content/images/winterBench.jpg", { speed: 150 });
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-52631408-1', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+
+</body>
+
+</html>

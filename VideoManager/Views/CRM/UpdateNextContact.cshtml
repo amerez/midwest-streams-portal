@@ -1,0 +1,82 @@
+﻿@model VideoManager.Models.ViewModels.AddCRMContactViewModel
+
+    @{
+        ViewBag.Title = "Add Owner";
+        Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+    }
+
+    <h2>Next Contact for @Model.FirstName @Model.LastName</h2>
+
+
+
+    <section class="panel">
+        <header class="panel-heading">
+            Update Next Contact
+        </header>
+        <div class="panel-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.CRMFuneralHomeId);
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label>@Html.LabelFor(model => model.NextContactDate)</label>
+                            <div class="iconic-input">
+                                @Html.EditorFor(model => model.NextContactDate, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NextContactDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>@Html.LabelFor(model => model.NextContactByUserName)</label>
+                            <div class="iconic-input">
+                                @Html.DropDownListFor(model => model.NextContactByUserName, (IEnumerable<SelectListItem>)ViewBag.UserList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.NextContactByUserName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>@Html.LabelFor(model => model.NextContactType)</label>
+                            <div class="iconic-input">
+                                <i class="fa fa-comments"></i>
+                                @Html.EditorFor(model => model.NextContactType, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NextContactType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>@Html.LabelFor(model => model.NextContactNotes)</label>
+                            <div class="iconic-input">
+                                @Html.TextAreaFor(model => model.NextContactNotes, new { @class = "form-control", rows = "5" })
+                                @Html.ValidationMessageFor(model => model.NextContactNotes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        @if (Model.CRMFuneralHome != null && Model.ContactCategory != VideoManager.Models.Data.Enums.ContactCategory.Business)
+                        {
+                            if (Model.CRMFuneralHome.FuneralHomeId == null || Model.CRMFuneralHome.FuneralHomeId == 0)
+                            {
+                                <div class="form-group col-lg-12">
+                                    <label>Lead Warmth</label>
+                                    <div class="iconic-input">
+                                        @Html.EnumDropDownListFor(model => model.LeadWarmth, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.LeadWarmth, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <label>Clear future contact</label>
+                     @Html.EditorFor(model => model.NoFutureContact, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+              
+
+                <button type="submit" class="btn btn-default right">Update</button>
+            }
+
+        </div>
+    </section>
+
+    <div>
+        @Html.ActionLink("Back to profile", "profilehighlight", new { id = @Model.CRMFuneralHomeId })
+    </div>

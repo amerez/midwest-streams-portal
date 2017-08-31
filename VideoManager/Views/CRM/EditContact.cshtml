@@ -1,0 +1,247 @@
+﻿@model VideoManager.Models.ViewModels.EditContactViewModel
+
+@{
+    ViewBag.Title = "AddFuneralHomeContact";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+
+    <style>
+        .panel-in-wizard-right {
+            padding-left: 25px;
+        }
+        .wizard > .content{
+            min-height:542px;
+        }
+    </style>
+}
+
+
+
+@section Scripts
+{
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#spinner3').spinner({ value: 0, min: 0, max: 1000 });
+            var form = $(".wizard-validation-form");
+            form.validate({
+                errorPlacement: function errorPlacement(error, element) {
+                    element.after(error);
+                }
+            });
+            form.children("div").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    $('#spinner3').spinner({ value: 1, min: 0, max: 1000 });
+                    form.validate().settings.ignore = ":disabled,:hidden";
+                    return form.valid();
+
+                },
+                onFinishing: function (event, currentIndex) {
+                    form.validate().settings.ignore = ":disabled";
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    $("#SubmitFuneralHomeContactForm").click();
+
+                }
+
+            });
+
+        });
+        //For some reason the default datepicker does not work in the wizard form
+        $(function () {
+            $(".manual-datepicker").datepicker(function () {
+                autoclose: true
+            });
+        });
+    </script>
+
+
+}
+
+    <h2>Edit @Model.FirstName's Profile</h2>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <!--progress bar start-->
+        <section class="panel">
+
+            <div class="panel-body">
+                @using (Html.BeginForm("EditContact", "CRM", FormMethod.Post, new { @class = "wizard-validation-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model=>model.Id)
+                    @Html.HiddenFor(model=>model.oldFuneralHomeId)
+                    <h3 class="danger">@Html.ValidationSummary()</h3>
+                    <div>
+                        <h3>General</h3>
+                        <section>
+                            <div class="row">
+                                <div class="col-lg-6 panel-in-wizard-right">
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.FirstName)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-user"></i>
+                                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.LastName)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-user"></i>
+                                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.City)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-building"></i>
+                                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.Email)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-envelope"></i>
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control email" } })
+                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Avatar Pic Link</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-picture-o"></i>
+                                            @Html.EditorFor(model => model.PictureFileName, new { htmlAttributes = new { @class = "form-control email" } })
+                                            @Html.ValidationMessageFor(model => model.PictureFileName, "", new { @class = "text-danger" })
+                                        </div>
+                                        <span class="help-block">Square Image (140X140 Recommended)</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.BannerPictureFileName)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-picture-o"></i>
+                                            @Html.EditorFor(model => model.BannerPictureFileName, new { htmlAttributes = new { @class = "form-control email" } })
+                                            @Html.ValidationMessageFor(model => model.BannerPictureFileName, "", new { @class = "text-danger" })
+                                        </div>
+                                        <span class="help-block">Wide Image (930X237 Recommended)</span>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.PhoneNumber)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-phone"></i>
+                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.ContactPosition)</label>
+                                        <div class="iconic-input">
+                                            @Html.EnumDropDownListFor(model => model.ContactPosition, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ContactPosition, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label>Funeral Home</label>
+                                        <div class="iconic-input">
+                                            @Html.DropDownListFor(model => model.CRMFuneralHomeId, new SelectList(ViewBag.FuneralHomeList, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.CRMFuneralHomeId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.GeneralNotes)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-telephone"></i>
+                                            @Html.TextAreaFor(model => model.GeneralNotes, new { @class = "form-control", rows = "4" })
+                                            @Html.ValidationMessageFor(model => model.GeneralNotes, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+                        <h3>Social</h3>
+                        <section>
+                            <div class="row">
+                                <div class="col-lg-6 panel-in-wizard-right">
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.FamilyInfo)</label>
+                                        <div class="iconic-input">
+                                            @Html.TextAreaFor(model => model.FamilyInfo, new { @class = "form-control", rows = "4" })
+                                            @Html.ValidationMessageFor(model => model.FamilyInfo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.Interests)</label>
+                                        <div class="iconic-input">
+                                            @Html.TextAreaFor(model => model.Interests, new { @class = "form-control", rows = "5" })
+                                            @Html.ValidationMessageFor(model => model.Interests, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.TwitterHandle)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-twitter"></i>
+                                            @Html.EditorFor(model => model.TwitterHandle, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.TwitterHandle, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.FacebookId)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-facebook"></i>
+                                            @Html.EditorFor(model => model.FacebookId, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.FacebookId, "", new { @class = "text-danger" })
+                                        </div>
+                                        <span class="help-block">Can be found by copying and pasting profile into <a href="http://findmyfbid.com/" target="_blank">here</a></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.SpotifyUserId)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-spotify"></i>
+                                            @Html.EditorFor(model => model.SpotifyUserId, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.SpotifyUserId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.LabelFor(model => model.SnapchatUserId)</label>
+                                        <div class="iconic-input">
+                                            <i class="fa fa-snapchat"></i>
+                                            @Html.EditorFor(model => model.SnapchatUserId, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.SnapchatUserId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group hidden">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" class="btn btn-default" id="SubmitFuneralHomeContactForm" />
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                }
+
+
+            </div>
+        </section>
+
+
+    </div>
+
+
+</div>
+<a href="@Url.Action("ProfileHighlight", new{id=Model.Id})" class="btn btn-default">Back to profile</a>

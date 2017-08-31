@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Midwest Streams</title>
+    <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    <link href="~/Content/crm/css/bootstrap.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/jQueryUI/theme/jquery-ui.css" rel="stylesheet" />
+    <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="~/Content/tooltipster.css" rel="stylesheet" />
+    <link href="~/Content/crm/css/slidebars.css" rel="stylesheet" />
+    <link href="~/Content/crm/css/crm-style-responsive.css" rel="stylesheet" />
+    <link href="~/Content/crm/css/crm-style.css" rel="stylesheet" />
+    <link href="~/Content/crm/css/jquery.steps.css" rel="stylesheet" />
+    <link href="~/Content/crm/assets/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" />
+    <link href="~/Content/crm/css/CustomStyles.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/s/dt/dt-1.10.10/datatables.min.css" />
+    @RenderSection("styles", required: false)
+
+</head>
+<body>
+    <section id="container" class="">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="sidebar-toggle-box">
+                <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
+            </div>
+            <!--logo start-->
+            <a href="@Url.Action("Index")" class="logo">MWS<span>CRM</span></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!--  notification start -->
+                <ul class="nav top-menu">
+
+
+                    <!-- notification dropdown start-->
+                    @if (ViewBag.Notifications != null)
+                    {
+                        List<VideoManager.Models.Data.CRMNotification> notes = ViewBag.Notifications;
+                    <li id="header_notification_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge bg-warning">@notes.Count()</span>
+                        </a>
+                        <ul class="dropdown-menu extended notification">
+                            <div class="notify-arrow notify-arrow-yellow"></div>
+                            <li>
+                                <p class="yellow">You have @notes.Count() new notifications</p>
+                            </li>
+                            @{
+                            
+                            foreach (var notification in notes)
+                            {
+                            <li>
+                                <a href="@notification.Link">
+                                    <span class="label label-warning"><i class="fa @notification.IconClass"></i></span>
+                                    @notification.Text
+                                </a>
+                            </li>
+                            }
+                            }
+
+                        </ul>
+                    </li>
+                    }
+
+
+                    <!-- notification dropdown end -->
+                </ul>
+
+            </div>
+            <div class="top-nav ">
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            @if (ViewBag.BaseUserFacebookId == null)
+                            {
+                            <img alt="image" class="" src="https://yt3.ggpht.com/-UnqRK9hiktg/AAAAAAAAAAI/AAAAAAAAAAA/ZhNOJ3fk3SA/s48-c-k-no/photo.jpg">
+                            }
+                            else
+                            {
+                            <img alt="" src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=square" />
+                            }
+
+                            <span class="username">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li><a href="@Url.Action("AdminEdit","Account")"><i class=" fa fa-suitcase"></i>Profile</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                            <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-key"></i> Log Out</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- user login dropdown end -->
+                    <li class="sb-toggle-right">
+                        <i class="fa  fa-align-right"></i>
+                    </li>
+                </ul>
+            </div>
+            @if (ViewBag.RenderingVideo == true)
+            {
+            <div class="col-lg-3 col-lg-offset-3" style="color:#a94442"><h4>Video Conversion in Progress</h4></div>
+            }
+
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <li>
+                        <a href="@Url.Action("Index","FuneralHomes")">
+                            <i class="fa fa-desktop"></i>
+                            <span>Portal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Dashboard","Analytics")">
+                            <i class="fa fa-tachometer"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("UserLog","CRM")">
+                            <i class="fa fa-address-card-o"></i>
+                            <span>User Log</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-building"></i>
+                            <span>Funeral Homes</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("Index","CRM")">List</a></li>
+                            <li><a href="@Url.Action("GetLeadPagesFuneralHome","CRM")">LeadPage Leads</a></li>
+                            <li><a href="@Url.Action("HomeListCurrent","CRM")">Customers</a></li>
+                            <li><a href="@Url.Action("Create","CRM")">Create</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-users"></i>
+                            <span>Contacts</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("ContactList","CRM")">All</a></li>
+                            <li><a href="@Url.Action("ContactListPrimaryContacts","CRM")">Primary Contacts</a></li>
+                            <li><a href="@Url.Action("ContactListCurrentClients","CRM")">Current Customers</a></li>
+                            <li><a href="@Url.Action("ContactListNeedsToBeContacted","CRM")">Overdue</a></li>
+                            <li><a href="@Url.Action("ContactListHotLeads","CRM")">Hot Leads</a></li>
+                            <li><a href="@Url.Action("AddFuneralHomeContact","CRM")">Create</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-fighter-jet"></i>
+                            <span>Owners</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("OwnerList","CRM")">List</a></li>
+                            <li><a href="@Url.Action("AddOwner","CRM")">Create</a></li>
+                            <li><a href="@Url.Action("AddOwnerContact","CRM")">Add Contact</a></li>
+                            <li><a href="@Url.Action("OwnerContactList","CRM")">Owner Contact List</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-users"></i>
+                            <span>Business Contacts</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("BusinessList","CRM")">List</a></li>
+                            <li><a href="@Url.Action("AddBusinessContact","CRM")">Create</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="fa fa-lock"></i>
+                            <span>Admin </span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("Index", "VideoQueues")">Video Que</a></li>
+                            <li><a href="@Url.Action("Tools","Admin")">Create Render VM</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper site-min-height">
+                <!-- page start-->
+                <div class="container-mws">
+                    @RenderBody()
+                </div>
+                <!-- page end-->
+            </section>
+        </section>
+        <!--main content end-->
+        <!-- Right Slidebar start -->
+        <div class="sb-slidebar sb-right sb-style-overlay">
+
+            @{
+            if (ViewBag.OnlineHomes != null)
+            {
+            List<VideoManager.Models.Data.FuneralHome> OnlineCustomers = ViewBag.OnlineHomes;
+            <h5 class="side-title">Online Customers</h5>
+            <ul class="quick-chat-list">
+                @foreach (var home in OnlineCustomers)
+                {
+                <li class="online">
+                    <div class="media">
+                        <div class="media-body">
+                            <strong>@home.Name</strong>
+                            <small>@home.City, @home.State</small>
+                        </div>
+                    </div><!-- media -->
+                </li>
+                }
+
+            </ul>
+            }
+            else
+            {
+            <h5 class="side-title">No Customers are Currently Online</h5>
+            }
+            if (ViewBag.ServicesInQue != null)
+            {
+            List<VideoManager.Models.Data.Service> ServicesInQue = ViewBag.ServicesInQue;
+            <h5 class="side-title">Videos In Upload Que</h5>
+            <ul class="quick-chat-list">
+                @foreach (var service in ServicesInQue)
+                {
+                <li class="online">
+                    <div class="media">
+                        <div class="media-body">
+                            <strong>@service.FirstName @service.LastName</strong>
+                            <small>@service.FuneralHome.Name</small>
+                        </div>
+                    </div><!-- media -->
+                </li>
+                }
+            </ul>
+            }
+            }
+
+            <h5 class="side-title">Performance *Not Done</h5>
+            <ul class="p-task tasks-bar">
+                <li>
+                    <a href="#">
+                        <div class="task-info">
+                            <div class="desc">CPU 1</div>
+                            <div class="percent">40%</div>
+                        </div>
+                        <div class="progress progress-striped">
+                            <div style="width: 40%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar progress-bar-success">
+                                <span class="sr-only">40% Complete (success)</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="task-info">
+                            <div class="desc">CPU 2</div>
+                            <div class="percent">64%</div>
+                        </div>
+                        <div class="progress progress-striped">
+                            <div style="width: 60%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="60" role="progressbar" class="progress-bar progress-bar-warning">
+                                <span class="sr-only">60% Complete (warning)</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="task-info">
+                            <div class="desc">CPU 3</div>
+                            <div class="percent">87%</div>
+                        </div>
+                        <div class="progress progress-striped">
+                            <div style="width: 87%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" role="progressbar" class="progress-bar progress-bar-info">
+                                <span class="sr-only">87% Complete</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="task-info">
+                            <div class="desc">CPU 4</div>
+                            <div class="percent">33%</div>
+                        </div>
+                        <div class="progress progress-striped">
+                            <div style="width: 33%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" role="progressbar" class="progress-bar progress-bar-danger">
+                                <span class="sr-only">33% Complete (danger)</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="task-info">
+                            <div class="desc">RAM</div>
+                            <div class="percent">45%</div>
+                        </div>
+                        <div class="progress progress-striped active">
+                            <div style="width: 45%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" role="progressbar" class="progress-bar">
+                                <span class="sr-only">45% Complete</span>
+                            </div>
+                        </div>
+
+                    </a>
+                </li>
+                <li class="external">
+                    <a href="#">More Info</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Right Slidebar end -->
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                @DateTime.Now.Year &copy; Midwest Streams
+                <a href="#" class="go-top">
+                    <i class="fa fa-angle-up"></i>
+                </a>
+            </div>
+        </footer>
+        <!--footer end-->
+    </section>
+
+
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/plugins")
+
+    <script src="~/Scripts/Site.js"></script>
+    <script class="include" type="text/javascript" src="~/Content/crm/js/jquery.dcjqaccordion.2.7.js"></script>
+
+    <script src="~/Content/crm/js/jquery.scrollTo.min.js"></script>
+    <script src="~/Content/crm/js/slidebars.min.js"></script>
+    <script src="~/Content/crm/js/jquery.nicescroll.js"></script>
+    <script src="~/Content/crm/js/respond.min.js"></script>
+    <script src="~/Content/crm/js/common-scripts.js"></script>
+    <script src="~/Content/crm/js/jquery.steps.min.js"></script>
+    <script src="~/Content/crm/js/jquery.validate.min.js"></script>
+    <script src="~/Content/crm/js/jquery.stepy.js"></script>
+    <script src="~/Content/crm/js/bootstrap-validator.min.js"></script>
+    <script src="~/Content/crm/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/Content/crm/assets/fuelux/js/spinner.js"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        //$.backstretch("../../Content/images/bg.jpg", { speed: 1050 });
+
+        //Sortable Table
+        $(document).ready(function () {
+            $('.data-table').DataTable({
+                "searching": true,
+                "paging": true,
+                "pagingType": "full_numbers",
+                "info": false,
+                "pageLength": 25,
+                //"order":[[1, "asc"]]
+                "aaSorting": [],
+                "stateSave": true,
+                "aoColumnDefs": [{
+                    "bSortable": false,
+                    "aTargets": ["no-sort"]
+                }],
+                "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]]
+            });
+            //Click Row on table and take them to correct service
+            $('tr[data-href]').on("click", function () {
+                document.location = $(this).data('href');
+            });
+
+
+
+
+        });
+    </script>
+
+
+</body>
+
+</html>

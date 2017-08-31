@@ -1,0 +1,635 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutNoNav.cshtml";
+    }
+<div class="row" style="background-color:#7eabc0;margin:0;padding:0;padding-bottom:15px">
+    <h1>Edit Email Template</h1>
+    <div class="uploader-form" >
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Header</label>
+                <input type="text" class="form-control" id="header" />
+            </div>
+            <div class="form-group">
+                <label>Sub Header</label>
+           <input type="text" class="form-control" id="subHeader"/>
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+            <label for="obit">Message</label>
+            <textarea rows="9" class="form-control" id="message"></textarea>
+        </div>
+        @*The upload form*@
+        <div id="filePlaceHolder" class="">
+            <!-- The file upload form used as target for the file upload widget -->
+            <form id="fileupload" method="POST" enctype="multipart/form-data">
+                <!-- Redirect browsers with JavaScript disabled to the origin page -->
+                <noscript><input type="hidden" name="redirect" value="http://www.midweststreams.com"></noscript>
+                <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                <div class="row fileupload-buttonbar">
+                    <div class="col-lg-12" style="text-align:center;">
+                        <!-- The fileinput-button span is used to style the file input field as button -->
+                        <span class="btn btn-success fileinput-button" style="margin-left:-86.5%; margin-top:-39px;">
+                            <i class=" fa fa-file-image-o">
+                            </i>
+                            <span>
+                                <text>Upload Image</text>
+                            </span>
+                            <input type="file" name="files[]" multiple>
+                        </span>
+                        <!-- The global file processing state -->
+                        <span class="fileupload-process"></span>
+                    </div>
+                    <!-- The global progress state -->
+                    <div class="col-lg-5 fileupload-progress fade">
+                        <!-- The global progress bar -->
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                        </div>
+                        <!-- The extended global progress state -->
+                        <div class="progress-extended">&nbsp;</div>
+                    </div>
+                </div>
+                <!-- The table listing the files available for upload/download -->
+                <div id="files" class="files col-lg-12"></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="emailHtml" marginwidth="0" marginheight="0" style="margin:0;padding:0;background-color:#7eabc0;min-height:100%!important;width:100%!important">
+ 
+    <center>
+        <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="border-collapse:collapse;margin:0;padding:0;background-color:#292929;height:100%!important;width:100%!important">
+            <tbody>
+                <tr>
+                    <td align="center" valign="top" style="margin:0;padding:0;border-top:0;height:100%!important;width:100%!important">
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border-top:1px none #292929;border-bottom:1px solid #292929">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="top" style="padding-top:9px">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+
+                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="366" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding-top:9px;padding-left:18px;padding-bottom:9px;padding-right:0;color:#f9faf9;font-family:Helvetica;font-size:11px;line-height:125%;text-align:left">
+                                                                                                        <img align="left" alt="" src="@ViewBag.PortalPath/Content/images/MWS_Logo_light.png" width="145" style="max-width:290px;padding-bottom:0;display:inline!important;margin-left:-41px;vertical-align:bottom;border:0;outline:none;text-decoration:none" class="CToWUd">
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                        <table align="right" border="0" cellpadding="0" cellspacing="0" width="197" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:0;color:#f9faf9;font-family:Helvetica;font-size:11px;line-height:125%;text-align:left"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background-color:#f9faf9;border-top:0;border-bottom:0">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="top" style="padding-top:10px;padding-bottom:10px">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top" style="padding:0px">
+                                                                                        <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td valign="top" style="padding-right:0px;padding-left:0px;padding-top:0;padding-bottom:0"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background-color:#f9faf9;border-top:0;border-bottom:0">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="top" style="padding-top:10px;padding-bottom:10px">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+
+                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px;color:#234d64;font-family:Helvetica;font-size:15px;line-height:100%;text-align:left">
+
+                                                                                                        <h1 style="margin:0;padding:0;display:block;font-family:Helvetica;font-size:40px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:-1px;text-align:left;color:#606060!important"><span style="color:#234d64" id="header-text">Header Goes Here!</span></h1>
+                                                                                                        &nbsp;
+
+                                                                                                        <h3 style="margin:0;padding:0;display:block;font-family:Helvetica;font-size:18px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:-.5px;text-align:left;color:#606060!important"><span style="color:#234d64"><span style="line-height:24.3360004425049px" id="subheader-text">Type some generic subheader in here.</span></span></h3>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td style="padding:10px 18px">
+                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top-width:1px;border-top-style:outset;border-top-color:#f9faf9;border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        <span></span>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+
+                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding:9px 18px;line-height:100%;color:#234d64;font-family:Helvetica;font-size:15px;text-align:left">
+
+                                                                                                        <h3 style="line-height:20.7999992370605px;text-align:center;margin:0;padding:0;display:block;font-family:Helvetica;font-size:14px;font-style:normal;font-weight:normal;letter-spacing:-.5px;color:#606060!important"><strong><span style="color:black"><span style="font-size:16px; font-weight:lighter;" id="message-text">Message to funeral home goes here.</span></span></strong></h3>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td style="padding:18px">
+                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top-width:1px;border-top-style:solid;border-top-color:#999999;border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        <span></span>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background-color:#f9faf9;border-top:0;border-bottom:0">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td align="left" valign="top" width="50%">
+                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td valign="top">
+
+                                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="300" style="border-collapse:collapse">
+                                                                                                            <tbody>
+                                                                                                                <tr>
+
+                                                                                                                    <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px;color:#292929;font-family:Helvetica;font-size:15px;line-height:100%;text-align:left">
+
+                                                                                                                        <h2 style="margin:0;padding:0;display:block;font-family:Helvetica;font-size:26px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:-.75px;text-align:left;color:#404040!important"><span style="color:#234d64">Follow us here:</span></h2>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </tbody>
+                                                                                                        </table>
+
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td align="left" valign="top" width="50%">
+                                                                        <table align="right" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td align="center" valign="top" style="padding:9px">
+                                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                                                            <tbody>
+                                                                                                                <tr>
+                                                                                                                    <td align="center" style="padding-left:9px;padding-right:9px">
+                                                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #eeeeee;background-color:#fafafa;border-collapse:collapse">
+                                                                                                                            <tbody>
+                                                                                                                                <tr>
+                                                                                                                                    <td align="center" valign="top" style="padding-top:9px;padding-right:9px;padding-left:9px">
+                                                                                                                                        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+                                                                                                                                            <tbody>
+                                                                                                                                                <tr>
+                                                                                                                                                    <td valign="top">
+
+
+                                                                                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+
+                                                                                                                                                            <tbody>
+                                                                                                                                                                <tr>
+                                                                                                                                                                    <td align="center" valign="top" style="padding-right:10px;padding-bottom:5px">
+                                                                                                                                                                        <a href="http://www.twitter.com/MidwestStreams" style="word-wrap:break-word" target="_blank"><img src="https://ci5.googleusercontent.com/proxy/hFOjQ4wBdntqcGvfhBxlewt4oRPay1AgDxeGA2KSt6GX8xUpulayqoXVVNqwuZ0g7QlJixaZglnX02_rfg0tjqG9O0bvjNY-3whYug2Kp-2prncKll_iWKHP15CaRUlu=s0-d-e1-ft#http://cdn-images.mailchimp.com/icons/social-block-v2/color-twitter-96.png" alt="MidwestStreams" width="48" style="width:48px;max-width:48px;display:block;border:0;outline:none;text-decoration:none" class="CToWUd"></a>
+                                                                                                                                                                    </td>
+                                                                                                                                                                </tr>
+
+
+                                                                                                                                                                <tr>
+                                                                                                                                                                    <td align="center" valign="top" style="padding-right:10px;padding-bottom:9px">
+                                                                                                                                                                        <a href="http://www.twitter.com/MidwestStreams" style="color:#606060;font-family:Arial;font-size:11px;font-weight:normal;line-height:100%;text-align:center;text-decoration:none;word-wrap:break-word" target="_blank">MidwestStreams</a>
+                                                                                                                                                                    </td>
+                                                                                                                                                                </tr>
+
+                                                                                                                                                            </tbody>
+                                                                                                                                                        </table>
+
+
+
+
+
+                                                                                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+
+                                                                                                                                                            <tbody>
+                                                                                                                                                                <tr>
+                                                                                                                                                                    <td align="center" valign="top" style="padding-right:0;padding-bottom:5px">
+                                                                                                                                                                        <a href="http://www.midweststreams.com" style="word-wrap:break-word" target="_blank"><img src="https://ci6.googleusercontent.com/proxy/6KMOL-ec-xC8PRPN3tGraBjaNDgPK0Hr0uGObIPcj8qy0jIFOozw4g45b9gm7LeuHrKrMQb43OC-IzvL66J85fDrvQooqfWghBjYnuU8FBHxz9tpg-PDxQk_01NS=s0-d-e1-ft#http://cdn-images.mailchimp.com/icons/social-block-v2/color-link-96.png" alt="Midwest Streams" width="48" style="width:48px;max-width:48px;display:block;border:0;outline:none;text-decoration:none" class="CToWUd"></a>
+                                                                                                                                                                    </td>
+                                                                                                                                                                </tr>
+
+
+                                                                                                                                                                <tr>
+                                                                                                                                                                    <td align="center" valign="top" style="padding-right:0;padding-bottom:9px">
+                                                                                                                                                                        <a href="http://www.midweststreams.com" style="color:#606060;font-family:Arial;font-size:11px;font-weight:normal;line-height:100%;text-align:center;text-decoration:none;word-wrap:break-word" target="_blank">Midwest Streams</a>
+                                                                                                                                                                    </td>
+                                                                                                                                                                </tr>
+
+                                                                                                                                                            </tbody>
+                                                                                                                                                        </table>
+
+
+
+
+                                                                                                                                                    </td>
+                                                                                                                                                </tr>
+                                                                                                                                            </tbody>
+                                                                                                                                        </table>
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+                                                                                                                            </tbody>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;background-color:#234d64;border-top:1px solid #234d64;border-bottom:1px solid #234d64">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="top" style="padding-top:10px;padding-bottom:10px">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+
+                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px;color:#f9faf9;font-family:Helvetica;font-size:15px;line-height:100%;text-align:left">
+
+                                                                                                        Thank you for using Midwest Streams. Feel like you're missing something? Drop us a line on Twitter @@MidwestStreams or email us at <a style="color: white;" href="mailto:support@midweststreams.com" target="_blank">support@midweststreams.com</a>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td valign="top">
+
+                                                                                        <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse">
+                                                                                            <tbody>
+                                                                                                <tr>
+
+                                                                                                    <td valign="top" style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px;color:#f9faf9;font-family:Helvetica;font-size:11px;line-height:100%;text-align:left">
+
+                                                                                                        <em>
+                                                                                                            Connecting Families Together.<br>
+                                                                                                            <br>
+                                                                                                            Copyright © @DateTime.Now.Year Midwest Streams, All rights reserved.
+                                                                                                        </em><br>
+                                                                                                        <br>
+                                                                                                        &nbsp;
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</div>
+<div class="row" style="background-color:#7eabc0;margin:0; margin-top: 25px;padding:0;padding-bottom:15px">
+    <h1 style="margin-left:10px">Send</h1>
+    <div class="uploader-form">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label>Test Email Address</label>
+                <input type="text" class="form-control" id="toEmail" />
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <input type="text" class="form-control" id="subject" />
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+              <div class="btn btn-primary" id="sendTest">Send Test Email</div>
+            </div>
+            <div class="form-group">
+                <div class="btn btn-primary" id="sendEmail">Send Email To All Customers</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-upload fade">
+        <div class="videoContainer">
+            <span class="preview"></span>
+        </div>
+        <div>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </div>
+        <div>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </div>
+        <div>
+            {% if (!i && !o.options.autoUpload) { %}
+            <button class="btn btn-primary start" disabled>
+                <i class="glyphicon glyphicon-upload"></i>
+                <span>Start</span>
+            </button>
+            {% } %}
+            {% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>Cancel</span>
+            </button>
+            {% } %}
+        </div>
+    </div>
+    {% } %}
+</script>
+
+@section scripts
+{
+
+<link href="~/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="~/Content/jquery.fileupload-ui.css" rel="stylesheet" />
+<link href="~/Content/imgareaselect-default.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+        $("#header").keyup(function () {
+            $("#header-text").html($("#header").val());
+        });
+        $("#subHeader").keyup(function () {
+            $("#subheader-text").html($("#subHeader").val());
+        });
+        $("#message").keyup(function () {
+           $("#message-text").html($("#message").val());
+        });
+
+        $("#sendTest").click(function () {
+            var toEmail = $("#toEmail").val();
+            var HTML = $("#emailHtml").html();
+    
+            var postData = { toInput: toEmail, html: HTML };
+            var postUrl = "/Email/SendTestEmail";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+            posting.done(function () {
+                alert("Test Email Sent");
+            });
+        });
+        $("#sendEmail").click(function () {
+            var subject = $("#subject").val();
+            var HTML = $("#emailHtml").html();
+
+            var postData = { subject: subject, html: HTML };
+            var postUrl = "/Email/SendTemplate";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+            posting.done(function () {
+                alert("An Email has been sent to all homes");
+            });
+        });
+    })
+    </script>
+
+<script id="template-download">
+
+</script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="~/Content/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="~/Content/js/load-image.all.min.js"></script> 
+<!-- The basic File Upload plugin -->
+<script src="~/Content/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="~/Content/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="~/Content/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="~/Content/js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="~/Content/js/jquery.fileupload-ui.js"></script>
+
+<script>
+    $(function () {
+        // Initialize the jQuery File Upload widget:
+        $('#fileupload').fileupload({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            url: '/Email/UploadEmailImages',
+            maxChunkSize: 10000000,
+            singleFileUploads: true,
+            autoUpload: true,
+            acceptFileTypes: /(\.|\/)(jpe?g|png)$/i
+        }).on('fileuploaddone', function (e, data) {
+            var returnedFile = $("#files .name").text();
+            var prevhtml = $("#message").val();
+            $("#message").val(prevhtml + ' ' + '<img src="@System.Configuration.ConfigurationManager.AppSettings["portalPath"]/EmailImages/'+returnedFile + '">')
+        }).on('fileuploadfail', function (e, data) {
+
+        }).on('fileuploadstart', function (e, data) {
+
+        });
+        // Enable iframe cross-domain access via redirect option:
+        $('#fileupload').fileupload(
+            'option',
+            'redirect',
+            window.location.href.replace(
+                /\/[^\/]*$/,
+                '/cors/result.html?%s') 
+        );  
+    });
+</script>
+}

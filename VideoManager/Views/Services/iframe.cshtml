@@ -1,0 +1,577 @@
+﻿@model VideoManager.Models.Data.Service
+<!DOCTYPE html>
+<html>
+
+@*New video player is bigger, so we only display it with the updated iframe dimensions*@
+@if (Model.CreateDate > new DateTime(2015, 4, 2))
+{
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - Midwest Streams</title>
+
+        @Scripts.Render("~/bundles/jquery")
+        <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
+        <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+
+        <style>
+            body {
+                font-family: 'Lato';
+            }
+
+            #video-title {
+                display: inline-block;
+                color: #eaeaea;
+                padding: 0px 10px;
+                margin-top: 2%;
+                margin-left: 5%;
+                background: rgba(0, 0, 0, .85);
+            }
+
+                #video-title h1 {
+                    font-weight: 300;
+                    font-size: 43px;
+                    margin-top: 0px;
+                    margin-bottom: 4px;
+                    height: 57px;
+                    border-bottom: #234d64 5px solid;
+                }
+
+            .viewing-video-container {
+                position: relative;
+            }
+
+                .viewing-video-container .video-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    pointer-events: none;
+                }
+
+            .logo {
+                position: absolute;
+                right: 26px;
+                bottom: 51px;
+                background: rgba(0, 0, 0, .85);
+            }
+
+                .logo img {
+                    width: 68px;
+                }
+
+            .video-overlay {
+                max-width: 980px;
+            }
+
+            #vidContainer {
+                position: relative;
+            }
+
+            #custom-message {
+                position: absolute;
+                color: white;
+                z-index: 1;
+                font-size: 24px;
+            }
+        </style>
+        @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+        {
+            <link rel="stylesheet" type="text/css" href="../../content/videoplayer/global.css" />
+            @*<script src="~/Scripts/fwduvnonmin.js"></script>*@
+            <script src="~/Scripts/FWDUVPlayerD.js"></script>
+    <!-- Setup video player-->
+            <script type="text/javascript">
+    var hasBeenTracked = false;
+    var playCount = 0;
+    var analyticId = 0;
+    var is_iPad = navigator.userAgent.match(/iPad/i) != null;
+    var portalPath = "@(System.Configuration.ConfigurationManager.AppSettings["portalPath"])";
+    var videoPath = "@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)";
+    var videoTitle = "@(Model.VideoTitle)";
+
+    if(!is_iPad)
+    {
+        FWDUVPUtils.onReady(function () {
+
+            new FWDUVPlayer({
+                //main settings
+                useYouTube: "no",
+                useVimeo: "no",
+                instanceName: "player1",
+                parentId: "videoPlayer",
+                playlistsId: "playlists",
+                mainFolderPath: "../../content/videoplayer",
+                skinPath: "minimal_skin_white",
+                displayType: "responsive",
+                facebookAppId: "888507064518588",
+                useDeepLinking: "no",
+                rightClickContextMenu: "default",
+                addKeyboardSupport: "yes",
+                autoScale: "yes",
+                showButtonsToolTip: "yes",
+                stopVideoWhenPlayComplete: "no",
+                autoPlay: "no",
+                loop: "no",
+                shuffle: "no",
+                maxWidth: 980,
+                maxHeight: 552,
+                volume: .8,
+                buttonsToolTipHideDelay: 1.5,
+                backgroundColor: "#f9faf9",
+                videoBackgroundColor: "#000000",
+                posterBackgroundColor: "#000000",
+                buttonsToolTipFontColor: "#000000",
+                //logo settings
+                showLogo: "no",
+                hideLogoWithController: "yes",
+                logoPosition: "topRight",
+                logoLink: "http://www.midweststreams.com",
+                logoMargins: 5,
+                //playlists/categories settings
+                showPlaylistsButtonAndPlaylists: "no",
+                showPlaylistsByDefault: "no",
+                thumbnailSelectedType: "opacity",
+                startAtPlaylist: 0,
+                buttonsMargins: 0,
+                thumbnailMaxWidth: 350,
+                thumbnailMaxHeight: 350,
+                horizontalSpaceBetweenThumbnails: 40,
+                verticalSpaceBetweenThumbnails: 40,
+                //playlist settings
+                showPlaylistButtonAndPlaylist: "no",
+                playlistPosition: "right",
+                showPlaylistByDefault: "no",
+                showPlaylistName: "no",
+                showSearchInput: "no",
+                showLoopButton: "no",
+                showShuffleButton: "no",
+                showNextAndPrevButtons: "no",
+                forceDisableDownloadButtonForFolder: "yes",
+                addMouseWheelSupport: "yes",
+                startAtRandomVideo: "no",
+                folderVideoLabel: "VIDEO ",
+                playlistRightWidth: 310,
+                playlistBottomHeight: 599,
+                startAtVideo: 0,
+                maxPlaylistItems: 50,
+                thumbnailWidth: 70,
+                thumbnailHeight: 70,
+                spaceBetweenControllerAndPlaylist: 2,
+                spaceBetweenThumbnails: 2,
+                scrollbarOffestWidth: 8,
+                scollbarSpeedSensitivity: .5,
+                playlistBackgroundColor: "#BBBBBB",
+                playlistNameColor: "#000000",
+                thumbnailNormalBackgroundColor: "#000000",
+                thumbnailHoverBackgroundColor: "#dcdcdc",
+                thumbnailDisabledBackgroundColor: "#c0c0c0",
+                searchInputBackgroundColor: "#c0c0c0",
+                searchInputColor: "#333333",
+                youtubeAndFolderVideoTitleColor: "#000000",
+                youtubeOwnerColor: "#919191",
+                youtubeDescriptionColor: "#919191",
+                //controller settings
+                showControllerWhenVideoIsStopped: "yes",
+                showNextAndPrevButtonsInController: "no",
+                showVolumeButton: "yes",
+                showTime: "yes",
+                showYoutubeQualityButton: "no",
+                showInfoButton: "yes",
+                showDownloadButton: "no",
+                showFacebookButton: "no",
+                showEmbedButton: "no",
+                showFullScreenButton: "yes",
+                repeatBackground: "yes",
+                controllerHeight: 37,
+                controllerHideDelay: 3,
+                startSpaceBetweenButtons: 7,
+                spaceBetweenButtons: 8,
+                scrubbersOffsetWidth: 2,
+                mainScrubberOffestTop: 14,
+                timeOffsetLeftWidth: 5,
+                timeOffsetRightWidth: 3,
+                timeOffsetTop: 0,
+                volumeScrubberHeight: 80,
+                volumeScrubberOfsetHeight: 12,
+                timeColor: "#cclala",
+                youtubeQualityButtonNormalColor: "#919191",
+                youtubeQualityButtonSelectedColor: "#000000",
+                //embed window and info window
+                embedAndInfoWindowCloseButtonMargins: 0,
+                borderColor: "#CDCDCD",
+                mainLabelsColor: "#000000",
+                secondaryLabelsColor: "#444444",
+                shareAndEmbedTextColor: "#777777",
+                inputBackgroundColor: "#c0c0c0",
+                inputColor: "#333333",
+                //ads
+                openNewPageAtTheEndOfTheAds: "no",
+                adsButtonsPosition: "left",
+                skipToVideoText: "You can skip to video in: ",
+                skipToVideoButtonText: "Skip Ad",
+                adsTextNormalColor: "#888888",
+                adsTextSelectedColor: "#000000",
+                adsBorderNormalColor: "#AAAAAA",
+                adsBorderSelectedColor: "#000000"
+            });
+            registerAPI();
+
+        });
+    }
+    else
+    {
+        //iPad doesn't like javascript video. So we are using there native video player, with some CSS trickery to make it look nice.
+        var ipadScript = document.createElement("script");
+        ipadScript.type = "text/javascript";
+        ipadScript.src = portalPath+"/scripts/videoplayerjs/iPadOveride.js";
+        // Use any selector
+        $("head").append(ipadScript);
+    }
+
+    $(window).resize(function () {
+        VideoOverlaySize();
+    });
+    var registerAPIInterval;
+    function registerAPI() {
+        clearInterval(registerAPIInterval);
+        if (window.player1) {
+            player1.addListener(FWDUVPlayer.READY, readyHandler);
+            player1.addListener(FWDUVPlayer.PLAY, playHandler);
+            player1.addListener(FWDUVPlayer.PAUSE, pauseHandler);
+            player1.addListener(FWDUVPlayer.STOP, stopHandler);
+            player1.addListener(FWDUVPlayer.UPDATE_TIME, updateTimeHandler);
+            player1.addListener(FWDUVPlayer.PLAY_COMPLETE, playCompleteHandler);
+            player1.addListener(FWDUVPlayer.GO_FULLSCREEN, fullScreenHandler);
+            player1.addListener(FWDUVPlayer.GO_NORMALSCREEN, normalScreenHandler);
+        } else {
+            registerAPIInterval = setInterval(registerAPI, 100);
+        }
+    };
+    function readyHandler(e) {
+        SetupVideoOverlay();
+    }
+    function playHandler(e) {
+        $(".video-overlay").hide();
+        //setTimeout(trackView, 5000);
+    }
+    function fullScreenHandler(e)
+    {
+        //Weird issue that video goes about 15px lower in full screen...
+        //$( "#videoPlayer div" ).first().css("margin-top", "-15px");
+
+    }
+    function normalScreenHandler(e)
+    {
+        $( "#videoPlayer div" ).first().css("margin-top", "0");
+    }
+    function pauseHandler(e) {
+        $(".video-overlay").fadeIn(1500);
+
+        var stopTime = TimeStringToSeconds(player1.getCurrentTime());
+        var duration = TimeStringToSeconds(player1.getTotalTime());
+        trackPause(stopTime, duration, false)
+
+    }
+    function updateTimeHandler(e){
+
+        //Calculate if video has played for at least 5 seconds if so track the view
+        var seconds = TimeStringToSeconds(e.currentTime);
+        if(seconds >5 && hasBeenTracked==false)
+        {
+            hasBeenTracked=true;
+            trackView();
+        }
+    }
+
+    function stopHandler(e) {
+        //console.log("API -- stop");
+    }
+    function playCompleteHandler(e) {
+        var duration = TimeStringToSeconds(player1.getTotalTime());
+        trackPause(duration, duration, true)
+    }
+    function SetupVideoOverlay()
+    {
+        $(".video-overlay").fadeIn();
+        VideoOverlaySize();
+
+    }
+    function TimeStringToSeconds(timeString)
+    {
+        //timeString is a string that is either formated in MM:SS or HH:MM:SS
+        //following code is to turn that string into seconds
+        var a = timeString.split(':'); // split it at the colons
+        var colonNumber = (timeString.match(/:/g) || []).length;
+        if(colonNumber == 1)
+        {
+            // minutes are worth 60 seconds.
+            var seconds = (+a[0]) * 60 + (+a[1]);
+        }
+        else
+        {
+            if(colonNumber==2)
+            {
+                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            }
+        }
+        return seconds;
+    }
+    function VideoOverlaySize()
+    {
+        var playerWidth = $("#videoPlayer").width();
+        playerWidth = parseInt(playerWidth);
+
+        var titleLength = $("#video-title h1").text().length;
+
+        $(".video-overlay").width(playerWidth);
+
+        if (playerWidth < 734) {
+            if (playerWidth < 420)
+            {
+                if(playerWidth<360)
+                {
+
+                    $("#video-title h1").css("font-size", "21px");
+                    $("#video-title h1").css("height", "35px");
+                    $("#video-title").css("margin-top", "3%");
+                    $( "#videoPlayer div" ).first().css("margin-top", "0");
+                    $("#video-title").css("margin-left", "0%");
+                    $(".logo img").css("width", "40px");
+                    $(".logo").css("right", "5px");
+                    if(titleLength>19)
+                    {
+                        $("#video-title h1").css("border", "none");
+                        $("#video-title h1").css("height", "67px");
+                    }
+                    else
+                    {
+                        $("#video-title h1").css("border-bottom", "#234d64 5px solid");
+                        $("#video-title h1").css("height", "35px");
+                    }
+                }
+                else{
+
+                    $("#video-title").css("margin-left", "1%");
+                    $("#video-title h1").css("font-size", "22px");
+                    $("#video-title h1").css("height", "29px");
+                    $("#video-title").css("margin-top", "13%");
+                    $(".logo img").css("width", "45px");
+                    $(".logo").css("right", "8px");
+                    $("#video-title h1").css("border-bottom", "#234d64 5px solid");
+                }
+
+            }
+            else
+            {
+
+                $("#video-title").css("margin-left", "2%");
+                $("#video-title h1").css("font-size", "25px");
+                $("#video-title h1").css("height", "45px");
+                $("#video-title").css("margin-top", "2%");
+                $("#video-title h1").css("border-bottom", "#234d64 5px solid");
+
+            }
+
+        }
+        else
+        {
+
+            $("#video-title").css("margin-left", "2.5%");
+            $("#video-title h1").css("font-size", "45px");
+            $("#video-title h1").css("height", "58px");
+            $(".logo img").css("width", "65px");
+            $("#video-title").css("margin-top", "2%");
+            $("#video-title h1").css("border-bottom", "#234d64 5px solid");
+        }
+    }
+    function trackView()
+    {
+
+        var serviceId = @Model.Id;
+        var postData = {id: serviceId};
+        var postUrl = "/Services/TrackVideoViews";
+        var posting = $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: "json",
+            traditional: true,
+            data: postData
+        });
+        posting.done(function(data)
+        {
+            analyticId = data.Id;
+        });
+        playCount = playCount + 1;
+
+    }
+    function trackPause(stopTime, duration, completed)
+    {
+        //If analyticId is 0 something went wrong
+        if(analyticId !=0)
+        {
+
+            var postData = {id: analyticId, stopTime: stopTime, duration: duration, completed:completed};
+            var postUrl = "/Services/UpdateAnalytics";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+        }
+    }
+
+            </script>
+        }
+    </head>
+    <body>
+        <div class="viewing-video-container">
+            @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+            {
+
+                <div id="videoPlayer"></div>
+                <div class="video-overlay" style="display:none;">
+                    <div id="video-title"><h1>@(Model.VideoTitle != null ? Model.VideoTitle : Model.FirstName + " " + Model.LastName + "'s Service")</h1></div>
+                    @{
+                        if (Model.FuneralHome.Setting != null && Model.FuneralHome.Setting.WhiteLabel == false)
+                        {
+                            <div class="logo"><img src="~/Content/videoplayer/minimal_skin_white/FullLogo_White.png" /></div>
+                        }
+                    }
+                </div>
+                @*<source src="@(System.Configuration.ConfigurationManager.AppSettings[" videocdn"] +" />videos/"+Model.Video.ConvertedFilePath)" type='video/mp4' />*@
+                        }
+
+        </div>
+
+
+        @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+        {
+
+    <!--  Playlists -->
+            <ul id="playlists" style="display:none;">
+                <li data-source="playlist1" data-playlist-name="Service" data-thumbnail-path="">
+                </li>
+            </ul>
+
+    <!--  HTML playlist -->
+            <ul id="playlist1" style="display:none;">
+                <li data-thumb-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-video-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)" data-poster-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-downloadable="no">
+
+                    <div data-video-short-description="">
+                        <div>
+                            <p class="minimalWhiteThumbnailTitle">@Model.FirstName @Model.LastName Service</p>
+                            <p class="minimalWhiteThumbnailDesc"></p>
+                        </div>
+                    </div>
+                    <div data-video-long-description="">
+                        <div>
+                            <div>
+                                <p class="minimalWhiteVideoTitleDesc">@Model.FirstName @Model.LastName's Service</p>
+                                <p class="minimalWhiteVideoMainDesc">@Model.Obituary</p>
+                                <p class="minimalWhiteLink">This service is being hosted by <a href="http://www.midweststreams.com/" target="_blank">Midwest Streams, Funeral Webcasting</a></p>
+                            </div>
+                        </div>
+                </li>
+            </ul>
+            {
+                if (Model.FuneralHome.Name == "Zabka" || Model.FuneralHome.Name == "Ranney-Bainbridge Funeral Home")
+                {
+                    @*<a class="btn btn-default" target="_blank" href="@Url.Action("OrderDownload", "Billing", new { id = Model.Id })">Order a digital download</a>*@
+                    <a class="btn btn-default" target="_blank" href="https://portal.midweststreams.com/billing/orderdownload/@Model.Id">Order a digital download</a>
+                }
+            }
+
+
+        }
+
+        else
+        {
+            if (Model.LiveStream != null)
+            {
+                Html.RenderPartial("~/Views/Services/_ViewLiveStreamPartial.cshtml", Model.LiveStream);
+            }
+            else
+            {
+                <h1>Webcast Coming Soon</h1>
+                            }
+                        }
+
+    </body>
+                        }
+                    else
+                    {
+                            <head>
+                                <meta charset="utf-8" />
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>@ViewBag.Title - Midwest Streams</title>
+
+                                @Scripts.Render("~/bundles/jquery")
+                                <link href="~/Content/video-js.css" rel="stylesheet" />
+                                <script src="~/Content/js/video.js"></script>
+
+                                <script>
+                                    $(document).ready(function () {
+                                        $("video").on('play', function () {
+                                            $('#custom-message').hide();
+                                //realTimeVideo();
+                            });
+                            var $vid = $('video', '#vidContainer');
+                            var $msg = $('#custom-message');
+                                        $msg.css({
+                                top: $vid.offset().top + (($vid.height() / 2) - ($msg.height() / 2)),
+                                            left: $vid.offset().left + (($vid.width() / 2) - ($msg.width() / 2))
+                                        });
+                            function realTimeVideo() {
+                                var postUrlu = "http://realtime.shanewhite.co/Map/RegisterHit";
+                                var posting = $.ajax({
+                                    url: postUrlu,
+                                                type: "POST",
+                                                dataType: "json",
+                                                traditional: true,
+                                            });
+                        }
+                    });
+                                </script>
+                                <style>
+#vidContainer {
+                                        position: relative;
+                }
+
+#custom-message {
+                position: absolute;
+                                        color: white;
+                                        z-index: 1;
+                                        font-size: 24px;
+                                    }
+                                </style>
+
+                            </head>
+                            <body>
+                                @if (Model.Video != null && Model.Video.Status.ToString() == "ConversionFinished")
+            {
+                                    <div id="vidContainer">
+                                        <video id="iframeVideo" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+                                               data-setup="{}">
+
+                                            <source src="@(System.Configuration.ConfigurationManager.AppSettings[" videocdn"] +"/videos/"+Model.Video.ConvertedFilePath)" type='video/mp4' />
+                                            @*
+                                                <source src="http://videos.midweststreams.com/rawVideoFiles/7127-pedersen-1.mp4" type="video/mp4">*@
+                                        </video>
+                                        <div id="custom-message">@Model.FirstName  @Model.LastName Service</div>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <h1>Webcast Coming Soon</h1>
+                                }
+                            </body>
+
+
+                        }
+
+</html>

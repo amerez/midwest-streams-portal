@@ -1,0 +1,111 @@
+﻿@model IEnumerable<VideoManager.Models.Data.Video>
+
+@{
+	ViewBag.Title = "Index";
+}
+
+<br>
+<h3>All Services</h3>
+
+<table class="service-table table">
+	<thead>
+		<tr>
+			@if (User.IsInRole("Admin"))
+			{
+				<th>
+					Home
+				</th>
+			}
+
+			<th class="col-md-4 name-box">
+				Name
+			</th>
+			<th class="col-md-2 centerBox">
+				@Html.DisplayNameFor(model => model.ServiceDate)
+			</th>
+            <th class="col-md-2 centerBox">
+                @Html.DisplayNameFor(model => model.Birthday)
+            </th>
+            <th class="col-md-2 centerBox">
+                @Html.DisplayNameFor(model => model.DeathDay)
+            </th>
+			<th class="col-md-2"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null && Model.Count() > 0)
+		{
+			foreach (var item in Model)
+			{
+				bool pending = false;
+				if (item.Status != VideoManager.Models.Data.VideoStatus.ConversionFinished)
+				{
+					pending = true;
+				}
+
+				<tr>
+					@if (User.IsInRole("Admin"))
+					{
+						<td class="side-border">
+							@Html.DisplayFor(modelItem => item.Creator)
+						</td>
+					}
+					<td class="side-border@(pending ? "-red" : "" )">
+						@Html.DisplayFor(modelItem => item.FirstName)
+						@Html.DisplayFor(modelItem => item.LastName)
+						@if (User.IsInRole("Admin"))
+						{
+							<span>@item.Status.ToString()</span>
+                           
+						}
+						@if (item.Status == VideoManager.Models.Data.VideoStatus.ConversionStarted)
+						{
+							<div class="video-status">Video Conversion in Progress</div>
+						}
+						else
+						{
+							if (item.Status != VideoManager.Models.Data.VideoStatus.ConversionFinished)
+							{
+								<div class="video-status">Upload Video</div>
+							}
+						}
+						
+					</td>
+					<td class="centerBox">
+
+						@Html.DisplayFor(modelItem => item.ServiceDate)
+					</td>
+                    <td class="centerBox">
+                        @Html.DisplayFor(modelItem => item.Birthday)
+                    </td>
+                    <td class="centerBox">
+                        @Html.DisplayFor(modelItem => item.DeathDay)
+                    </td>
+					<td class="icon-box">
+						@{
+				if (item.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+				{
+					<a href="@Url.Action("ViewStream", new { id=item.Id })"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+				}
+				else
+				{
+					<a href="@Url.Action("Service", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+				}
+						}
+
+						<a href="@Url.Action("Service", new { id=item.Id })"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+						<a href="@Url.Action("Delete", new { id=item.Id })"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+
+					</td>
+
+
+
+				</tr>
+			}
+		}
+	</tbody>
+
+
+
+</table>
+

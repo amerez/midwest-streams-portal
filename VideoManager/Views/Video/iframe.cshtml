@@ -1,0 +1,90 @@
+﻿@model VideoManager.Models.Data.Video
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Midwest Streams</title>
+
+    @Scripts.Render("~/bundles/jquery")
+    <link href="~/Content/video-js.css" rel="stylesheet" />
+    <script src="~/Content/js/video.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            $("video").on('play', function () {
+                $('#custom-message').hide();
+            });
+
+            //$("video").on('pause', function () {
+            //    $('#custom-message').show();
+            //});
+
+            var $vid = $('video', '#vidContainer');
+            var $msg = $('#custom-message');
+            $msg.css({
+                top: $vid.offset().top + (($vid.height() / 2) - ($msg.height() / 2)),
+                left: $vid.offset().left + (($vid.width() / 2) - ($msg.width() / 2))
+            });
+        });
+        function hideText() {
+            alert('play');
+
+        }
+
+    </script>
+    <style>
+        #vidContainer {
+            position: relative;
+        }
+
+        #custom-message {
+            position: absolute;
+            color: white;
+            z-index: 1;
+            font-size: 24px;
+        }
+    </style>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
+</head>
+<body>
+
+
+    @if (Model.Status.ToString() == "ConversionFinished")
+    {
+        <div id="vidContainer">
+            <!--<h2 class="videoTitle">Funeral Service for @Model.Service.FirstName  @Model.Service.LastName</h2>-->
+            <video id="iframeVideo" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+                   data-setup="{}">
+
+                <source src="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/videos/"+Model.ConvertedFilePath)" type='video/mp4' />
+
+            </video>
+
+            <div id="custom-message">@Model.Service.FirstName  @Model.Service.LastName Service</div>
+        </div>
+
+    }
+    else
+    {
+        <h1>Video Coming Soon</h1>
+    }
+
+
+    @*<script>
+        //reference the player
+        var myPlayer = videojs("iframeVideo");
+        //provide a name for the Events
+        var videoTitle = "@Model.Service.FirstName @Model.LastName \\ @Model.Creator.UserName ";
+        </script>
+        <script src="/JS/video-ga.js"></script>*@
+</body>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,127 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CRMFuneralHome>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Funeral Homes</h2>
+
+<section class="panel">
+    <header class="panel-heading">
+        <span class="pull-right">
+            <a href="@Url.Action("Create")" class=" btn btn-success">Add new home</a>
+        </span>
+    </header>
+    <table class="table table-hover dataTable data-table">
+        <thead>
+            <tr>
+                <th>Funeral Home Name</th>
+                <th class="no-sort">Contact</th>
+                <th>Lead Warmth</th>
+                <th class="no-sort">Notes</th>
+                <th>Positions in CRM</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="p-name">
+                        <h4><a href="@Url.Action("FuneralHomeHighlight", new{id=item.Id})">@item.Name</a></h4>
+                        <small>@item.City, @item.State</small>
+                        @if (item.PrimaryCRMContact != null)
+                        {
+                            <small>Primary Contact: @item.PrimaryCRMContact.FirstName @item.PrimaryCRMContact.LastName</small>
+                        }
+                    </td>
+                    <td class="p-team">
+                        <a href="@item.Website">@item.Website</a>
+                        <br />@item.FuneralHomeNumber
+                    </td>
+                    <td class="p-progress">
+                        @if (item.FuneralHome != null)
+                        {
+                            <!--Hack For Sorting-->
+                            switch (item.FuneralHome.PaymentStatus)
+                            {
+                                case VideoManager.Models.Data.Enums.PaymentStatus.TrialPeriod:
+                                    <span class="label label-default">Free Trial</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.Unsubscribed:
+                                <span class="label label-danger">Cancelled</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.HasPaid:
+                                <span class="label label-success">Active</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.HasNotPaid:
+                                <span class="label label-danger">Invoice Over Due</span>
+                                    break;
+                            }
+
+                        }
+                        else
+                        {
+                            switch (item.LeadWarmth)
+                            {
+                                case VideoManager.Models.Data.Enums.LeadWarmth.FargoInJanuary:
+                                    <div class="progress progress-xs">
+                                        <div style="width: 2%;" class="progress-bar"></div>
+                                    </div>
+                                    <small>Ya not gonna happen </small>
+                                    break;
+                                case VideoManager.Models.Data.Enums.LeadWarmth.Cold:
+                                <div class="progress progress-xs">
+                                    <div style="width: 35%;" class="progress-bar progress-bar-info"></div>
+                                </div>
+                                <small>Maybe </small>
+                                    break;
+
+                                case VideoManager.Models.Data.Enums.LeadWarmth.Hot:
+                                <div class="progress progress-xs">
+                                    <div style="width: 65%;" class="progress-bar progress-bar-success"></div>
+                                </div>
+                                <small>Keep Trying </small>
+                                    break;
+
+                                case VideoManager.Models.Data.Enums.LeadWarmth.RedHot:
+                                <div class="progress progress-xs">
+                                    <div style="width: 92%;" class="progress-bar progress-bar-danger"></div>
+                                </div>
+                                <small>Go Get Em </small>
+                                    break;
+                            }
+                        }
+
+
+                    </td>
+  
+                    <td>
+                        @item.WebcastingHistoryNotes
+                    </td>
+                    <td>
+                        @if (item.CRMContact != null)
+                        {
+                            <text>@item.CRMContact.Count()</text>
+                        }
+                        else
+                        {
+                            <text>0</text>
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Scraper", new { id = item.Id })" class="btn btn-default btn-xs call"><i class="fa fa-users"></i> View Contacts </a>
+                        <a href="@Url.Action("AddFuneralHomeContact", new { id = item.Id })" class="btn btn-default btn-xs call"><i class="fa fa-user"></i> Add Contact </a>
+                        <br/>
+                        <a href="@Url.Action("EditFuneralHome", new{id=item.Id})" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                        <a href="@Url.Action("LinkCRMtoFH", new{id=item.Id})" class="btn btn-primary btn-xs"><i class="fa fa-link"></i> Link Portal</a>
+                        <a href="@Url.Action("Delete", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</section>

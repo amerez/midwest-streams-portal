@@ -1,0 +1,219 @@
+﻿@model IEnumerable<VideoManager.Models.Data.Service>
+
+@{
+    ViewBag.Title = "Index";
+}
+@*@* Jquery Tutorial *@
+@{
+    if (ViewBag.DisplayTutorial == true)
+    {
+        <link href="~/Content/joyride-2.1.css" rel="stylesheet" />
+        <ol id="joyRideTipContent">
+            <li data-text="Next: Inventory" class="custom">
+                <h2>The Dashboard</h2>
+                <p>Welcome to your Dashboard! View all your past uploads, edit, and create new services here.</p>
+            </li>
+
+            <li data-id="name-tutorial" data-button="Next: Upload It" data-options="tipLocation:bottom;tipAnimation:fade">
+                <h2>Your Inventory</h2>
+                <p>
+                    Your entire upload inventory will always be listed here. The red bar indicates an unfinished service.
+                </p>
+            </li>
+            <li data-id="right-tutorial" data-button="Next: Notify " data-options="tipLocation:left" class="icon-tutorial-class">
+                <h2>Upload a Video</h2>
+                <p>
+                    Click the arrow to add your videos. If you save a service without adding a video file this button will also show as red. After you add the video and it’s finished processing it will switch to
+                    a blue play icon.
+                </p>
+            </li>
+            <li data-id="notify-tutorial" data-button="Next: Settings" data-options="tipLocation:left" class="icon-tutorial-class">
+                <h2>Notify Your Clients</h2>
+                <p>When your video is ready, click the envelope to send the family a notification email.</p>
+            </li>
+            <li data-id="edit-tutorial" data-button="Next: Trash" data-options="tipLocation:left" class="icon-tutorial-class">
+                <h2>Edit a Service</h2>
+                <p>Change any service details here.</p>
+            </li>
+            <li data-id="delete-tutorial" data-button="Next: Finish" data-options="tipLocation:left" class="icon-tutorial-class">
+                <h2>Delete</h2>
+                <p>Use the trash to delete a service.</p>
+            </li>
+
+            <li data-text="Finish" class="custom">
+                <h2>You're Done!</h2>
+                <p>Start connecting families. Further questions? Check out the Help Center or contact us at any time. Welcome aboard!</p>
+            </li>
+        </ol>
+    }
+}
+<br>
+<h3 class="allServices">All Services</h3>
+
+<table class="service-table table">
+    <thead>
+        <tr>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
+                    Home
+                </th>
+            }
+
+            <th class="col-md-5 name-box" id="name-tutorial">
+                Name
+            </th>
+            <th class="col-md-3 centerBox">
+                @Html.DisplayNameFor(model => model.ServiceDate)
+            </th>
+            <!--Hidden icons to get jquery display tutorial to display correctly-->
+            <th class="col-md-4"><a style="visibility:hidden" href="#" id="right-tutorial"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="notify-tutorial"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="edit-tutorial"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="delete-tutorial"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                bool pending = true;
+                if (item.Video != null)
+                {
+                    if (item.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                    {
+                        pending = false;
+                    }
+                }
+
+
+
+                <tr data-href="@Url.Action("Manage", new { id=item.Id })">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td class="side-border">
+                            @Html.DisplayFor(modelItem => item.FuneralHome.Name)
+                        </td>
+                    }
+                    <td class="side-border@(pending ? "-red" : "" )">
+
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                        @Html.DisplayFor(modelItem => item.LastName)
+                        @if (User.IsInRole("Admin"))
+                        {
+                            if (item.Video != null)
+                            {
+                                <span>@item.Video.Status.ToString()</span>
+                            }
+
+                        }
+                        @if (item.Video != null)
+                        {
+                            if (item.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionStarted)
+                            {
+                                <div class="video-status">Video Conversion in Progress</div>
+                            }
+                            else
+                            {
+                                if (item.Video.Status == VideoManager.Models.Data.VideoStatus.Error)
+                                {
+                                    <div class="video-status">Error</div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div class="video-status">Upload Video</div>
+                        }
+
+                    </td>
+
+                    <td class="centerBox">
+
+                        @Html.DisplayFor(modelItem => item.ServiceDate)
+
+                    </td>
+
+                    <td class="icon-box">
+                        @{
+                if (item.Video != null)
+                {
+                    if (item.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                    {
+                        <a href="@Url.Action("View", new { id=item.Id })" class="table-link"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+                            <a href="@Url.Action("Download", new { id=item.Id })"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+                    }
+                    if (item.Video.Status == VideoManager.Models.Data.VideoStatus.UploadStarted)
+                    {
+                        <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+                    }
+                }
+                else
+                {
+                    <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+                }
+
+                        }
+                        <a href="@Url.Action("Notify", new { id=item.Id })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>
+                        <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+                        <a href="@Url.Action("Delete", new { id=item.Id })"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+
+                    </td>
+                </tr>
+
+            }
+        }
+    </tbody>
+
+
+
+
+</table>
+@if (User.IsInRole("Admin"))
+{
+    <a href="@Url.Action("AdminCreate")" class="btn btn-default">Create New Service</a>
+}
+
+
+    <div class="row">
+@if (ViewBag.totalVideoViews != 0 && ViewBag.totalVideoViews != null)
+{
+        <div class="col-lg-6 analytics">
+            <h4>Total Video Views</h4>
+            @ViewBag.totalVideoViews
+        </div>
+}
+@if (ViewBag.totalPDFViews != 0 && ViewBag.totalPDFViews != null)
+{
+        <div class="col-lg-6 analytics">
+            <h4>Total PDF Views </h4>
+            @ViewBag.totalPDFViews
+        </div>
+}
+
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        if (ViewBag.VideoConversion != null && ViewBag.PDFConversion != null)
+        {
+            <div class="row">
+                <div class="col-lg-3 analytics">
+                    <h4>Video Conversion Rate</h4>
+                    @ViewBag.VideoConversion %
+                </div>
+                <div class="col-lg-3 analytics">
+                    <h4>PDF Conversion Rate</h4>
+                    @ViewBag.PDFConversion %
+                </div>
+                <div class="col-lg-3 analytics">
+                    <h4>Total Services</h4>
+                    @ViewBag.totalServices
+                </div>
+                <div class="col-lg-3 analytics">
+                    <h4>30-Day Servies</h4>
+                    @ViewBag.monthServices
+                </div>
+            </div>
+
+        }
+    }
+
+

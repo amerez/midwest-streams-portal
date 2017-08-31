@@ -1,0 +1,45 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "customVmName": {
+            "value": "cloneVM2"
+        },
+        "userImageStorageAccountName": {
+            "value": "armrenderdisks312"
+        },
+        "userImageStorageAccountResourceGroupName": {
+            "value": "ARMRender"
+        },
+        "adminUsername": {
+            "value": "MWS"
+        },
+        "adminPassword": {
+            "value": "Models4Wive$"
+        },
+        "dnsLabelPrefix": {
+            "value": "idontthinkthismattersvm"
+        },
+        "osType": {
+            "value": "Windows"
+        },
+        "vmSize": {
+            "value": "Standard_A2"
+        },
+        "newOrExistingVnet": {
+            "value": "new"
+        },
+        "newOrExistingVnetName": {
+            "value": "cloneVM2vnet"
+        },
+        "newOrExistingSubnetName": {
+            "value": "cloneVM2subnet"
+        },
+        "existingVnetResourceGroupName": {
+            "value": "TestStrongPW"
+        },
+         "tempVHDDiskLocation": {
+            "value": "someUnignameHere"
+        }
+    }
+}

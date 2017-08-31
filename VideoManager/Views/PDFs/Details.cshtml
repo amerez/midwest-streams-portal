@@ -1,0 +1,56 @@
+﻿@model VideoManager.Models.Data.PDF
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PDF</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Service.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Service.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+        <dt>
+            @Html.DisplayFor(model => model.PDFPath)
+        </dt>
+        <dt>
+            @Html.DisplayFor(model => model.ThumbnailPath)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Style)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Style)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GoogleAnalytics)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GoogleAnalytics)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    
+    @Html.ActionLink("Back to List", "Index")
+</p>

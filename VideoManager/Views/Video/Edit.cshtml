@@ -1,0 +1,297 @@
+﻿@model VideoManager.Models.Data.Video
+
+@{
+	ViewBag.Title = "Edit";
+}
+<style>
+	.panel-primary > .panel-heading {
+		color: #ffffff;
+		background-color: #393939;
+		border-color: #393939;
+	}
+
+	.panel-primary {
+		border-color: #393939;
+	}
+
+	.editUser {
+	}
+</style>
+
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+
+	<div class="row">
+		<div class="jumbotron">
+			<h1>Edit Service Information</h1>
+			<p>This page allows you to edit the details of the service. As well as a link you can copy and paste on your website to display the service.</p>
+
+		</div>
+	</div>
+
+	<div class="form-horizontal">
+		@Html.ValidationSummary(true)
+		<div class="col-lg-6">
+			<div class="panel panel-primary uploadPanels">
+				<div class="panel-heading">
+					Deceased
+					<h3 class="panel-title"> Information</h3>
+				</div>
+				<div class="panel-body" style="text-align:center">
+					<div class="bs-example form-horizontal">
+						<fieldset>
+							<div class="form-group">
+								@Html.LabelFor(model => model.ServiceDate, new { @class = "control-label col-md-4" })
+								<div class="col-md-8">
+									@Html.EditorFor(model => model.ServiceDate, new { htmlAttributes = new { @class = "form-control" } })
+									@Html.ValidationMessageFor(model => model.ServiceDate)
+								</div>
+							</div>
+
+							<div class="form-group">
+								@Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-4" })
+								<div class="col-md-8">
+									@Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+									@Html.ValidationMessageFor(model => model.FirstName)
+								</div>
+							</div>
+
+							<div class="form-group">
+								@Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-4" })
+								<div class="col-md-8">
+									@Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+									@Html.ValidationMessageFor(model => model.LastName)
+								</div>
+							</div>
+
+							<div class="form-group">
+								@Html.LabelFor(model => model.Birthday, new { @class = "control-label col-md-4" })
+								<div class="col-md-8">
+									@Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control" } })
+									@Html.ValidationMessageFor(model => model.Birthday)
+								</div>
+							</div>
+
+							<div class="form-group">
+								@Html.LabelFor(model => model.DeathDay, new { @class = "control-label col-md-4" })
+								<div class="col-md-8">
+									@Html.EditorFor(model => model.DeathDay, new { htmlAttributes = new { @class = "form-control" } })
+									@Html.ValidationMessageFor(model => model.DeathDay)
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-lg-6">
+			<div class="panel panel-primary uploadPanels">
+				<div class="panel-heading">
+					<h3 class="panel-title">Advanced</h3>
+				</div>
+				<div class="panel-body" style="text-align:center">
+					<div class="bs-example form-horizontal">
+						<fieldset>
+
+
+							@if (User.IsInRole("Family"))
+							{
+								<div class="form-group editUser">
+									@Html.Label("Family User", new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.ActionLink("Edit User " + Model.FamilyUser.UserName, "Edit", "Account", new { Id = Model.FamilyUser.Id }, new { @class = "btn btn-default" })
+									</div>
+								</div>
+							}
+							@if (User.IsInRole("Viewing"))
+							{
+								<div id="viewingUser" class="form-group editUser">
+									@Html.Label("Viewing User", new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.ActionLink("Edit User " + Model.ViewingUser.UserName, "Edit", "Account", new { Id = Model.ViewingUser.Id }, new { @class = "btn btn-default" })
+									</div>
+								</div>
+							}
+
+							@if (User.IsInRole("Admin"))
+							{
+								<div class="form-group">
+									@Html.Label("Vimeo Id", new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.EditorFor(model => model.VimeoId, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.VimeoId)
+									</div>
+								</div>
+								<div class="form-group">
+									@Html.Label("Video Status", new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+
+										@Html.EnumDropDownListFor(model => model.Status)
+									</div>
+								</div>
+								<div class="form-group">
+									@Html.Label("Funeral Home", new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@(Model.Creator.UserName != null ? Model.Creator.UserName.ToString() : "Null Creator(This line should never be displayed)")
+									</div>
+								</div>
+								<h4 class="warning">For errors only! If you aren't shane you probably shouldn't be touching this..</h4>
+								<div class="form-group">
+									@Html.LabelFor(model => model.FilePath, new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.EditorFor(model => model.FilePath, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.FilePath)
+									</div>
+								</div>
+								<div class="form-group">
+									@Html.LabelFor(model => model.Start, new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.EditorFor(model => model.Start, new { htmlAttributes = new { @class = "form-control", data_id = "StartTime" } })
+										@Html.ValidationMessageFor(model => model.Start)
+									</div>
+								</div>
+
+								<div class="form-group">
+									@Html.LabelFor(model => model.Stop, new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.EditorFor(model => model.Stop, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.Stop)
+									</div>
+								</div>
+								<div class="btn btn-danger" id="startConversion">Manually Start Conversion</div>
+
+								<br />
+								<div class="form-group">
+									@Html.LabelFor(model => model.ConvertedFilePath, new { @class = "control-label col-md-4" })
+									<div class="col-md-8">
+										@Html.EditorFor(model => model.ConvertedFilePath, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.ConvertedFilePath)
+									</div>
+								</div>
+							}
+						</fieldset>
+
+
+
+						@if (User.IsInRole("Admin") || User.IsInRole("FuneralHome"))
+						{
+							<h2>Embed Code</h2>
+							if (Model.Status.ToString() == "ConversionFinished")
+							{
+								<p class="text-danger">&ltiframe src="@(System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/video/iframe/" + Model.Id)" scrolling="no" width="648" height="280" frameborder="0"  webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"&gt &lt/iframe&gt</p>
+
+								<h2>Video Link</h2>
+                            <!--This handles the pathing change, this check can be deleted in the year 2015-->
+
+
+								<p class="text-danger">@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/convertedvideos/" + Model.ConvertedFilePath)</p>
+							}
+							else
+							{
+								<p class="text-danger">This code will be available once the video is done processing</p>
+							}
+
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="clearfix"></div>
+
+		<div class="col-lg-12">
+			<div class="panel panel-primary uploadPanels">
+				<div class="panel-heading">
+					<h3 class="panel-title">Obituary</h3>
+				</div>
+				<div class="panel-body" style="text-align:center">
+					<div class="bs-example form-horizontal">
+						<fieldset>
+							<div class="form-group">
+								<div class="col-lg-12">
+									@Html.TextAreaFor(model => model.Obituary, new { @class = "form-control", style = "min-height:200px; max-width:100%; width:100%; margin-left:10px; margin-right:10px;" })
+									@Html.ValidationMessageFor(model => model.Obituary)
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="form-group">
+			<div class="col-lg-offset-4 col-lg-4">
+				<input type="submit" value="Save" class="btn btn-success" style="margin-left:10px;" />
+				@if (User.IsInRole("FuneralHome"))
+				{
+					@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+				}
+
+				@Html.ActionLink("View Service", "ViewStream", "Video", new { id = Model.Id }, new { @class = "btn btn-warning" })
+			</div>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+	<script language="javascript" type="text/javascript" src="/Scripts/backstretch.js"></script>
+	<script>
+		$.backstretch("/Content/images/snowWeeds.jpg", { speed: 150 });
+	</script>
+	<script>
+		$(function () {
+
+			$("#startConversion").click(function () {
+
+				sendInfoToServer();
+			});
+
+
+		});
+
+
+
+		function sendInfoToServer() {
+
+			var id = @Model.Id;
+			var fileNames = $('#FilePath').val().split(",");
+			var startTime = $("#Start").val();
+			var endTime = $("#Stop").val();
+
+			var postUrl = "/video/uploaddetailsmulti";
+
+			$token = $('input[name="__RequestVerificationToken"]').val();
+			var test = $('THolder');
+
+			console.log(fileNames);
+			var postData = { id: id, fileurls: fileNames, inpoint: startTime, outpoint: endTime };
+
+			//var postData = { username: "us" };
+			var posting = $.ajax({
+				url: postUrl,
+				type: "POST",
+				dataType: "json",
+				//crossDomain:true,
+				//timeout:3000,
+				//contentType: "application/json: charset=utf-8",
+				//headers: { __RequestVerificationToken: $token },
+				data: postData
+			})
+			posting.done(function (json, responseText, jsonResponse) {
+
+
+			});
+			posting.error(function (jqXHR, textStatus, errorThrown) {
+
+			});
+
+			return false;
+		};
+	</script>
+}

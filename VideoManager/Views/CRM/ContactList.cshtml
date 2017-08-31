@@ -1,0 +1,322 @@
+﻿@model IEnumerable<VideoManager.Models.Data.CRMContact>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<h2>Contacts</h2>
+
+<section class="panel">
+    <header class="panel-heading">
+        <span class="pull-right">
+            <a href="@Url.Action("AddFuneralHomeContact")" class=" btn btn-success">Add new contact</a>
+        </span>
+    </header>
+    <table class="table table-hover dataTable data-table">
+        <thead>
+            <tr>
+                <th class="no-sort"></th>
+                <th>Name</th>
+                <th>Owner</th>
+                <th class="no-sort">Contact Info</th>
+                <th class="text-center"># of contacts</th>
+                <th>Lead Warmth</th>
+                <th>Last Contact</th>
+                <th>Next Contact</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string cssClass = "";
+                if (item.NextContactDate.Date == DateTime.Now.Date)
+                {
+                    cssClass = "table-today";
+                }
+                else
+                {
+                    if (item.NextContactDate.Date < DateTime.Now.Date)
+                    {
+                        cssClass = "table-urgent";
+                    }
+                }
+                <tr class="@cssClass">
+                    <td class="p-team">
+                        @if (item.FacebookId == null)
+                        {
+                            if (item.ScreenScrappedImage != null && item.ScreenScrappedImage!="")
+                            {
+                                <img alt="image" class="" src="@item.ScreenScrappedImage">
+                            }
+                            else
+                            {
+                                <img alt="image" class="" src="https://yt3.ggpht.com/-UnqRK9hiktg/AAAAAAAAAAI/AAAAAAAAAAA/ZhNOJ3fk3SA/s48-c-k-no/photo.jpg">
+                            }
+
+                        }
+                        else
+                        {
+                            <img alt="image" class="" src="https://graph.facebook.com/@item.FacebookId/picture?type=square">
+                        }
+                </td>
+                <td class="p-name">
+
+                    <h4>@item.FirstName @item.LastName</h4>
+                    <p>@item.ContactPosition @if (item.CRMFuneralHome != null)
+                    {
+                        <br/>
+                       @item.CRMFuneralHome.Name
+                    }</p> 
+                   
+
+                </td>
+                    <td>
+                        @item.CRMFuneralHome.OwnershipType
+                        @if (item.CRMFuneralHome.CRMOwner != null)
+                        {
+                            if (item.CRMFuneralHome.CRMOwner.Name != "Not Entered Yet")
+                            {
+                                <text><br />@item.CRMFuneralHome.CRMOwner.Name</text>
+                            }
+
+                        }
+                        else
+                        {
+                            <text><br/>@item.CRMFuneralHome.OwnerFirstName @item.LastName</text>
+                        }
+                    </td>
+                <td>
+                    @item.PhoneNumber
+                    <br />
+                    @item.Email
+                </td>
+                <td class="text-center">
+                    @item.NumberOfContacts
+                </td>
+                <td class="p-progress">
+                    @if (item.CRMFuneralHome != null)
+                    {
+                        if (item.CRMFuneralHome.FuneralHome != null)
+                        {
+                            <!--Hack For Sorting-->
+                            switch (item.CRMFuneralHome.FuneralHome.PaymentStatus)
+                            {
+                                case VideoManager.Models.Data.Enums.PaymentStatus.TrialPeriod:
+                                    <span class="label label-default">Free Trial</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.Unsubscribed:
+                                <span class="label label-danger">Cancelled</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.HasPaid:
+                                <span class="label label-success">Active</span>
+                                    break;
+                                case VideoManager.Models.Data.Enums.PaymentStatus.HasNotPaid:
+                                <span class="label label-danger">Invoice Over Due</span>
+                                    break;
+                            }
+
+                        }
+                        else
+                        {
+                            switch (item.CRMFuneralHome.LeadWarmth)
+                            {
+                                case VideoManager.Models.Data.Enums.LeadWarmth.FargoInJanuary:
+                                    <div class="progress progress-xs">
+                                        <div style="width: 2%;" class="progress-bar"></div>
+                                    </div>
+                                    <small>Ya not gonna happen </small>
+                                    break;
+                                case VideoManager.Models.Data.Enums.LeadWarmth.Cold:
+                                <div class="progress progress-xs">
+                                    <div style="width: 35%;" class="progress-bar progress-bar-info"></div>
+                                </div>
+                                <small>Maybe </small>
+                                    break;
+
+                                case VideoManager.Models.Data.Enums.LeadWarmth.Hot:
+                                <div class="progress progress-xs">
+                                    <div style="width: 65%;" class="progress-bar progress-bar-success"></div>
+                                </div>
+                                <small>Keep Trying </small>
+                                    break;
+
+                                case VideoManager.Models.Data.Enums.LeadWarmth.RedHot:
+                                <div class="progress progress-xs">
+                                    <div style="width: 92%;" class="progress-bar progress-bar-danger"></div>
+                                </div>
+                                <small>Go Get Em </small>
+                                    break;
+                            }
+                        }
+                    }
+
+                </td>
+                    @if (item.CRMContactHistory.Count > 0)
+                    {
+                        DateTime lastComment = item.CRMContactHistory.OrderByDescending(c => c.LastContactedDate).FirstOrDefault().LastContactedDate;
+                        <td data-sort="@lastComment.ToShortDateString()">
+                           @lastComment.ToShortDateString()
+                        </td>
+                    }
+                    else
+                    {
+                        if (item.FirstContactedDate == new DateTime(1990, 8, 12))
+                        {
+                            <td data-sort="@Html.DisplayFor(modelItem => item.FirstContactedDate)">
+                                Has Not Been Contacted
+                            </td>
+                        }
+                        else
+                        {
+                            <td data-sort="@Html.DisplayFor(modelItem => item.FirstContactedDate)">
+                                @Html.DisplayFor(modelItem => item.FirstContactedDate)
+                            </td>
+                        }
+
+                    }
+              
+                <td class="nextContactDate" data-sort="@Html.DisplayFor(modelItem => item.NextContactDate)">
+                    @if (item.NoFutureContact == false)
+                    {
+                        if (item.NextContactDate.Date > DateTime.Now.Date.AddDays(14).Date)
+                        {
+                            @item.NextContactDate.ToShortDateString()
+                        }
+                        else
+                        {
+                            if (item.NextContactDate.Date > DateTime.Now.Date.AddDays(7).Date)
+                            {
+                                <span>Two Weeks</span>
+                            }
+                            else
+                            {
+                                if (item.NextContactDate.Date >= DateTime.Now.Date.AddDays(2).Date)
+                                {
+                                    @item.NextContactDate.DayOfWeek
+                                }
+                                else
+                                {
+                                    if (item.NextContactDate.Date == DateTime.Now.Date.AddDays(1).Date)
+                                    {
+                                        <span>Tomorrow</span>
+                                    }
+                                    else
+                                    {
+                                        if (item.NextContactDate.Date != DateTime.Now.Date)
+                                        {
+                                            <span>ASAP!!</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Today</span>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    <p>Type: @item.NextContactType <br />Next Contact By:@item.NextContactByUserName</p>
+                    }
+                    else
+                    {
+                        <text>N/A</text>
+                    }
+                
+                </td>
+                <td>
+                    <a href="@Url.Action("ProfileHighlight", new { id = item.Id })" class="btn btn-default btn-xs call"><i class="fa fa-folder"></i> View </a>
+                    @if (item.NextContactDate.Date < DateTime.Now.Date)
+                    {
+                        <button class="btn btn-warning btn-xs call snoozeButton" data-contactid="@item.Id"><i class="fa fa-moon-o"></i> Snooze </button>
+                    }
+                    <a href="@Url.Action("DeleteContact", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                </td>
+            </tr>
+
+            }
+
+        </tbody>
+    </table>
+</section>
+
+<aside class="col-lg-9">
+    <section class="panel">
+        <div class="panel-body">
+            <div id="calendar" class="has-toolbar"></div>
+        </div>
+    </section>
+</aside>
+@section styles
+{
+    <link href="~/Content/crm/assets/calendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/crm/assets/calendar/fullcalendar.css" rel="stylesheet" />
+    <style>
+        .table-urgent {
+            background-color: rgba(158, 55, 55, 0.86) !important;
+            color: rgb(0, 0, 0);
+        }
+
+        .table-today {
+            background-color: rgba(50, 202, 187, 0.65) !important;
+            color: #594EE8;
+        }
+    </style>
+}
+@section Scripts
+{
+    <script src="~/Content/crm/assets/calendar/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function (){
+            var CalendarEvents = [];
+            @foreach(var item in Model)
+            {
+                <text>CalendarEvents.push({title:'@item.NextContactType to @item.FirstName @item.LastName', start: new Date(@item.NextContactDate.Year, @(item.NextContactDate.Month-1), @item.NextContactDate.Day), allDay:true} )</text>
+            }
+            $('#calendar').fullCalendar({
+                editable: true,
+                events: CalendarEvents
+            });
+
+       
+        });
+
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".snoozeButton").click(function(){
+                var contactId = $(this).attr("data-contactId");
+                var postData = { ContactId: contactId};
+                var postUrl = "/CRM/ContactSnooze";
+                var orignalBUttonObject = $(this);
+            
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    data: postData
+                });
+                posting.done(function (json, responseText, jsonResponse) {
+                    console.log(json);
+                    console.log(responseText);
+                    if(responseText=="success")
+                    { var result = json.result;
+                        console.log("result: "+result);
+                        if(result=="success")
+                        {
+                            orignalBUttonObject.parent().parent().removeClass("table-urgent");
+                            orignalBUttonObject.parent().siblings(".nextContactDate").html("Next Week");
+                            orignalBUttonObject.remove();
+                        }
+                        else
+                        {
+                            alert("Error Submitting Snooze");
+                            console.log(json);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+}

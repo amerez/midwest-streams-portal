@@ -1,0 +1,948 @@
+﻿@model VideoManager.Models.ViewModels.FuneralHomeHighlightViewModel
+@{
+    ViewBag.Title = "ProfileHighlight";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+
+}
+<style>
+    #ContactNotes {
+        color: black;
+    }
+
+    .fb-name {
+        color: white;
+        left: 6px;
+    }
+
+    .info-panel-title {
+        font-weight: bold;
+    }
+
+    .Overdue {
+        background-color: rgba(241, 80, 80, 0.76);
+        color: black;
+    }
+
+    .editbtn {
+        background: #FF6C60 !important;
+        font-weight: bold;
+        color: white;
+        margin-top: 15px;
+    }
+
+    #stars i {
+        color: #39b2a9;
+        font-size: 30px;
+        cursor: pointer;
+        padding-left: 4px;
+    }
+
+    .existingstarrr {
+        margin-top: -14px;
+    }
+    .count3
+    {
+        font-size: 22px;
+    }
+    .green{
+        background-color: #5cb85c;
+    }
+
+        .existingstarrr i {
+            color: #39b2a9;
+            font-size: 14px;
+            padding-left: 2px;
+        }
+</style>
+<section id="main-content">
+    <section class="wrapper site-min-height">
+        @if (Model.FuneralHome != null)
+        {
+            <div class="row state-overview">
+                <div class="col-lg-2 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol terques">
+                            <i class="fa fa-video-camera"></i>
+                        </div>
+                        <div class="value">
+                            <h1 class="count">
+                                @string.Format("{0:n0}", Model.ServicesThisMonth)
+                            </h1>
+                            <p>Services this month</p>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-2 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol red">
+                            <i class="fa fa-video-camera"></i>
+                        </div>
+                        <div class="value">
+                            <h1 class=" count2">
+                                @string.Format("{0:n0}", Model.TotalServices)
+                            </h1>
+                            <p>Total Services</p>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-2 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol yellow">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <div class="value">
+                            <h1 class=" count3">
+                                @Model.LastService.ToShortDateString()
+                            </h1>
+                            <p>Last Service</p>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-2 col-sm-6">
+                    <section class="panel">
+                        @{
+                            string iconColor = "red";
+                            if(Model.PaymentStatus=="0.00")
+                            {
+                                iconColor = "green";
+                            }
+                            if(Model.PaymentStatus=="N/A")
+                            {
+                                iconColor = "yellow";
+                            }
+                        }
+                        <div class="symbol @iconColor">
+                            <i class="fa fa-dollar"></i>
+                        </div>
+                        <div class="value">
+                            <h1 class=" count3">
+                                @Model.PaymentStatus
+                            </h1>
+                            <p>Amount Owed</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        }
+        <!-- page start-->
+        <div class="row">
+            <div class="col-md-9">
+
+
+                @{
+                    if (Model.FuneralHome != null)
+                    {
+                            <!--Hack For Sorting-->
+                        switch (Model.FuneralHome.PaymentStatus)
+                        {
+                            case VideoManager.Models.Data.Enums.PaymentStatus.TrialPeriod:
+                                <span class="label label-default">Free Trial</span>
+                                break;
+                            case VideoManager.Models.Data.Enums.PaymentStatus.Unsubscribed:
+                            <span class="label label-danger">Cancelled</span>
+                                break;
+                            case VideoManager.Models.Data.Enums.PaymentStatus.HasPaid:
+                            <span class="label label-success">Active</span>
+                                break;
+                            case VideoManager.Models.Data.Enums.PaymentStatus.HasNotPaid:
+                            <span class="label label-danger">Invoice Over Due</span>
+                                break;
+                        }
+
+                    }
+                    else
+                    {
+                        <h4>Lead Warmth</h4>
+                        switch (Model.LeadWarmth)
+                        {
+                            case VideoManager.Models.Data.Enums.LeadWarmth.FargoInJanuary:
+                                <select data-val="true" data-val-required="The LeadWarmth field is required." htmlattributes="{ class = form-control required }" id="LeadWarmth" name="LeadWarmth" class="valid">
+                                    <option value="0">RedHot</option>
+                                    <option value="1">Hot</option>
+                                    <option value="2">Warm</option>
+                                    <option value="3">Cold</option>
+                                    <option selected value="4">Fargo In January</option>
+                                </select>
+
+                                break;
+                            case VideoManager.Models.Data.Enums.LeadWarmth.Cold:
+                            <select data-val="true" data-val-required="The LeadWarmth field is required." htmlattributes="{ class = form-control required }" id="LeadWarmth" name="LeadWarmth" class="valid">
+                                <option value="0">RedHot</option>
+                                <option value="1">Hot</option>
+                                <option value="2">Warm</option>
+                                <option selected value="3">Cold</option>
+                                <option value="4">Fargo In January</option>
+                            </select>
+
+                                break;
+
+                            case VideoManager.Models.Data.Enums.LeadWarmth.Warm:
+                            <select data-val="true" data-val-required="The LeadWarmth field is required." htmlattributes="{ class = form-control required }" id="LeadWarmth" name="LeadWarmth" class="valid">
+                                <option value="0">RedHot</option>
+                                <option value="1">Hot</option>
+                                <option selected value="2">Warm</option>
+                                <option value="3">Cold</option>
+                                <option value="4">Fargo In January</option>
+                            </select>
+                                break;
+                            case VideoManager.Models.Data.Enums.LeadWarmth.Hot:
+                            <select data-val="true" data-val-required="The LeadWarmth field is required." htmlattributes="{ class = form-control required }" id="LeadWarmth" name="LeadWarmth" class="valid">
+                                <option value="0">RedHot</option>
+                                <option selected value="1">Hot</option>
+                                <option value="2">Warm</option>
+                                <option value="3">Cold</option>
+                                <option value="4">Fargo In January</option>
+                            </select>
+
+                                break;
+
+                            case VideoManager.Models.Data.Enums.LeadWarmth.RedHot:
+                            <select data-val="true" data-val-required="The LeadWarmth field is required." htmlattributes="{ class = form-control required }" id="LeadWarmth" name="LeadWarmth" class="valid">
+                                <option selected value="0">RedHot</option>
+                                <option value="1">Hot</option>
+                                <option value="2">Warm</option>
+                                <option value="3">Cold</option>
+                                <option value="4">Fargo In January</option>
+                            </select>
+
+                                break;
+                        }
+
+
+                    }
+                }
+                <br />
+                <section class="panel">
+                    <div class="cover-photo">
+                        <div class="fb-timeline-img">
+                            @if (Model.BannerImage != null)
+                            {
+                                <img src="@Model.BannerImage" />
+                            }
+                            else
+                            {
+                                <img src="~/Content/crm/img/DefaultCover.jpg" />
+                            }
+
+
+
+                        </div>
+                        <div class="fb-name">
+                            <h2>@Model.Name <br /> @Model.City, @Model.State</h2>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <i class="fa fa-envelope"></i><a href="mailto:@Model.Email" target="_blank" class="fb-user-mail">@Model.Email</a><br />
+                        <i class="fa fa-phone"></i> @Model.FuneralHomeNumber<br />
+                        <i class="fa fa-globe"></i> <a target="_blank" href="@Model.Website">@Model.Website</a>
+
+                        <a href="@Url.Action("EditFuneralHome", new{id=Model.Id})" style="float: right;" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
+                    </div>
+                </section>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-body">
+
+
+                                        <div class="col-lg-12">
+                                            <h4 class="info-panel-title">Webcasting Notes</h4>
+                                            <p>@Model.WebcastingHistoryNotes</p>
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <h4 class="info-panel-title">PDF Notes</h4>
+                                            <p>@Model.PDFNotes</p>
+
+                                            <h4 class="info-panel-title">Tech </h4>
+                                            <p>Owns Camera: @Model.HasCamera <br /> Memorial Folder: @Model.HasMemorialFolders <br /> PDF Software: @Model.PDFPublishingSoftware</p>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h4 class="info-panel-title">Calls Per Year: @Model.EstimatedCallsPerYear</h4>
+
+                                        @{
+                                            string reminderText = "Add Reminder";
+                                            if (Model.NextContactByUserName != null)
+                                            {
+                                                <div class="next-contact-wrap contact-details">
+                                                    <h4>Contact Reminder</h4>
+                                                    <strong>Date:</strong> @Model.NextContactDate<br />
+                                                    <strong>User:</strong> @Model.NextContactByUserName<br />
+                                                    <strong>Type:</strong> @Model.NextContactType<br />
+                                                    <strong>Notes</strong> @Model.NextContactNotes
+                                                </div>
+                                                reminderText = "Update Reminder";
+                                            }
+                                        }
+
+
+
+                                        <div class="next-contact-wrap">
+                                            <a class="btn btn-success reminder-button" href="@Url.Action("UpdateNextContactFH", new{id=Model.Id})">@reminderText</a>
+                                            @{
+                                                if (Model.NextContactByUserName != null)
+                                                {
+                                                    <button id="clear-reminder" class="btn btn-danger">Clear Reminder</button>
+                                                }
+                                            }
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="panel profile-info">
+                    <form>
+                        <textarea id="ContactNotes" class="form-control input-lg p-text-area" rows="2" placeholder="Did you reach out to @Model.Name? Tell us about it!"></textarea>
+                    </form>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <select class="form-control" id="ContactType">
+                                    <option value="0">Email</option>
+                                    <option value="1">Phone</option>
+                                    <option value="2">ThankYou</option>
+                                    <option value="3">InPersonMeeting</option>
+                                    <option value="4">Webinar</option>
+                                    <option value="5">Text</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="stars" class="starrr"></div>
+                            </div>
+                            <button id="postComment" class="btn btn-danger pull-right" style="margin-right:15px">Post</button>
+                        </div>
+                    </footer>
+                </section>
+                @if (Model.CRMFuneralHomeHistory != null && Model.CRMFuneralHomeHistory.Count > 0)
+                {
+                    foreach (var comment in Model.CRMFuneralHomeHistory)
+                    {
+                        List<VideoManager.Models.ApplicationUser> adminUsers = ViewBag.AdminComments;
+                        VideoManager.Models.ApplicationUser commentUsers = adminUsers.Where(a => a.UserName == comment.LastContactedByUserName).FirstOrDefault();
+                        <section class="panel">
+                            <div class="panel-body">
+                                @if (comment.LastContactedByUserName == User.Identity.Name)
+                                {
+                                    <div class="btn top pull-right delete-post" data-commentid="@comment.Id"><i class="fa fa-times-circle"></i></div>
+                                }
+                                <div class="fb-user-thumb">
+                                    <img src="https://graph.facebook.com/@commentUsers.FacebookId/picture?type=normal" />
+                                </div>
+                                <div class="fb-user-details">
+                                    <h3><a href="#" class="#">@commentUsers.FirstName @commentUsers.LastName</a></h3>
+                                    <p>@comment.LastContactedDate Via:@comment.ContactType</p>
+                                    @if (comment.PostRating != 0)
+                                    {
+                                        <div class="starrr existingstarrr" data-rating='@comment.PostRating'></div>
+                                    }
+                                </div>
+                                <div class="clearfix"></div>
+                                <p class="fb-user-status">
+                                    @comment.LastContactNotes
+                                </p>
+                                <div class="fb-status-container fb-border fb-gray-bg">
+
+                                    <ul class="fb-comments">
+                                        @foreach (var history in comment.CRMContactHistoryComments)
+                                        {
+                                            VideoManager.Models.ApplicationUser historyUser = adminUsers.Where(a => a.UserName == history.UserName).FirstOrDefault();
+                                            <li>
+                                                @if (history.UserName == User.Identity.Name)
+                                                {
+                                                    <div class="btn top pull-right delete-comment" data-commentid="@history.Id"><i class="fa fa-times-circle"></i></div>
+                                                }
+                                                <a href="#" class="cmt-thumb">
+                                                    <img src="https://graph.facebook.com/@historyUser.FacebookId/picture?type=normal" />
+                                                </a>
+                                                <div class="cmt-details">
+                                                    <a href="#">@history.UserName</a>
+                                                    <span> @history.Comment </span>
+                                                    <p>@history.CommentDate - <a class="like-link" data-commentid="@comment.Id">Like</a></p>
+                                                </div>
+                                            </li>
+                                        }
+
+                                        <li>
+                                            <a href="#" class="cmt-thumb">
+                                                <img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />
+                                            </a>
+                                            <div class="cmt-form">
+                                                <textarea data-commentid="@comment.Id" class="form-control comment-submit" placeholder="Write a comment..." name=""></textarea>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <div class="clearfix"></div>
+
+                                </div>
+
+                            </div>
+                        </section>
+                    }
+                }
+                @if (Model.CRMContact != null && Model.CRMContact.Count > 0)
+                {
+                    <h2>Individual Contact Notes</h2>
+                    foreach (var contact in Model.CRMContact)
+                    {
+                        foreach (var comment in contact.CRMContactHistory)
+                        {
+                            List<VideoManager.Models.ApplicationUser> adminUsers = ViewBag.AdminComments;
+                            VideoManager.Models.ApplicationUser commentUsers = adminUsers.Where(a => a.UserName == comment.LastContactedByUserName).FirstOrDefault();
+                            <section class="panel">
+                                <div class="panel-body">
+                                    @if (comment.LastContactedByUserName == User.Identity.Name)
+                                    {
+                                        <div class="btn top pull-right delete-post" data-commentid="@comment.Id"><i class="fa fa-times-circle"></i></div>
+                                    }
+                                    <div class="fb-user-thumb">
+                                        <img src="https://graph.facebook.com/@commentUsers.FacebookId/picture?type=normal" />
+                                    </div>
+                                    <div class="fb-user-details">
+                                        <h3><a href="#" class="#">@commentUsers.FirstName @commentUsers.LastName</a> <i class="fa fa-arrow-right" aria-hidden="true"></i> @comment.CRMContact.FirstName @comment.CRMContact.LastName</h3>
+                                        <p>@comment.LastContactedDate Via:@comment.ContactType</p>
+                                        @if (comment.PostRating != 0)
+                                        {
+                                            <div class="starrr existingstarrr" data-rating='@comment.PostRating'></div>
+                                        }
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <p class="fb-user-status">
+                                        @comment.LastContactNotes
+                                    </p>
+                                    <div class="fb-status-container fb-border fb-gray-bg">
+
+                                        <ul class="fb-comments">
+                                            @foreach (var history in comment.CRMContactHistoryComments)
+                                            {
+                                                VideoManager.Models.ApplicationUser historyUser = adminUsers.Where(a => a.UserName == history.UserName).FirstOrDefault();
+                                                <li>
+                                                    @if (history.UserName == User.Identity.Name)
+                                                    {
+                                                        <div class="btn top pull-right delete-comment" data-commentid="@history.Id"><i class="fa fa-times-circle"></i></div>
+                                                    }
+                                                    <a href="#" class="cmt-thumb">
+                                                        <img src="https://graph.facebook.com/@historyUser.FacebookId/picture?type=normal" />
+                                                    </a>
+                                                    <div class="cmt-details">
+                                                        <a href="#">@history.UserName</a>
+                                                        <span> @history.Comment </span>
+                                                        <p>@history.CommentDate - <a class="like-link" data-commentid="@comment.Id">Like</a></p>
+                                                    </div>
+                                                </li>
+                                            }
+
+                                            <li>
+                                                <a href="#" class="cmt-thumb">
+                                                    <img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />
+                                                </a>
+                                                <div class="cmt-form">
+                                                    <textarea data-commentid="@comment.Id" class="form-control comment-submit" placeholder="Write a comment..." name=""></textarea>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        <div class="clearfix"></div>
+
+                                    </div>
+
+                                </div>
+                            </section>
+                        }
+                    }
+
+                }
+            </div>
+
+            <div style="text-align:center;" class="col-md-3">
+                <div class="fb-timeliner">
+                    <div style="text-align: left;"class="col-md-12 col-sm-12">
+
+                        @{
+                            foreach (var contact in Model.CRMContact)
+                            {
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div class="media">
+                                            <a class="pull-left" href="@Url.Action("ProfileHighlight", new { id = @contact.Id })">
+                                                @if (contact.PictureFileName != null)
+                                                {
+                                                    <img src="@contact.PictureFileName" />
+                                                }
+                                                else
+                                                {
+                                                    if (contact.FacebookId != null)
+                                                    {
+
+                                                        <img alt="image" src="https://graph.facebook.com/@contact.FacebookId/picture?type=large">
+                                                    }
+                                                    else
+                                                    {
+                                                        if (contact.ContactCategory == VideoManager.Models.Data.Enums.ContactCategory.Business)
+                                                        {
+                                                            <img src="~/Content/crm/img/defaultBusinessAvatar.jpg" />
+                                                        }
+                                                        else
+                                                        {
+                                                            if (contact.ScreenScrappedImage == null || contact.ScreenScrappedImage == "")
+                                                            {
+                                                                <img src="~/Content/crm/img/defaultAvatar.jpg" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="@contact.ScreenScrappedImage" />
+                                                            }
+
+                                                        }
+
+                                                    }
+                                                }
+                                                <img class="thumb media-object" src="@contact.PictureFileName" alt="">
+                                            </a>
+                                            <div class="media-body">
+                                                <h4><a href="@Url.Action("ProfileHighlight", new { id = @contact.Id })">@contact.FirstName @contact.LastName</a> <span class="text-muted small"> - @contact.ContactPosition</span></h4>
+                                                <h6>@contact.Email</h6>
+                                                @if (contact.PhoneNumber != null)
+                                                {
+                                                    <h6>@contact.PhoneNumber</h6>
+                                                }
+                                                <div class="col-lg-10">
+                                                    <p>@Html.Raw(contact.ScreenScrappedBio)</p>
+                                                    @{
+                                                        if (contact.NextContactNotes != null)
+                                                        {
+                                                            <h4 class="info-panel-title">Next Contact Notes</h4>
+                                                                                <p>@contact.NextContactNotes</p>
+                                                        }
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+
+                    </div>
+                </div>
+                <a href="@Url.Action("AddFuneralHomeContact", new { id = Model.Id })" class="btn btn-primary"><i class="fa fa-user"></i> Add Contact </a>
+            </div>
+        </div>
+        <!-- page end-->
+    </section>
+</section>
+@section scripts
+    {
+    <script src="~/Content/crm/assets/starr/starrplugin.js"></script>
+    <script src="~/Content/crm/js/jquery.pulsate.min.js"></script>
+    <script>
+        var currentPostRating = 0;
+        $(document).ready(function () {
+
+            $('#postComment').click(function () {
+                $(this).pulsate({
+                    color: "#d9534f",
+                    repeat: false
+                });
+            });
+            $("#remine").click(function(){
+                remineServer(@Model.Id);
+            });
+            $("#postComment").click(function () {
+                var commentNotes = $("#ContactNotes").val();
+                var contactId = @Model.Id;
+                var contactType = $("#ContactType").val();
+                sendPostToServer(contactId, commentNotes, contactType);
+            });
+            $(".comment-submit").keyup(function(e){
+                if((e.keyCode || e.which) == 13) { //Enter keycode
+                    var commentId = $(this).attr("data-commentid");
+                    var comment = $(this).val();
+                    var previousCommentObj = $(this).parent().parent();
+                    sendCommentToServer(commentId, comment, previousCommentObj);
+                    $(this).val("");
+                }
+            });
+            $(".delete-comment").dblclick(function(){
+                var comId =  $(this).attr("data-commentid");
+                var commentObj = $(this).parent();
+                deleteComment(comId, commentObj);
+            });
+            $(".delete-post").dblclick(function(){
+                var postId =  $(this).attr("data-commentid");
+                var commentObj = $(this).parent().parent();
+                deletePost(postId, commentObj);
+            });
+            $("#clear-reminder").click(function()
+            {
+                clearReminder(@Model.Id);
+            });
+            $("#LeadWarmth").change(function()
+            {
+                var leadWarmth = $(this).val();
+                ChangeLeadWarmth(@Model.Id, leadWarmth);
+            });
+        });
+        function ChangeLeadWarmth(funeralHomeId, LeadWarmth)
+        {
+            var postData = { id: funeralHomeId, lead: LeadWarmth};
+            var postUrl = "/CRM/changeleadwarmth";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                if(responseText=="success")
+                {
+                    var result = json.result;
+                    if(result=="success")
+                    {
+
+                    }
+                }
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+
+            });
+        }
+        function clearReminder(funeralHomeId)
+        {
+            var postData = { id: funeralHomeId};
+            var postUrl = "/CRM/clearreminder";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(responseText=="success")
+                {
+                    var result = json.result;
+                    console.log("result: "+result);
+                    if(result=="success")
+                    {
+                        $(".contact-details").slideUp();
+                        $(".reminder-button").text("Add Reminder");
+                        $("#clear-reminder").hide();
+                    }
+
+
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+
+            });
+        }
+        function remineServer(contactId)
+        {
+            var postData = { id: contactId};
+            var postUrl = "/CRM/Rescrape";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(responseText=="success")
+                { var result = json.result;
+                    console.log("result: "+result);
+                    if(result=="success")
+                    {
+                        window.location.reload(false);
+                    }
+                    else
+                    {
+                        alert("Error scraping data");
+                        console.log(json);
+                    }
+
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+
+            });
+        }
+        function sendPrimaryContactToServer(contactId)
+        {
+            var postData = { ContactId: contactId};
+            var postUrl = "/CRM/SetPrimaryContact";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(responseText=="success")
+                { var result = json.result;
+                    console.log("result: "+result);
+                    if(result=="success")
+                    {
+                        $("#primarySuccess").show().delay(5000).fadeOut();
+                    }
+                    else
+                    {
+                        alert("Error Submitting Primary Contact");
+                        console.log(json);
+                    }
+
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+            });
+        }
+        function sendPostToServer(contactId, notes, contactType)
+        {
+            var postData = { ContactId: contactId, notes: notes, contactType: contactType, postRating: currentPostRating, type: "funeralHome"};
+            var postUrl = "/CRM/AddContactHistory";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(responseText=="success")
+                { var result = json.result;
+                    console.log("result: "+result);
+                    if(result=="Success")
+                    {
+                        var comment = json.comment;
+                        currentPostRating = 0;
+                        var commentId = json.commentId;
+                        var contactType = json.contactType;
+                        console.log(comment);
+                        constructPost(comment, contactType, commentId);
+                    }
+                    else
+                    {
+                        alert("Error Submitting Post");
+                        console.log(json);
+                    }
+
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function deleteComment(commentId, objectToDelete)
+        {
+            var postData = { CommentId: commentId};
+            var postUrl = "/CRM/DeleteComment";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    objectToDelete.remove();
+                }
+                else
+                {
+                    alert("Error Deleting Comment");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function deletePost(commentId, objectToDelete)
+        {
+            var postData = { CommentId: commentId, type:"funeralHome"};
+            var postUrl = "/CRM/DeletePost";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    objectToDelete.remove();
+                }
+                else
+                {
+                    alert("Error Deleting Post");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function sendCommentToServer(commentId, comment, previousCommentObj)
+        {
+            var postData = { CommentId: commentId, Comment: comment};
+            var postUrl = "/CRM/AddContactComment";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+                if(json.result=='success')
+                {
+                    constructComment(comment, previousCommentObj)
+                }
+                else
+                {
+                    alert("Error Submitting Comment");
+                    console.log(json);
+                }
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function sendLikeToServer(commentId)
+        {
+            var postData = { CommentHistoryId: commentId};
+            var postUrl = "/CRM/AddCommentLike";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                console.log(json);
+                console.log(responseText);
+
+            });
+            posting.error(function (jqXHR, textStatus, errorThrown) {
+                alert("error");
+                // alert(errorThrown);
+            });
+        }
+        function constructPost(comment, contactType, commentId)
+        {
+            var html = '<section class="panel">'+
+                            '<div class="panel-body">'+
+                                '<div class="fb-user-thumb">'+
+            '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+            '</div>'+
+            '<div class="fb-user-details">'+
+            '<h3><a href="#" class="#">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</a></h3>'+
+            '<p>Just now via:'+contactType+'</p>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '<p class="fb-user-status">'+
+            comment+
+            '</p>'+
+            '<div class="fb-status-container fb-border fb-gray-bg">'+
+
+            '<ul class="fb-comments">'+
+            '<li>'+
+            '<a href="#" class="cmt-thumb">'+
+            '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+            '</a>'+
+            '<div class="cmt-form">'+
+            '<textarea data-commentid="'+commentId+'" class="form-control comment-submit" placeholder="Write a comment..." name=""></textarea>'+
+            '</div>'+
+            '</li>'+
+            '</ul>'+
+            '<div class="clearfix"></div>'+
+            '</div>'+
+            '</div>'+
+            '</section>';
+            $(".profile-info").after(html);
+            $("#ContactNotes").val("");
+            $(".comment-submit").keyup(function(e){
+                if((e.keyCode || e.which) == 13) { //Enter keycode
+                    var commentId = $(this).attr("data-commentid");
+                    var comment = $(this).val();
+                    $(this).focusout();
+                    sendCommentToServer(commentId, comment);
+                }
+            });
+        }
+        function constructComment(comment, previousCommentObj)
+        {
+            var htmlComment = '<li>'+
+                                            '<a href="#" class="cmt-thumb">'+
+                                                '<img src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=normal" />'+
+                                            '</a>'+
+                                               '<div class="cmt-details">'+
+                                                    '<a href="#">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</a>'+
+                                                    '<span> '+comment+'</span>'+
+                                                    '<p>Just Now - <a class="like-link" data-commentid="1">Like</a></p>'+
+                                                '</div>'+
+                                        '</li>';
+
+            previousCommentObj.before(htmlComment);
+        }
+        $( document ).ready(function() {
+
+            $('#stars').on('starrr:change', function(e, value){
+                $('#count').html(value);
+                console.log("star val: "+value)
+                currentPostRating = value;
+            });
+
+            $('#stars-existing').on('starrr:change', function(e, value){
+                $('#count-existing').html(value);
+            });
+        });
+    </script>
+}
