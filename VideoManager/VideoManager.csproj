@@ -339,9 +339,6 @@
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
-    <Reference Include="VimeoAPI">
-      <HintPath>..\VimeoAPI.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\packages\WebActivatorEx.2.0.5\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -529,9 +526,6 @@
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\AutoMapper.dll" />
     <Content Include="bin\AutoMapper.Net4.dll" />
-    <Content Include="bin\Backload.Contracts.dll" />
-    <Content Include="bin\Backload.dll" />
-    <Content Include="bin\BlackBayou.Vimeo.dll" />
     <Content Include="bin\de\Microsoft.Data.Edm.resources.dll" />
     <Content Include="bin\de\Microsoft.Data.OData.resources.dll" />
     <Content Include="bin\de\Microsoft.Data.Services.Client.resources.dll" />
@@ -604,10 +598,6 @@
     <Content Include="bin\Microsoft.WindowsAzure.Storage.xml" />
     <Content Include="bin\Newtonsoft.Json.dll" />
     <Content Include="bin\Owin.dll" />
-    <Content Include="bin\PdfSharp.Charting.dll" />
-    <Content Include="bin\PdfSharp.Charting.xml" />
-    <Content Include="bin\PdfSharp.dll" />
-    <Content Include="bin\PdfSharp.xml" />
     <Content Include="bin\ru\Microsoft.Data.Edm.resources.dll" />
     <Content Include="bin\ru\Microsoft.Data.OData.resources.dll" />
     <Content Include="bin\ru\Microsoft.Data.Services.Client.resources.dll" />
@@ -628,7 +618,6 @@
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\VimeoAPI.dll" />
     <Content Include="bin\WebActivatorEx.dll" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="bin\zh-Hans\Microsoft.Data.Edm.resources.dll" />
