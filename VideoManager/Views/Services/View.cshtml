@@ -2,9 +2,33 @@
 @{
     ViewBag.Title = "View";
     Layout = "~/Views/Shared/_Layout.cshtml";
-  
+    bool _conversionFinsihed = false;
+    if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+    {
+        _conversionFinsihed = true;
+    }
+    string _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
+    string _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+    string _portalPath = System.Configuration.ConfigurationManager.AppSettings["portalPath"];
+    string _pagePath = _portalPath + "/services/view/" + Model.Id;
 }
-<style>
+@section Styles
+{
+@if(_conversionFinsihed)
+{
+    <meta property="fb:app_id" content="888507064518588">
+    <meta property="og:url" content="@_pagePath">
+    <meta property="og:title" content="@Model.VideoTitle">
+    <meta property="og:description" content="Ignore this message. The video will be shown once you click 'Post'">
+    <meta property="og:type" content="video">
+    <meta property="og:image" content="@_thumbnailPath">
+    <meta property="og:video" content="@_videoPath">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:site_name" content="Midwest Streams">
+}
+
+
+    <style>
     #video-title {
         display: inline-block;
         color: #eaeaea;
@@ -48,7 +72,10 @@
             width: 68px;
         }
 </style>
-@if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+    
+    }
+
+@if (_conversionFinsihed)
 {
 
     <link rel="stylesheet" type="text/css" href="../../content/videoplayer/global.css" />
@@ -340,7 +367,7 @@
         }
     }
     <div class="col-lg-10 col-lg-offset-@colOffset viewing-video-container">
-        @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+        @if (_conversionFinsihed)
         {
 
             <div id="videoPlayer"></div>
@@ -372,7 +399,7 @@
     </div>
 </div>
 
-@if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+@if (_conversionFinsihed)
 {
 
     <!--  Playlists -->
@@ -383,7 +410,7 @@
 
     <!--  HTML playlist -->
     <ul id="playlist1" style="display:none;">
-        <li data-thumb-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-video-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)" data-poster-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-downloadable="no">
+        <li data-thumb-source="@_thumbnailPath" data-video-source="@_videoPath" data-poster-source="@_thumbnailPath" data-downloadable="no">
 
             @*<li data-thumb-source="https://mwsvideocdn.blob.core.windows.net/video-thumbnails/@Model.Video.ImagePath" data-video-source="https://mwsvideocdn.blob.core.windows.net/videos/@Model.Video.ConvertedFilePath" data-poster-source="https://mwsvideocdn.blob.core.windows.net/video-thumbnails/@Model.Video.ImagePath" data-downloadable="no">*@
             <div data-video-short-description="">

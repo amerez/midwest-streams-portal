@@ -1,4 +1,16 @@
 ﻿@model VideoManager.Models.Data.Service
+
+@{
+    bool _conversionFinsihed = false;
+    if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+    {
+        _conversionFinsihed = true;
+    }
+    string _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
+    string _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+    string _portalPath = System.Configuration.ConfigurationManager.AppSettings["portalPath"];
+    string _pagePath = _portalPath + "/services/view/" + Model.Id;
+}
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +20,18 @@
     <head>
         <meta charset="utf-8" />
         <title>@ViewBag.Title - Midwest Streams</title>
-
+        @if (_conversionFinsihed)
+        {
+            <meta property="fb:app_id" content="888507064518588">
+            <meta property="og:url" content="@_pagePath">
+            <meta property="og:title" content="@Model.VideoTitle">
+            <meta property="og:description" content="Ignore this message. The video will be shown once you click 'Post'">
+            <meta property="og:type" content="video">
+            <meta property="og:image" content="@_thumbnailPath">
+            <meta property="og:video" content="@_videoPath">
+            <meta property="og:video:type" content="video/mp4">
+            <meta property="og:site_name" content="Midwest Streams">
+        }
         @Scripts.Render("~/bundles/jquery")
         <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
         <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
@@ -76,7 +99,7 @@
                 font-size: 24px;
             }
         </style>
-        @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+        @if (_conversionFinsihed)
         {
             <link rel="stylesheet" type="text/css" href="../../content/videoplayer/global.css" />
             @*<script src="~/Scripts/fwduvnonmin.js"></script>*@
@@ -429,7 +452,7 @@
     </head>
     <body>
         <div class="viewing-video-container">
-            @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+            @if (_conversionFinsihed)
             {
 
                 <div id="videoPlayer"></div>
@@ -448,7 +471,7 @@
         </div>
 
 
-        @if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+        @if (_conversionFinsihed)
         {
 
     <!--  Playlists -->
@@ -459,7 +482,7 @@
 
     <!--  HTML playlist -->
             <ul id="playlist1" style="display:none;">
-                <li data-thumb-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-video-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)" data-poster-source="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/video-thumbnails/"+Model.Video.ImagePath)" data-downloadable="no">
+                <li data-thumb-source="@_thumbnailPath" data-video-source="@_videoPath" data-poster-source="@_thumbnailPath" data-downloadable="no">
 
                     <div data-video-short-description="">
                         <div>
@@ -497,13 +520,13 @@
             else
             {
                 <h1>Webcast Coming Soon</h1>
-                            }
-                        }
+            }
+        }
 
     </body>
                         }
-                    else
-                    {
+                        else
+                        {
                             <head>
                                 <meta charset="utf-8" />
                                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -517,32 +540,24 @@
                                     $(document).ready(function () {
                                         $("video").on('play', function () {
                                             $('#custom-message').hide();
-                                //realTimeVideo();
-                            });
-                            var $vid = $('video', '#vidContainer');
-                            var $msg = $('#custom-message');
+
+                                        });
+                                        var $vid = $('video', '#vidContainer');
+                                        var $msg = $('#custom-message');
                                         $msg.css({
-                                top: $vid.offset().top + (($vid.height() / 2) - ($msg.height() / 2)),
+                                            top: $vid.offset().top + (($vid.height() / 2) - ($msg.height() / 2)),
                                             left: $vid.offset().left + (($vid.width() / 2) - ($msg.width() / 2))
                                         });
-                            function realTimeVideo() {
-                                var postUrlu = "http://realtime.shanewhite.co/Map/RegisterHit";
-                                var posting = $.ajax({
-                                    url: postUrlu,
-                                                type: "POST",
-                                                dataType: "json",
-                                                traditional: true,
-                                            });
-                        }
-                    });
+
+                                    });
                                 </script>
                                 <style>
-#vidContainer {
+                                    #vidContainer {
                                         position: relative;
-                }
+                                    }
 
-#custom-message {
-                position: absolute;
+                                    #custom-message {
+                                        position: absolute;
                                         color: white;
                                         z-index: 1;
                                         font-size: 24px;
@@ -551,8 +566,8 @@
 
                             </head>
                             <body>
-                                @if (Model.Video != null && Model.Video.Status.ToString() == "ConversionFinished")
-            {
+                                @if (_conversionFinsihed)
+                                {
                                     <div id="vidContainer">
                                         <video id="iframeVideo" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
                                                data-setup="{}">
