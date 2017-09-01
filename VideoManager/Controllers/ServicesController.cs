@@ -276,16 +276,15 @@ namespace VideoManager.Controllers
                             
                            }
                        }
-                       if (service.IsSecured && service.ViewingUserId == null)
-                       {
-                           SecuredServiceHelper servHelp = new SecuredServiceHelper();
-                           servHelp.MakeServiceSecure(service, db);
-                       }
+                
                     }
-
-
                     db.Entry(service).State = EntityState.Modified;
                     db.SaveChanges();
+                }
+                if (service.IsSecured && service.ViewingUserId == null)
+                {
+                    SecuredServiceHelper servHelp = new SecuredServiceHelper();
+                    servHelp.MakeServiceSecure(service, db);
                 }
                 return RedirectToAction("Manage", new { id = service.Id });
             }
