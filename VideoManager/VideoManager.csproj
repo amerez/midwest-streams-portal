@@ -403,7 +403,6 @@
     <Compile Include="Code\PDFParser.cs" />
     <Compile Include="Code\SecuredServiceHelper.cs" />
     <Compile Include="Code\VideoConverter.cs" />
-    <Compile Include="Code\VideoHelper.cs" />
     <Compile Include="Code\VMmanager.cs" />
     <Compile Include="Code\VMSizeDictionary.cs" />
     <Compile Include="Code\WijmoSeriesBuilder.cs" />
