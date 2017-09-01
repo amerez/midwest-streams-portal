@@ -929,13 +929,24 @@ namespace VideoManager.Controllers
                 {
                     if (service.Video != null)
                     {
+
                         CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
                         CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                         CloudBlobContainer container = blobClient.GetContainerReference("videos");
-                        string userFileName = service.FirstName + service.LastName + "Video.mp4";
-                        Response.AddHeader("Content-Disposition", "attachment; filename=" + userFileName); // force download
-                        container.GetBlobReference(service.Video.ConvertedFilePath).DownloadToStream(Response.OutputStream);
-                        return new EmptyResult();
+                        string userFileName = service.FirstName +"_"+ service.LastName + "_Video.mp4";
+                        CloudBlockBlob blob = container.GetBlockBlobReference(service.Video.ConvertedFilePath);
+                        SharedAccessBlobPolicy policy = new SharedAccessBlobPolicy()
+                        {
+                            Permissions = SharedAccessBlobPermissions.Read,
+                            SharedAccessExpiryTime = DateTime.Now.AddYears(100)
+                        };
+                        SharedAccessBlobHeaders blobHeaders = new SharedAccessBlobHeaders()
+                        {
+                            ContentDisposition = "attachment; filename=" + userFileName
+                        };
+                        string sasToken = blob.GetSharedAccessSignature(policy, blobHeaders);
+                        var sasUrl = blob.Uri.AbsoluteUri + sasToken;//This is the URL you will use. It will force the user to download the vi
+                        return Redirect(sasUrl);
                     }
                 }
           

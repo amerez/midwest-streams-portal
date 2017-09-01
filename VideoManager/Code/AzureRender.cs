@@ -115,6 +115,7 @@ namespace VideoManager.Code
                     CloudBlockBlob blockBlob = container.GetBlockBlobReference(file);
                     //The async method returns a 404??
                    // blockBlob.UploadFromFileAsync(UploadfilePath + "\\" + file, FileMode.Open);
+                   
                     blockBlob.UploadFromFile(UploadfilePath + "\\" + file);
                     blockBlob.Properties.ContentType = "video/mp4";
                     blockBlob.SetProperties();
