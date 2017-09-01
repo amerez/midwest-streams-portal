@@ -27,7 +27,7 @@
 
             <form action="/Billing/StripeResult" method="POST">
                 <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                        data-key="pk_live_gznr3Ckw4VQELUG5ouTreXab"
+                        data-key="@System.Configuration.ConfigurationManager.AppSettings["StripeApiKeyPublic"]"
                         data-amount="999"
                         data-name="Midwest Streams"
                         data-description="Digital Download"
