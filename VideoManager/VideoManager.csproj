@@ -1411,6 +1411,9 @@
     <Content Include="Scripts\jquery.collapse_storage.js" />
     <Content Include="Scripts\jquery.slides.min.js" />
     <Content Include="Scripts\jquery.tooltipster.js" />
+    <Content Include="Scripts\JqueryCollapse\jquery.collapse.js" />
+    <Content Include="Scripts\JqueryCollapse\jquery.collapse_cookie_storage.js" />
+    <Content Include="Scripts\JqueryCollapse\jquery.collapse_storage.js" />
     <Content Include="Scripts\videoplayerjs\FWDConsole.js" />
     <Content Include="Scripts\videoplayerjs\FWDIos6Timers.js" />
     <Content Include="Scripts\videoplayerjs\fwdupdatedplayer.js" />

@@ -4,106 +4,212 @@
 
 @section styles
 {
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-        .serviceContainer {
-            background-color: rgba(34, 34, 34, .8);
-            margin-top: 1em;
-            border-radius: 5px;
+        .topic-container {
+            color: black;
+            background-color: white;
+        }
+
+        .help-container {
+            background-color: white;
+            margin-left: 3%;
+            width: 97%;
+        }
+
+        .title {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            margin-bottom: 25px;
+        }
+
+            .title h1 {
+                font-size: 38px;
+                font-weight: bold;
+            }
+
+        .help-item-title {
+            padding: 1px;
+            background-color: #292929;
+            border-bottom: 2px solid #7eabc0;
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+            .help-item-title:hover {
+                background-color: #3c3c3c;
+                
+            }
+
+            .help-item-title i {
+                font-size: 25px;
+                margin: 0 10px;
+            }
+
+            .help-item-title a {
+                color: white;
+                text-decoration: none !important;
+            }
+                .help-item-title a:hover {
+                    text-decoration: none !important;
+                }
+
+            .help-item-title h1 {
+                font-size:30px;
+            }
+
+        .help-content {
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #B3E6C9;
+            border-bottom: 2px solid #7eabc0;
+            padding: 8px;
+        }
+        .help-content h2{
+            font-size: 23px;
+            font-weight: bolder;
+            border-bottom: 3px solid;
+            width: 46%;
+            margin-top:26px;
+        }
+        .content-button {
+            background: #428bca;
+            font: inherit;
             color: white;
+            font-size: 14px;
+            font-weight: 400;
+            height: 36px;
+            letter-spacing: .75px;
+            line-height: 1;
+            margin: 8px 0;
+            padding: 12px 23px;
+            text-transform: uppercase;
+            vertical-align: middle;
         }
+            .content-button:hover {
+                color: white;
+            }
 
-
-
-        /*Styles for the Slide Show*/
-        #slides {
-            display: none;
-            width: 89%;
-        }
-
-        .slideText img {
-            float: left;
-            width: 89%;
-        }
-
-        .slideText span {
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .caption {
-            position: absolute;
-            padding: 5px 20px 0 20px;
-            background: rgba(0,0,0,.5);
-            width: 595px;
-            font-size: 1.3em;
-            line-height: 1.33;
-            color: #fff;
-            border-top: 1px solid #000;
-            text-shadow: none;
-        }
     </style>
 }
+<div class="help-container">
+    <div class="title">
+        <h1>Welcome to the Midwest Streams Help Center</h1>
+    </div>
 
 
-<!-- style="width: 675px;" The container and the row have widths set because for some reason they were making the page extra wide, causing a horizontal scrollbar.-->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="contactContent">
-                <h1 class="QuestionsFeedback">Questions or Feedback</h1>
-                <br />
+    <div class="help-item">
+        <div class="help-item-title"><h1><i class="fa fa-plus-circle" aria-hidden="true"></i>Getting Started</h1></div>
+        <div class="help-content">
+           <h1>Complete the checklist below</h1>
+            <ul>
+                <li><div><h2>Verify you have the correct equipment</h2><p>To begin webcasting you need a Video Camera, a Tripod, and an SD card. If you do not have these items, click on the "Purchase Video Equipment" tab.</p><p>Some computers do not have an SD card reader. If your computer does not have an SD card reader you can purchase on the "Purchase Video Equipment" tab.</p></div></li>
+                <li><div><h2>Download Google Chrome</h2><p>All video uploads must be done in Google Chrome. Although all videos can be watched in every major browsers, all uploading and site usage must be done using Google Chrome.</p><a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank" class="button content-button">Download Chrome</a></div></li>
+                <li><div><h2>Check Your Internet Speed</h2><p>Having fast internet is very important to ensuring the upload process is smooth. Normally consumers are concerned about their download speed, however we are actually more concerned about your upload speed. We recommend having a minimum of 5mbps upload. Our absolute minimum upload speed is 1mbs.</p><a href="http://speedtest.googlefiber.net/" target="_blank" class="button content-button">Internet Speed Test</a></div></li>
+                <li><div><h2>Watch the "Camera Setup Tutorial"</h2><p>It is very important that you setup your video camera BEFORE you record your first funeral. Failure to do so, will cause problems when uploading your first service</p></div></li>
+            </ul>
+        </div>
+    </div>
+    <div class="help-item">
+        <div class="help-item-title"><h1><i class="fa fa-plus-circle" aria-hidden="true"></i>Camera Setup Tutorial</h1></div>
+        <div class="help-content">
+            <h2>Watch this video to set your camera up for seemless recording</h2>
+            <iframe src="https://portal.midweststreams.com/services/iframe/2158" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
+            <p>In this video Kyle shows you how to setup your camera for recording funerals.</p>
+        </div>
+    </div>
+    <div class="help-item">
+        <div class="help-item-title"><h1><i class="fa fa-plus-circle" aria-hidden="true"></i>Video Upload and Embed Tutorial</h1></div>
+        <div class="help-content">
+            <h2>Watch this video to learn how to use the webcasting tools.</h2>
+            <iframe src="https://portal.midweststreams.com/services/iframe/5988" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
+            <p>In this video Shane takes an in-depth look at how to webcast. This video covers everything you need to know to take a service from the video camera, and put it on your website.</p>
+        </div>
+    </div>
+    <div class="help-item">
+        <div class="help-item-title"><h1><i class="fa fa-plus-circle" aria-hidden="true"></i>Embeding a Memorial Folder Tutorial</h1></div>
+        <div class="help-content">
+            <h2>Watch this video to learn how to take your memorial folders and publish them on your website.</h2>
+            <iframe src="https://portal.midweststreams.com/services/iframe/5916" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
+            <p>In this video Shane takes an in-depth look at how to use the memorial folder tools.</p>
+        </div>
+    </div>
 
-                <p class="contactInfo">If you are having any issues, or would like to send us some feedback please let us know!</p>
-                <p class="contactInfo">Email us at <a href="mailto:support@midweststreams.com">support@midweststreams.com</a> or give us a call at <b>701-491-9016</b>.</p>
+    <div class="help-item">
+        <div class="help-item-title"><h1><i class="fa fa-plus-circle" aria-hidden="true"></i>Purchase Recording Equipment</h1></div>
+        <div class="help-content">
+            <h1>Recommended Video Equipment</h1>
+            <ul>
+                <li><div><h2>Canon Vixia Video Camera</h2><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=tf_til&ad_type=product_link&tracking_id=midweststream-20&marketplace=amazon&region=US&placement=B01N7OAH3I&asins=B01N7OAH3I&linkId=8b60a96360f840261368e12c6a46ecb0&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=234d64&bg_color=ffffff"></iframe><p>We support all versions of the Canon Vixia.</p></div></li>
+                <li><div><h2>Carbon Fiber Tripod</h2><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=tf_til&ad_type=product_link&tracking_id=midweststream-20&marketplace=amazon&region=US&placement=B01KTHUBLQ&asins=B01KTHUBLQ&linkId=0f76bad26888fe632bbdcfd9763bb898&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=234d64&bg_color=ffffff"></iframe><p>Having a good tripod is the key to high quality video. This tripod raises to 68" and has a good moving head to easily pan and zoom.</p></div></li>
+                <li><div><h2>SD Card</h2><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=tf_til&ad_type=product_link&tracking_id=midweststream-20&marketplace=amazon&region=US&placement=B0143RT8OY&asins=B0143RT8OY&linkId=35d038534840f63ce2dfb55ea7eba110&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=234d64&bg_color=ffffff"></iframe><p>Each funeral takes up about 3GB worth of space. This SD card is a high quality card that can hold about 10 funerals on it.</p></div></li>
+                <li><div><h2>SD Card Reader</h2><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=tf_til&ad_type=product_link&tracking_id=midweststream-20&marketplace=amazon&region=US&placement=B009D79VH4&asins=B009D79VH4&linkId=e6a7c06890a617f8a2839d94905287a2&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=234d64&bg_color=ffffff"></iframe><p>Most newer computers have an SD card reader built in. If your computer does not have an SD card reader, you will need to purchase one.</p></div></li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="contactContent">
+                    <h1 class="QuestionsFeedback">Questions or Feedback</h1>
+                    <br />
+
+                    <p class="contactInfo">If you are having any issues, or would like to send us some feedback please let us know!</p>
+                    <p class="contactInfo">Email us at <a href="mailto:support@midweststreams.com">support@midweststreams.com</a> or give us a call at <b>701-491-9016</b>.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="tutorialContent">
-                <h1 class="QuestionsFeedback">Display Tutorials</h1>
-                <div class="contactInfo">
-                    @{if (ViewBag.DisplayTutorialCheckbox == true)
-                        {
-                            <input type="checkbox" id="displayTutorial" checked="checked" />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tutorialContent">
+                    <h1 class="QuestionsFeedback">Display Tutorials</h1>
+                    <div class="contactInfo">
+                        @{if (ViewBag.DisplayTutorialCheckbox == true)
+                            {
+                                <input type="checkbox" id="displayTutorial" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="displayTutorial" />
+                            }
                         }
-                        else
-                        {
-                            <input type="checkbox" id="displayTutorial" />
-                        }
-                    }
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="QuestionsFeedback">Camera Setup Tutorial</h1>
-            <iframe src="https://portal.midweststreams.com/services/iframe/2158" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
-        </div>
-        </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 class="QuestionsFeedback">How to embed a memorial folder on your website</h1>
-            <iframe src="https://portal.midweststreams.com/services/iframe/5916" scrolling="no" width="648" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="margin-left:auto; margin-right:auto; display:block;"> </iframe>
-        </div>
-    </div>
-</div>
 
 
 @section scripts
 {
-
+    <script src="~/Scripts/JqueryCollapse/jquery.collapse.js"></script>
+    <script src="~/Scripts/JqueryCollapse/jquery.collapse_cookie_storage.js"></script>
+    <script src="~/Scripts/JqueryCollapse/jquery.collapse_storage.js"></script>
+    <script>
+        new jQueryCollapse($(".help-item"), {
+            open: function () {
+                this.slideDown(350);
+            },
+            close: function () {
+                this.slideUp(350);
+            }
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
+
             $("#displayTutorial").change(function () {
                 var checkValue = $("#displayTutorial").prop('checked');
                 var postData = { displayTutorial: checkValue };
@@ -124,22 +230,5 @@
 
     </script>
 
-    <script>
-        $(".cameraTutorial").collapse({
-            accordion: true,
-            open: function () {
-                this.addClass("open");
-                this.css({ height: this.children().outerHeight() });
-                $("#arrow").replaceWith('<i id= "arrow" class="fa fa-chevron-circle-up"></i>')
-            },
-            close: function () {
-                this.css({ height: "0px" });
-                this.removeClass("open");
-                $("#arrow").replaceWith('<i id ="arrow" class="fa fa-chevron-circle-down"></i>')
-            }
-        });
-    </script>
-
- 
 }
 
