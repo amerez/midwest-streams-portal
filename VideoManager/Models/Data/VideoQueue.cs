@@ -24,5 +24,7 @@ namespace VideoManager.Models.Data
         public string ResourceGroupName { get; set; }
  
         public virtual VideoQueueStatus? VideoStatus { get; set; }
-	}
+
+        public VideoQueType VideoQueType { get; set; }
+    }
 }

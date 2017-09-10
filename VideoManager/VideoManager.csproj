@@ -511,6 +511,10 @@
     <Compile Include="Migrations\201702211729302_addedStartFieldToLive.Designer.cs">
       <DependentUpon>201702211729302_addedStartFieldToLive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709102342566_Added Video Que Type.cs" />
+    <Compile Include="Migrations\201709102342566_Added Video Que Type.Designer.cs">
+      <DependentUpon>201709102342566_Added Video Que Type.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
     <Compile Include="Models\Data\CRMFuneralHomeHistoryComment.cs" />
@@ -522,6 +526,7 @@
     <Compile Include="Models\Data\CRMContactHistory.cs" />
     <Compile Include="Models\Data\CWFuneralHome.cs" />
     <Compile Include="Models\Data\CRMOwnerContact .cs" />
+    <Compile Include="Models\Data\Enums\VideoQueType.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\AutoMapper.dll" />
@@ -1808,6 +1813,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702211729302_addedStartFieldToLive.resx">
       <DependentUpon>201702211729302_addedStartFieldToLive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709102342566_Added Video Que Type.resx">
+      <DependentUpon>201709102342566_Added Video Que Type.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
