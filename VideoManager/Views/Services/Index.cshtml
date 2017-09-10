@@ -20,17 +20,17 @@
                     Your entire upload inventory will always be listed here. The red bar indicates an unfinished service.
                 </p>
             </li>
-            <li data-id="right-tutorial" data-button="Next: Notify " data-options="tipLocation:left" class="icon-tutorial-class">
+            <li data-id="right-tutorial" data-button="Next: Settings " data-options="tipLocation:left" class="icon-tutorial-class">
                 <h2>Upload a Video</h2>
                 <p>
                     Click the arrow to add your videos. If you save a service without adding a video file this button will also show as red. After you add the video and it’s finished processing it will switch to
                     a blue play icon.
                 </p>
             </li>
-            <li data-id="notify-tutorial" data-button="Next: Settings" data-options="tipLocation:left" class="icon-tutorial-class">
+            @*<li data-id="notify-tutorial" data-button="Next: Settings" data-options="tipLocation:left" class="icon-tutorial-class">
                 <h2>Notify Your Clients</h2>
                 <p>When your video is ready, click the envelope to send the family a notification email.</p>
-            </li>
+            </li>*@
             <li data-id="edit-tutorial" data-button="Next: Trash" data-options="tipLocation:left" class="icon-tutorial-class">
                 <h2>Edit a Service</h2>
                 <p>Change any service details here.</p>
@@ -60,14 +60,14 @@
                 </th>
             }
 
-            <th class="col-md-5 name-box" id="name-tutorial">
+            <th class="col-md-6 name-box" id="name-tutorial">
                 Name
             </th>
             <th class="col-md-3 centerBox">
                 @Html.DisplayNameFor(model => model.ServiceDate)
             </th>
             <!--Hidden icons to get jquery display tutorial to display correctly-->
-            <th class="col-md-4"><a style="visibility:hidden" href="#" id="right-tutorial"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="notify-tutorial"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="edit-tutorial"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="delete-tutorial"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></th>
+            <th class="col-md-3"><a style="visibility:hidden" href="#" id="right-tutorial"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="notify-tutorial"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="edit-tutorial"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a><a style="visibility:hidden" href="#" id="delete-tutorial"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></th>
         </tr>
     </thead>
     <tbody>
@@ -152,7 +152,7 @@
                 }
 
                         }
-                        <a href="@Url.Action("Notify", new { id=item.Id })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>
+                        @*<a href="@Url.Action("Notify", new { id=item.Id })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>*@
                         <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
                         <a href="@Url.Action("Delete", new { id=item.Id })"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
 
