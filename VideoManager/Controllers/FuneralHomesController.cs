@@ -41,7 +41,7 @@ namespace VideoManager.Controllers
 			}
             return View(db.FuneralHomes.ToList());
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize]
 		public ActionResult SetPassword(int? id)
 		{
             if (id == null)
@@ -81,6 +81,7 @@ namespace VideoManager.Controllers
 			model.FuneralHomeId = id;
 			return View(model);
 		}
+
 		[HttpPost]
         [Authorize]
 		[ValidateAntiForgeryToken]
