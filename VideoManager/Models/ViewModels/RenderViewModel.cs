@@ -6,6 +6,7 @@ using VideoManager.Models;
 using System.Linq;
 using System.Web;
 using VideoManager.Models.Data;
+using VideoManager.Models.Data.Enums;
 
 namespace VideoManager.Models.ViewModels
 {
@@ -25,6 +26,8 @@ namespace VideoManager.Models.ViewModels
         public DateTime ServiceDate { get; set; }
 
         public string ResourceGroupName { get; set; }
+
+        public VideoQueType VideoQueType { get; set; }
 
 
 

@@ -80,6 +80,7 @@ namespace VideoManager.Controllers
             rvm.ResourceGroupName = vq.ResourceGroupName;
             rvm.ServiceId = service.Id;
             rvm.ServiceDate = service.ServiceDate;
+            rvm.VideoQueType = vq.VideoQueType;
 
             //If the video is uploaded to azure farm, its ready to be rendered. All other status mean it's either rendering or not ready.
             if(vq.VideoStatus == VideoQueueStatus.UploadedToAzureRenderFarm)

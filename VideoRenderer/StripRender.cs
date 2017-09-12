@@ -15,7 +15,7 @@ using VideoManager.Models.Data;
 
 namespace VideoRenderer
 {
-    class RenderVideo
+    class StripRender
     {
 
         DataAccess da = new DataAccess();
@@ -34,7 +34,7 @@ namespace VideoRenderer
       
 
 
-        public RenderVideo(RenderViewModel RenderParameters)
+        public StripRender(RenderViewModel RenderParameters)
         {
             _renderParameters = RenderParameters;
             _videoQid = _renderParameters.VideoQueId;
@@ -42,7 +42,7 @@ namespace VideoRenderer
             if (ConfigurationManager.AppSettings["IsAzureVM"] != "false")
                 _isAzureVm = true;
          }
-        public async void StartRender(bool includeSlate)
+        public async void StartRender()
         {
             //TODO
             //Implement all of the azure vm stuff.
@@ -72,19 +72,15 @@ namespace VideoRenderer
             //Compress the video
             string compressedFileName = CompressVideo(trimVideodName);
 
+            //TODO: Once you have a better way to control this implement the slate.
+            //Create opening slate
+            //CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
 
-            if(includeSlate==true)
-            {
-                //Create opening slate
-                CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
-
-                //Merge slideshow and service
-                List<string> openerAndService = new List<string>();
-                openerAndService.Add("opener.mp4");
-                openerAndService.Add(compressedFileName);
-                compressedFileName = ConcatenateVideoFiles(openerAndService, false);
-            }
-         
+            //Merge slideshow and service
+            //List<string> openerAndService = new List<string>();
+            //openerAndService.Add("opener.mp4");
+            //openerAndService.Add(compressedFileName);
+            //compressedFileName = ConcatenateVideoFiles(openerAndService, false);
 
             ////Move the file to Converted folder
             if (!MoveFinishedVideoFromTempToConvertedFolder(compressedFileName, _renderParameters.ConvertedFileName))

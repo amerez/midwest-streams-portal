@@ -7,17 +7,10 @@ namespace VideoManager.Models.Data.Enums
 {
     public enum VideoQueType
     {
-        FuneralOne,
-        Batesville,
-        FuneralNet,
-        Frazer,
-        Beyondfunerals,
-        FuneralFuturistWebsites,
-        Other,
-        CFS,
-        WordPress,
-        OtherIframe,
-        Aurora,
-        DJ
+        FullWithSlate,
+        FullNoSlate,
+        StripSlate,
+        AddSlate,
+        ReEditSlate
     }
 }

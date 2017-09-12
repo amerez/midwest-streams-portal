@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Configuration;
 using System.IO;
-using VideoManager;
-using VideoManager.Models.Data;
-using System.Xml;
-using System.Xml.Linq;
 using VideoManager.Models.ViewModels;
+using VideoManager.Models.Data.Enums;
 
 namespace VideoRenderer
 {
@@ -87,7 +77,16 @@ namespace VideoRenderer
                 {
                     Library.WriteServiceLog("Succefully got Render data.");
                     RenderVideo render = new RenderVideo(renderData);
-                    render.StartRender();
+                    switch (renderData.VideoQueType)
+                    {
+                        case VideoQueType.FullNoSlate:
+                        render.StartRender(false);
+                            break;
+                        case VideoQueType.FullWithSlate:
+                            render.StartRender(true);
+                            break;
+                    }
+                   
                 }
                 else
                 {
