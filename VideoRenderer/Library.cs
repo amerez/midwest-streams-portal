@@ -13,11 +13,10 @@ namespace VideoRenderer
         public static void WriteErrorLog(Exception ex)
         {
            string BatchFilePath = ConfigurationManager.AppSettings["logFilePath"];
-
             StreamWriter sw = null;
             try
             {
-                sw = new StreamWriter(BatchFilePath +"RenderServiceLog.txt", true);
+                sw = new StreamWriter(BatchFilePath + "RenderServiceLog.txt", true);
                 sw.WriteLine(DateTime.Now.ToString() + ": " + ex.Source.ToString().Trim() + ": " + ex.Message.ToString().Trim());
                 sw.Flush();
                 sw.Close();

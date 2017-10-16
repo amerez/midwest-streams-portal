@@ -657,7 +657,7 @@ namespace VideoRenderer
             {
                 Library.WriteServiceLog("Error deleting semi file");
                 Library.WriteServiceLog("Error: " + e.Message);
-                Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanUpRenderEnviroment", "481", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanUpRenderEnviroment", "660", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
             }
           
             //Delete All Raw and temp videos
@@ -679,7 +679,7 @@ namespace VideoRenderer
                 catch(Exception e)
                 {
                     Library.WriteServiceLog("Failed to delete file: " + file.Name);
-                    Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanTempEditFolder", "523", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                    Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanTempEditFolder", "682", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
                 }
             }
         }
@@ -690,7 +690,7 @@ namespace VideoRenderer
         private void HandleErrors()
         {
             string vmMachineName = System.Environment.MachineName;
-            RenderErrors.ReportError(ErrorSeverity.Severe, "Video Failed To Render. Machine Name: " + vmMachineName, "RenderVideo", "HandleErrors", "662", _renderParameters.ServiceId, _renderParameters.FuneralHomeName);
+            RenderErrors.ReportError(ErrorSeverity.Severe, "Video Failed To Render. Machine Name: " + vmMachineName, "RenderVideo", "HandleErrors", "693", _renderParameters.ServiceId, _renderParameters.FuneralHomeName);
 
             int errorCount = GlobalVariables.ErrorCount;
             da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoManager.Models.Data.Enums.VideoQueueStatus.Error);
