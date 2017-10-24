@@ -49,6 +49,10 @@ namespace VideoManager.Controllers
 					var ownerId = db.Owners.Where(o => o.UserId == userId);
 					return RedirectToAction("Home", "Owners", ownerId);
 				}
+                else if (User.IsInRole("CRMUser"))
+                {
+                    return RedirectToAction("Index", "CRM");
+                }
                 else if (User.IsInRole("Family"))
                 {
                     ApplicationUser user = db.Users.Find(Id);

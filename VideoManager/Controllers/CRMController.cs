@@ -17,7 +17,7 @@ using VideoManager.Code;
 
 namespace VideoManager.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,CRMUser")]
     public class CRMController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -1177,7 +1177,7 @@ namespace VideoManager.Controllers
                         }
                     }
                 }
-                return RedirectToAction("addfuneralhomecontact", new { id = cRMFuneralHome.Id });
+                return RedirectToAction("funeralhomehighlight", new { id = cRMFuneralHome.Id });
             }
 
             List<CRMOwner> owners = new List<CRMOwner>();
@@ -1533,6 +1533,7 @@ namespace VideoManager.Controllers
         }
 
         // GET: CRM/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

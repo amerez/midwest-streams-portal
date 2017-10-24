@@ -43,7 +43,8 @@ namespace VideoManager.Migrations
                 new ApplicationUser { UserName = "Shane.P.White", Name = "Shane White", Email = "Shane.P.White@gmail.com", FirstName = "Shane", LastName = "White", FacebookId = "818265286" },
                 new ApplicationUser { UserName = "devHome", Name = "Dev Home", Email = "shane.p.white+dev@gmail.com" },
                 new ApplicationUser { UserName = "devOwner", Name = "Dev Owner", Email = "shane.p.white+devowner@gmail.com" },
-                 new ApplicationUser { UserName = "owner", Name = "Shane Owner", Email = "shane.p.white+owner@gmail.com" }
+                 new ApplicationUser { UserName = "owner", Name = "Shane Owner", Email = "shane.p.white+owner@gmail.com" },
+                new ApplicationUser { UserName = "Upwork", Name = "Upwork User", Email="shane.p.white+crm@gmail.com"}
                 );
 
             context.SaveChanges();
@@ -54,6 +55,7 @@ namespace VideoManager.Migrations
             UserManager.AddPassword(context.Users.Where(u => u.UserName == "devHome").FirstOrDefault().Id.ToString(), "GoBison1");
             UserManager.AddPassword(context.Users.Where(u => u.UserName == "devOwner").FirstOrDefault().Id.ToString(), "GoBison1");
             UserManager.AddPassword(context.Users.Where(u => u.UserName == "owner").FirstOrDefault().Id.ToString(), "GoBison1");
+            UserManager.AddPassword(context.Users.Where(u => u.UserName == "Upwork").FirstOrDefault().Id.ToString(), "Shane1");
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             if (!context.Roles.Any(r => r.Name == "Admin"))
@@ -64,6 +66,8 @@ namespace VideoManager.Migrations
                 roleManager.Create(new IdentityRole { Name = "Viewing" });
             if (!context.Roles.Any(r => r.Name == "FuneralHomeOwner"))
                 roleManager.Create(new IdentityRole { Name = "FuneralHomeOwner" });
+            if (!context.Roles.Any(r => r.Name == "CRMUser"))
+                roleManager.Create(new IdentityRole { Name = "CRMUser" });
 
             var suser = UserManager.FindByEmail("Shane.P.White@gmail.com");
             if (!UserManager.IsInRole(suser.Id, "Admin"))
@@ -84,6 +88,10 @@ namespace VideoManager.Migrations
             var juser = UserManager.FindByEmail("jeffreyschmidt@outlook.com");
             if (!UserManager.IsInRole(juser.Id, "Admin"))
                 UserManager.AddToRole(juser.Id, "Admin");
+
+            var uuser = UserManager.FindByEmail("shane.p.white+crm@gmail.com");
+            if (!UserManager.IsInRole(uuser.Id, "CRMUser"))
+                UserManager.AddToRole(uuser.Id, "CRMUser");
 
             //This code is only meant to launch on new Databases
             //Check if Dev Owner has been created. If not create one
