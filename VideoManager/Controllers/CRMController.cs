@@ -308,8 +308,7 @@ namespace VideoManager.Controllers
 
             if (id != null)
             {
-                IEnumerable<ApplicationUser> AdminUsers = GetApplicationUsersInRole("Admin");
-                ViewBag.AdminComments = AdminUsers.ToList();
+                ViewBag.AdminComments = GetCRMUsers();
                 CRMContact crmContact = db.CRMContact.Find(id);
                 if (crmContact.CRMContactHistory != null)
                 {
@@ -336,9 +335,8 @@ namespace VideoManager.Controllers
         {
 
             if (id != null)
-            {
-                IEnumerable<ApplicationUser> AdminUsers = GetApplicationUsersInRole("Admin");
-                ViewBag.AdminComments = AdminUsers.ToList();
+            { 
+                ViewBag.AdminComments = GetCRMUsers();
                 CRMFuneralHome CRMfh = db.CRMFuneralHome.Find(id);
                 if (CRMfh.CRMFuneralHomeHistory != null)
                 {
@@ -454,8 +452,7 @@ namespace VideoManager.Controllers
         {
             if (id != null)
             {
-                IEnumerable<ApplicationUser> AdminUsers = GetApplicationUsersInRole("Admin");
-                ViewBag.AdminComments = AdminUsers.ToList();
+                ViewBag.AdminComments = GetCRMUsers();
                 CRMOwnerContact crmOwner = db.CRMOwnerContact.Find(id);
                 if (crmOwner.CRMContactHistory != null)
                 {
@@ -473,8 +470,7 @@ namespace VideoManager.Controllers
 
         public ActionResult UserLog()
         {
-            IEnumerable<ApplicationUser> AdminUsers = GetApplicationUsersInRole("Admin");
-            ViewBag.AdminComments = AdminUsers.ToList();
+            ViewBag.AdminComments = GetCRMUsers();
             DateTime NintyDaysAgo= DateTime.Now.AddDays(-90);
             List<CRMFuneralHomeHistory> UserLog = db.CRMFuneralHomeHistory.Where(h => h.LastContactedDate > NintyDaysAgo).OrderByDescending(h => h.LastContactedDate).ToList();
             return View(UserLog);
@@ -493,7 +489,7 @@ namespace VideoManager.Controllers
                 CRMFuneralHomeId = businessContainer.Id,
                 ContactCategory = ContactCategory.Business
             };
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
             IEnumerable<SelectListItem> selectList =
             from c in Users
             select new SelectListItem
@@ -511,7 +507,7 @@ namespace VideoManager.Controllers
         public ActionResult AddOwnerContact(int? id)
         {
 
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -583,7 +579,7 @@ namespace VideoManager.Controllers
                 db.SaveChanges();
                 return RedirectToAction("ownercontactlist");
             }
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -613,7 +609,7 @@ namespace VideoManager.Controllers
         public ActionResult AddFuneralHomeContact(int? id)
         {
 
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -720,7 +716,7 @@ namespace VideoManager.Controllers
                 db.SaveChanges();
                 return RedirectToAction("contactlist");
             }
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -765,7 +761,7 @@ namespace VideoManager.Controllers
                 CRMFuneralHome = crmCon.CRMFuneralHome,
                 LeadWarmth = crmCon.LeadWarmth
             };
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -795,7 +791,7 @@ namespace VideoManager.Controllers
                 NextContactType = crmFH.NextContactType,
                 NextContactNotes = crmFH.NextContactNotes
             };
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -824,7 +820,7 @@ namespace VideoManager.Controllers
                 FirstName = crmCon.FirstName,
                 LastName = crmCon.LastName
             };
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -1353,7 +1349,7 @@ namespace VideoManager.Controllers
                 }
                
             }
-            IEnumerable<ApplicationUser> Users = GetApplicationUsersInRole("Admin");
+            IEnumerable<ApplicationUser> Users = GetCRMUsers();
 
             IEnumerable<SelectListItem> selectList =
             from c in Users
@@ -1559,6 +1555,12 @@ namespace VideoManager.Controllers
             return RedirectToAction("Index");
         }
 
+        private List<ApplicationUser> GetCRMUsers()
+        {
+            var CRMUsers = GetApplicationUsersInRole("Admin").ToList();
+            CRMUsers.AddRange(GetApplicationUsersInRole("CRMUser").ToList());
+            return CRMUsers;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

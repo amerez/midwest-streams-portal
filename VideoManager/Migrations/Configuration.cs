@@ -44,7 +44,7 @@ namespace VideoManager.Migrations
                 new ApplicationUser { UserName = "devHome", Name = "Dev Home", Email = "shane.p.white+dev@gmail.com" },
                 new ApplicationUser { UserName = "devOwner", Name = "Dev Owner", Email = "shane.p.white+devowner@gmail.com" },
                  new ApplicationUser { UserName = "owner", Name = "Shane Owner", Email = "shane.p.white+owner@gmail.com" },
-                new ApplicationUser { UserName = "Upwork", Name = "Upwork User", Email="shane.p.white+crm@gmail.com"}
+                new ApplicationUser { UserName = "Upwork", Name = "Upwork User", Email="shane.p.white+crm@gmail.com", FirstName = "Upwork", LastName = "User", FacebookId = "33804637" }
                 );
 
             context.SaveChanges();
