@@ -34,12 +34,12 @@ namespace VideoManager.Controllers
                 }
                 else if (User.IsInRole("FuneralHome"))
                 {
-
-                        string userId = User.Identity.GetUserId();
-                        FuneralHome home = db.FuneralHomes.Where(u => u.UserId == userId).FirstOrDefault();
-                        home.LastLogin = DateTime.Now;
-                        db.Entry(home).State = System.Data.Entity.EntityState.Modified;
-                        db.SaveChanges();
+                    //Moved to account controller
+                        //string userId = User.Identity.GetUserId();
+                        //FuneralHome home = db.FuneralHomes.Where(u => u.UserId == userId).FirstOrDefault();
+                        //home.LastLogin = DateTime.Now;
+                        //db.Entry(home).State = System.Data.Entity.EntityState.Modified;
+                        //db.SaveChanges();
                     
                     return RedirectToAction("Index", "Services", null);
                 }

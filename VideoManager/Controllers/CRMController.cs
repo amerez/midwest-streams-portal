@@ -471,7 +471,7 @@ namespace VideoManager.Controllers
         public ActionResult UserLog()
         {
             ViewBag.AdminComments = GetCRMUsers();
-            DateTime NintyDaysAgo= DateTime.Now.AddDays(-90);
+            DateTime NintyDaysAgo= DateTime.Now.AddDays(-180);
             List<CRMFuneralHomeHistory> UserLog = db.CRMFuneralHomeHistory.Where(h => h.LastContactedDate > NintyDaysAgo).OrderByDescending(h => h.LastContactedDate).ToList();
             return View(UserLog);
         }

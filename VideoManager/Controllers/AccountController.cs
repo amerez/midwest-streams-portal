@@ -75,7 +75,16 @@ namespace VideoManager.Controllers
                 {
                     await SignInAsync(user, model.RememberMe);
                     this.Session.Add("UserId", user.Id.ToString());
-   
+
+                    string userId = user.Id.ToString();
+                    FuneralHome home = db.FuneralHomes.Where(u => u.UserId == userId).FirstOrDefault();
+                    if(home!=null)
+                    {
+                        home.LastLogin = DateTime.Now;
+                        db.Entry(home).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                    }
+
                     return RedirectToLocal(returnUrl);
                 }
                 else
