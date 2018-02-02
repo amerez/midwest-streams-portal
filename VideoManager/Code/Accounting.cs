@@ -14,6 +14,9 @@ namespace VideoManager.Code
     {
         public static decimal GetDollarsOwed(string EmailAddress)
         {
+            try
+            {
+                string certPath = ConfigurationManager.AppSettings["rootPath"] + "\\FreeSSL.pfx";
                 PrivateAuthenticator pa = new PrivateAuthenticator(certPath, "go");
                 var private_app_api = new XeroCoreApi("https://api.xero.com/api.xro/2.0/", pa,
                     new Consumer("EJDPQ3KHW8O2QKQJM7UYXMACD2POTD", "HHEERGR1927D8LPWCUQJSZFDJMTX1X"), null,
@@ -21,16 +24,16 @@ namespace VideoManager.Code
 
                 var org = private_app_api.Organisation;
 
-                var home = private_app_api.Contacts.Where("EmailAddress = \""+EmailAddress+"\"").Find();
-            if(home.Count()==0)
-            {
-                return -1;
-            }
+                var home = private_app_api.Contacts.Where("EmailAddress = \"" + EmailAddress + "\"").Find();
+                if (home.Count() == 0)
+                {
+                    return -1;
+                }
                 string funeralHomeName = home.First().Name;
                 var invoices = private_app_api.Invoices.Where("Contact.Name == \"" + funeralHomeName + "\"").Find();
-               
-            decimal dollarsOwed = 0;
-            foreach(var invoice in invoices)
+
+                decimal dollarsOwed = 0;
+                foreach (var invoice in invoices)
                 {
                     if (invoice.AmountDue != null)
                     {
