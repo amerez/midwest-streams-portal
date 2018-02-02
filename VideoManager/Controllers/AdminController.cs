@@ -122,15 +122,19 @@ namespace VideoManager.Controllers
         }
         public ActionResult VertinReport()
         {
-            DateTime startDate = DateTime.Now.AddDays(-100);
+            DateTime lastYear = DateTime.Now.AddDays(-368);
+            DateTime today = DateTime.Now.AddDays(-3);
+           // int numofViews = db.Analytics.Where(x => x.CreateDate > lastYear && x.CreateDate < today).Count();
+            DateTime startDate = DateTime.Now.AddDays(-90);
+            DateTime endDate = DateTime.Now;
             List<FuneralHome> Homes = db.FuneralHomes.Where(h => h.Owner.Name == "Vertin").ToList();
             List<VertinReportViewModel> vrvm = new List<VertinReportViewModel>();
             foreach(var home in Homes)
             {
                 VertinReportViewModel vrm = new VertinReportViewModel();
                 vrm.FuneralHome = home;
-                vrm.VideoCount = home.Services.Where(s => s.CreateDate > startDate && s.Video != null).Count();
-                vrm.PDFCount = home.Services.Where(s => s.CreateDate > startDate && s.PDF != null).Count();
+                vrm.VideoCount = home.Services.Where(s => s.CreateDate > startDate && s.CreateDate < endDate && s.Video != null).Count();
+                vrm.PDFCount = home.Services.Where(s => s.CreateDate > startDate && s.CreateDate < endDate && s.PDF != null).Count();
                 vrvm.Add(vrm);
             }
             vrvm = vrvm.OrderBy(a => a.FuneralHome.Name).ToList();

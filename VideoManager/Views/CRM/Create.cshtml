@@ -94,7 +94,7 @@
                                         @Html.LabelFor(model => model.Address1)
                                         <div class="iconic-input">
                                             <i class="fa fa-building"></i>
-                                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@
                                         @Html.LabelFor(model => model.ZipCode)
                                         <div class="iconic-input">
                                             <i class="fa fa-building"></i>
-                                            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control required" } })
+                                            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -267,7 +267,7 @@
                                             @Html.LabelFor(model => model.EstimatedCallsPerYear)
                                             <div class="iconic-input">
                                                 <i class="fa fa-question"></i>
-                                                @Html.EditorFor(model => model.EstimatedCallsPerYear, new { htmlAttributes = new { @class = "form-control required" } })
+                                                @Html.EditorFor(model => model.EstimatedCallsPerYear, new { htmlAttributes = new { @class = "form-control" } })
                                                 @Html.ValidationMessageFor(model => model.EstimatedCallsPerYear, "", new { @class = "text-danger" })
                                             </div>
                                         </div>

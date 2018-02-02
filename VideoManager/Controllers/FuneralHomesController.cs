@@ -413,6 +413,14 @@ namespace VideoManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            CRMFuneralHome home = db.CRMFuneralHome.Where(h => h.FuneralHomeId == id).FirstOrDefault();
+            if(home!=null)
+            {
+                home.FuneralHomeId = null;
+                home.FuneralHome = null;
+                db.Entry(home).State = EntityState.Modified;
+                db.SaveChanges();
+            }
             FuneralHome funeralHome = db.FuneralHomes.Find(id);
             db.FuneralHomes.Remove(funeralHome);
             db.SaveChanges();
