@@ -130,6 +130,12 @@ else
                         <label for="inputLastName">Secured</label>
                         <span class="glyphicon glyphicon-question-sign" id="securedToolTip" aria-hidden="true" title="If you do not wish to post this service on your website, click this check mark and we will email them a link that they can securely watch the service."></span>
                     </div>
+                    <div class="col-xs-6">
+                        <br />
+                        @Html.CheckBoxFor(model => model.HasSlate, new { @class = "has-slate-cb" })
+                        <label for="inputLastName">Include Opening Slate</label>
+                        <span class="glyphicon glyphicon-question-sign" id="securedToolTip" aria-hidden="true" title="If you do not wish to post this service on your website, click this check mark and we will email them a link that they can securely watch the service."></span>
+                    </div>
 
                 </div>
                 @*Was confusing to directors, so just removed this functionality. When an email is typed in, once the video is complete we would send a notification to the family.*@

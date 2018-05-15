@@ -83,28 +83,7 @@ namespace VideoRenderer
             return service;
         }
 
-        public bool UpdateVideoStatus(int id, VideoQueueStatus status)
-        {
-            var client = new RestClient(APIPath);
-            client.AddDefaultHeader("api-key", ApiKey);
-            var request = new RestRequest("updatevideoquestatus", Method.POST);
-            request.AddParameter("id", id);
-            request.AddParameter("status", status);
 
-            var response = client.Execute(request);
-
-            if (response != null && response.Content != null)
-            {
-                if (response.Content == "{\"Success\":true}") 
-                {
-                    return true;
-                }
-                Library.WriteErrorLog("Error Getting Video Q Status.");
-                Library.WriteErrorLog(response.StatusCode.ToString());
-                Library.WriteErrorLog(response.Content);
-            }
-            return false;
-        }
         public void GetVideoStartDuration(int id, out double start, out double duration)
         {
             var client = new RestClient(APIPath);

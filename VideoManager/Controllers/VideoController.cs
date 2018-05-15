@@ -29,6 +29,7 @@ using System.Configuration;
 using VideoManager.Models.ViewModels;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using VideoManager.Models.Data.Enums;
 
 namespace VideoManager.Controllers
 {
@@ -1137,11 +1138,16 @@ namespace VideoManager.Controllers
                 sr.Close();
 
                 //Local Video Conversion
-               // videoConverter.CombineVideos(passedId, filenames, convertedFileNameAndPath, startTime.ToString(),
-                 //  stopTime.ToString(), User.Identity.GetUserName().Replace(" ", ""));
+                // videoConverter.CombineVideos(passedId, filenames, convertedFileNameAndPath, startTime.ToString(),
+                //  stopTime.ToString(), User.Identity.GetUserName().Replace(" ", ""));
 
                 //Azure Video Conversion
-                AzureRender.AssigningVideosToQueue(passedId, filenames);
+                VideoQueType renderType = VideoQueType.FullWithSlate;
+                if (service.HasSlate==false)
+                {
+                    renderType = VideoQueType.FullNoSlate;
+                }
+                AzureRender.AssigningVideosToQueue(passedId, filenames, renderType);
 
             }
             catch (Exception upEx)

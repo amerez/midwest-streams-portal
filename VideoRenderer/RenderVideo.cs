@@ -12,6 +12,7 @@ using VideoManager.Code;
 using VideoManager.Models.ViewModels;
 using VideoManager.Models.Data.Enums;
 using VideoManager.Models.Data;
+using Newtonsoft.Json;
 
 namespace VideoRenderer
 {
@@ -31,7 +32,8 @@ namespace VideoRenderer
         public string ThumbnailFolder = ConfigurationManager.AppSettings["videoThumbnailArchive"];
         public string BatchFilePath = ConfigurationManager.AppSettings["logFilePath"];
         public string FfMpegPathAndExecuteable = ConfigurationManager.AppSettings["ffmpeg"];
-      
+        public string ffProbe = ConfigurationManager.AppSettings["ffprobe"];
+        public int SlateLength = 21;
 
 
         public RenderVideo(RenderViewModel RenderParameters)
@@ -42,11 +44,75 @@ namespace VideoRenderer
             if (ConfigurationManager.AppSettings["IsAzureVM"] != "false")
                 _isAzureVm = true;
          }
+
+        public async void EditSlate()
+        {
+            InitiateRenderProcess();
+            _renderParameters.Start = SlateLength;
+            var success = await DownloadVideosFromBlob();
+            if (success == false)
+                return;
+
+            if (!MoveFileFromRawFolderToTempEdit(_videoFiles[0]))
+                return;
+
+            string video = TrimVideo(_videoFiles[0]);
+
+            //Create opening slate
+            CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
+
+            //Merge slideshow and service
+            List<string> openerAndService = new List<string>();
+            openerAndService.Add("opener.mp4");
+            openerAndService.Add(video);
+            video = ConcatenateVideoFiles(openerAndService, false);
+            //FinishPartialRender(video);
+
+        }
+
+        public async void RemoveSlate()
+        {
+            InitiateRenderProcess();
+            _renderParameters.Start = SlateLength;
+            var success = await DownloadVideosFromBlob();
+            if (success == false)
+                return;
+
+            if (!MoveFileFromRawFolderToTempEdit(_videoFiles[0]))
+                return;
+
+            string video = TrimVideo(_videoFiles[0]);
+
+            FinishPartialRender(video);
+
+        }
+
+        public async void AddSlate()
+        {
+            InitiateRenderProcess();
+
+            var success = await DownloadVideosFromBlob();
+            if (success == false)
+                return;
+
+            string video = _videoFiles[0];
+
+            if (!MoveFileFromRawFolderToTempEdit(video))
+                return;
+
+            //Create opening slate
+            CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
+
+            //Merge slideshow and service
+  
+            video = MergeSlateToService("opener.mp4",video, "video-with-slate.mp4");
+
+            FinishPartialRender(video);
+
+        }
+        //Main method to render videos
         public async void StartRender(bool includeSlate)
         {
-            //TODO
-            //Implement all of the azure vm stuff.
-
             InitiateRenderProcess();
             var success = await DownloadVideosFromBlob();
             if (success == false)
@@ -69,9 +135,11 @@ namespace VideoRenderer
             //Trim The Video
             string trimVideodName = TrimVideo(concatenatedVideoFile);
 
-            //Compress the video
-            string compressedFileName = CompressVideo(trimVideodName);
+          
 
+            //Take a picture of the video at 3 seconds for videos without slates. 23 seconds for videos with slates.
+            int thumbnailSnapShot = 3;
+            string compressedFileName = trimVideodName;
 
             if(includeSlate==true)
             {
@@ -79,10 +147,14 @@ namespace VideoRenderer
                 CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
 
                 //Merge slideshow and service
-                List<string> openerAndService = new List<string>();
-                openerAndService.Add("opener.mp4");
-                openerAndService.Add(compressedFileName);
-                compressedFileName = ConcatenateVideoFiles(openerAndService, false);
+                //This method also does the rendering/compressing
+                compressedFileName = MergeSlateToService("opener.mp4", compressedFileName, "converted_video_with_opener.mp4");
+                thumbnailSnapShot = 23;
+            }
+            else
+            {
+                //Compress the video
+                compressedFileName = CompressVideo(trimVideodName);
             }
          
 
@@ -91,8 +163,11 @@ namespace VideoRenderer
                 return;
 
             //Extract Thumbnail
-            //When implementing slideshow increase this to 23 so the pic isn't a pic of the slideshow
-            string thumbnailName = ExtractThumbnail(_renderParameters.ConvertedFileName, 3);
+            string thumbnailName = ExtractThumbnail(_renderParameters.ConvertedFileName, thumbnailSnapShot);
+
+            //DELETE THIS. ONLY TO CUT METHOD SHORT FOR EASIER RENDER TESTING
+            CleanUpRenderEnviroment();
+            return;
 
             //Upload Thumbnail to Azure
             UploadThumbnailToAzure(thumbnailName);
@@ -123,88 +198,324 @@ namespace VideoRenderer
                 
 
         }
+        public void TestBatch()
+        {
+            //ConcateVideoFileReRender(_videoFiles.ToList(), "bla.mp4");
+           // ConcatenateVideoFiles(_videoFiles.ToList(), true);
+        }
+        private void FinishPartialRender(string video)
+        {
+            ////Move the file to Converted folder
+            if (!MoveFinishedVideoFromTempToConvertedFolder(video, _renderParameters.ConvertedFileName))
+                return;
+
+            //Upload Converted Video to Azure
+            if (!UploadConvertedVideoToAzure(_renderParameters.ConvertedFileName))
+                return;
+
+            //Update Q Status
+            da.DeleteVideoQue(_renderParameters.VideoQueId);
+            da.UpdateVideoStatus(_renderParameters.ServiceId, VideoStatus.ConversionFinished);
+
+            //Delete files from video-que container
+            DeleteVideoFilesFromQue();
+
+            if (_isAzureVm)
+            {
+                DeleteRenderMachine();
+            }
+            else
+            {
+                //Delete temp video files. And set rendering var to false
+                CleanUpRenderEnviroment();
+            }
+
+            ////Move the file to Converted folder
+            if (!MoveFinishedVideoFromTempToConvertedFolder(video, _renderParameters.ConvertedFileName))
+                return;
+        }
 
         private void DeleteRenderMachine()
         {
             ManageResourceGroup.DeleteResourceGroupAsync(_renderParameters.ResourceGroupName);
         }
 
-        private string ConcatenateVideoFiles(List<string> videoFiles, bool filesLocatedInRawDirectory)
+        public string ConcatenateVideoFiles(List<string> videoFiles, bool filesLocatedInRawDirectory)
         {
             Library.WriteServiceLog("Creating Temp Files");
             List<string> tempFiles = new List<string>();
-            foreach(var video in videoFiles)
+            int videoWidth = 0;
+            int videoHeight = 0;
+            bool sameAspectRatio = true;
+            int order = 1;
+            //If video files are same aspect ratio we can throw them in a temp file and merge them together without re-rendering.
+            //If they are different aspect ratios they need to be re-rendered.
+
+            List<VideoConcatData> videoConcatModel = new List<VideoConcatData>();
+           
+            foreach (var video in videoFiles)
             {
-                string tempFileName = TempEditFolder +"\\"+ video.Substring(0, video.Length-4)+"_temp.ts";
+             
+                string tempFileName = TempEditFolder + "\\" + video.Substring(0, video.Length - 4) + "_temp.ts";
                 tempFiles.Add(tempFileName);
                 string fileName = RawFileArchivePath + "\\" + video;
-                if(filesLocatedInRawDirectory!=true)
+                //TODO Ensure that this works when video is not in raw path. There is another spot like this below
+                Stream vidData = GetVideoMetaData(video, RawFileArchivePath+"\\").streams.Where(v => v.codec_type == "video").FirstOrDefault();
+                VideoConcatData vCd = new VideoConcatData()
+                {
+                    Name = video,
+                    Height = vidData.height,
+                    Width = vidData.width,
+                    Order = order
+                };
+                videoConcatModel.Add(vCd);
+                order++;
+                if (videoHeight == 0 || videoHeight == vidData.height && sameAspectRatio)
+                {
+                    videoHeight = vidData.height;
+                    if(videoWidth==0 || videoWidth==vidData.width)
+                    {
+                        videoWidth = vidData.width;
+                    }
+                    else
+                    {
+                        sameAspectRatio = false;
+                    }
+                }
+                else
+                {
+                    sameAspectRatio = false;
+                }
+                if (filesLocatedInRawDirectory != true)
                 {
                     fileName = TempEditFolder + "\\" + video;
                 }
-                string argumentsString = FfMpegPathAndExecuteable + " " + fileName + " " + tempFileName;
-                var p = new Process
+                
+                //No need to create temp files if we are going to be doing a re-render
+                if(sameAspectRatio)
                 {
-                    StartInfo =
+                    string argumentsString = FfMpegPathAndExecuteable + " " + fileName + " " + tempFileName;
+                    var p = new Process
+                    {
+                        StartInfo =
                     {
                         FileName = BatchFilePath + "CreateTempConcatFile.bat",
                         Arguments = argumentsString
                     }
-                };
-                p.Start();
-                p.WaitForExit();
-                if (p.ExitCode != 0)
-                {
-                    Library.WriteServiceLog("FAILED TO CREATE TEMP FILE.");
-                    string errorDescription = "Batch file 'CreateTempConcatFile' failed. Temp Name: " + tempFileName + " Video File Name: " + video;
-                    Library.WriteServiceLog(errorDescription);
-                    Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "ConcateVideoFiles", "73", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
-                }
-                else
-                {
-                    Library.WriteServiceLog("Succesfully Created Temp File: " + tempFileName);
-                }
-            }
-            //Batch files require files to be in a pipedelimited string
-            string pipeDelimitedTempFiles = "";
-            foreach (var tempString in tempFiles)
-            {
-                pipeDelimitedTempFiles = pipeDelimitedTempFiles + tempString+"|";
-            }
-            //remove the last pipe
-            pipeDelimitedTempFiles = pipeDelimitedTempFiles.Substring(0, pipeDelimitedTempFiles.Length - 1);
+                    };
+                    p.Start();
+                    p.WaitForExit();
+                    if (p.ExitCode == 0)
+                    {
+                        Library.WriteServiceLog("Succesfully Created Temp File: " + tempFileName);
 
-            string concatVideoFileName = videoFiles[0].Substring(0, videoFiles[0].Length-4) + "_concat.mp4";
-            
-            string argumentString = FfMpegPathAndExecuteable + " " + "\""+ pipeDelimitedTempFiles + "\"" + " " + TempEditFolder+"\\"+ concatVideoFileName;
+                    }
+                    else
+                    {
+                        Library.WriteServiceLog("FAILED TO CREATE TEMP FILE.");
+                        string errorDescription = "Batch file 'CreateTempConcatFile' failed. Temp Name: " + tempFileName + " Video File Name: " + video;
+                        Library.WriteServiceLog(errorDescription);
+                        Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "ConcateVideoFiles", "272", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                    }
+                }
+               
+            }
 
-            //string argumentString = "argument1 \""+ pipeDelimitedTempFiles+"\" "+ TempEditFolder + "\\" + concatVideoFileName;
-            Library.WriteServiceLog("Beggining to Concatenate Videos");
-            var proc = new Process
+            if(sameAspectRatio)
             {
-                StartInfo =
+                //Batch files require files to be in a pipedelimited string
+                string pipeDelimitedTempFiles = "";
+                foreach (var tempString in tempFiles)
+                {
+                    pipeDelimitedTempFiles = pipeDelimitedTempFiles + tempString + "|";
+                }
+                //remove the last pipe
+                pipeDelimitedTempFiles = pipeDelimitedTempFiles.Substring(0, pipeDelimitedTempFiles.Length - 1);
+
+                string concatVideoFileName = videoFiles[0].Substring(0, videoFiles[0].Length - 4) + "_concat.mp4";
+
+                string argumentString = FfMpegPathAndExecuteable + " " + "\"" + pipeDelimitedTempFiles + "\"" + " " + TempEditFolder + "\\" + concatVideoFileName;
+
+                //string argumentString = FfMpegPathAndExecuteable + " \"-i D:\\MWSArchive\\Video\\TempEditFolder\\open.mp4 -i D:\\MWSArchive\\Video\\TempEditFolder\\yes.mp4\" \"[0:v:0] [0:a:0] [1:v:0] [1:a:0]\" 2 " + "name.mp4"; 
+                Library.WriteServiceLog("Beggining to Concatenate Videos");
+                var proc = new Process
+                {
+                    StartInfo =
                     {
                         FileName = BatchFilePath + "ConcatVideos.bat",
                         Arguments = argumentString
                     }
+                };
+                //Concat videos no re-render
+                proc.Start();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0)
+                {
+                    Library.WriteServiceLog("Succesfully Concatenated Videos");
+                    return concatVideoFileName;
+                }
+                else
+                {
+                    Library.WriteServiceLog("FAILED CONCATENATING VIDEOS");
+                    string errorDescription = "Batch file 'ConcatVideos.bat' failed. Argument String: " + argumentString;
+                    Library.WriteServiceLog(errorDescription);
+                    HandleErrors();
+                    Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "ConcateVideoFiles", "73", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                }
+            }
+            else
+            {
+                string inputFiles = "";
+                string filterText = "";
+                int count = 0;
+                VideoConcatData largestVid = videoConcatModel.OrderByDescending(x => x.Width).FirstOrDefault();
+                string largestWidth = largestVid.Width.ToString();
+                string largestHeight = largestVid.Height.ToString();
+                string mapping = "";
+                foreach(var vid in videoConcatModel)
+                {
+                    string countStr = count.ToString();
+                    inputFiles = inputFiles + " -i " + RawFileArchivePath+"\\"+ vid.Name;
+                    //If this is the largest video don't apply filter to add black bars 
+                    if(count == largestVid.Order)
+                    {
+                        filterText = filterText + "[" + countStr + ":v]setsar=1[" + countStr + "v];";
+                    }
+                    else
+                    {
+                        filterText = filterText + "["+countStr+":v]scale=" + largestWidth + ":" +largestHeight +":force_original_aspect_ratio=decrease,setsar=1,pad="+largestWidth+":"+largestHeight+":(ow-iw)/2:(oh-ih)/2["+ countStr + "v];";
+                    }
+                    mapping = mapping + "[" + countStr + "v][" + countStr + ":a]";
+                    count++;
+                }
+
+                string videoCount = videoConcatModel.Count().ToString();
+                string concatVideoFileName = TempEditFolder+"\\"+ videoFiles[0].Substring(0, videoFiles[0].Length - 4) + "_concat.mp4";
+                string argumentString = FfMpegPathAndExecuteable + " " + "\"" + inputFiles + "\"" + " " +"\""+ filterText + "\""+ " " + mapping + " " + videoCount + " "+concatVideoFileName;
+                //Declare the process
+                var proc = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = BatchFilePath + "ConcatFilter.bat",
+                        Arguments = argumentString
+                    }
+                };
+
+                Library.WriteServiceLog("Combing Videos. Using the Re-Render Method");
+                proc.Start();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0)
+                {
+                    Library.WriteServiceLog("Succefully concatenated videos");
+                    return "bob";
+                }
+                else
+                {
+                    Library.WriteErrorLog("Failed to run the Compress-ReRender batch file. Most likely videos are different codecs");
+                    Library.WriteErrorLog("Now trying to merge the videos using a safer method. This method does not include the fade effect");
+                    Library.WriteServiceLog("FAILED TO COMPRESS VIDEO! SEE ffmpeglog.txt FOR MORE DETAILS");
+                    string errorDescription = "Batch file 'ConcatVideosReRender.bat' failed. Argument String: " + argumentString;
+                    Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "MergeSlateToService", "364", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                    HandleErrors();
+                }
+            }
+           
+            return "false";
+        }
+
+        //Merging the
+        private string MergeSlateToService(string videoFile1, string videoFile2, string outputFileName)
+        {
+            var prefix = TempEditFolder + "\\";
+            //Get Video File MetaData and ensure the width and height ratio match
+            Stream vid1Data = GetVideoMetaData(videoFile1, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault();
+            Stream vid2Data = GetVideoMetaData(videoFile2, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault(); ;
+
+            //Videos can not be merged if they arent exactly the same aspect ratio
+            if(vid1Data!=null && vid2Data!=null)
+            {
+                int width1 = vid1Data.width;
+                int height1 = vid1Data.height;
+                int width2 = vid2Data.width;
+                int height2 = vid2Data.height;
+                if (width1!=width2 || height1!=height2)
+                {
+                    string videoFile1Resized =  "resized_" + videoFile1;
+                    ResizeVideo(prefix + videoFile1, width2, height2, prefix + videoFile1Resized);
+                    videoFile1 = videoFile1Resized;
+                }
+            }
+
+
+
+       
+                string argumentString = String.Format(@"{0} {1} {2} {3}", FfMpegPathAndExecuteable, prefix + videoFile1, prefix + videoFile2, prefix + outputFileName);
+                //Declare the process
+                var proc = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = BatchFilePath + "ConcatVideosReRender.bat",
+                        Arguments = argumentString
+                    }
+                };
+
+                Library.WriteServiceLog("Combing Videos. Using the Re-Render Method");
+                proc.Start();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0)
+                {
+                    Library.WriteServiceLog("Succefully concatenated videos");
+                    return outputFileName;
+                }
+                else
+                {
+                    Library.WriteErrorLog("Failed to run the Compress-ReRender batch file. Most likely videos are different codecs");
+                    Library.WriteErrorLog("Now trying to merge the videos using a safer method. This method does not include the fade effect");
+                    Library.WriteServiceLog("FAILED TO COMPRESS VIDEO! SEE ffmpeglog.txt FOR MORE DETAILS");
+                    string errorDescription = "Batch file 'ConcatVideosReRender.bat' failed. Argument String: " + argumentString;
+                    Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "MergeSlateToService", "364", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                    HandleErrors();
+                }
+    
+        
+            return "false";
+
+        }
+
+        public bool ResizeVideo(string fileName, int width, int height, string outputName)
+        {
+         
+            string argumentString = String.Format(@"{0} {1} {2} {3} {4}", FfMpegPathAndExecuteable, fileName, width.ToString(), height.ToString(), outputName);
+            //Declare the process
+            var proc = new Process
+            {
+                StartInfo =
+                    {
+                        FileName = BatchFilePath + "Resize.bat",
+                        Arguments = argumentString
+                    }
             };
+
+            Library.WriteServiceLog("Resizing "+fileName+" to an aspect ratio of "+width.ToString()+":"+height.ToString());
             proc.Start();
             proc.WaitForExit();
             if (proc.ExitCode == 0)
             {
-                Library.WriteServiceLog("Succesfully Concatenated Videos");
-                return concatVideoFileName;
+                Library.WriteServiceLog("Successfully resized video");
+                return true;
             }
             else
             {
-                Library.WriteServiceLog("FAILED CONCATENATING VIDEOS");
-                string errorDescription = "Batch file 'ConcatVideos.bat' failed. Argument String: " + argumentString;
-                Library.WriteServiceLog(errorDescription);
+                Library.WriteErrorLog("Failed to resize video file: "+fileName);
+                string errorDescription = "Batch file 'Resize.bat' failed. Argument String: " + argumentString;
+                Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "ResizeVideo", "405", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
                 HandleErrors();
-                Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "ConcateVideoFiles", "73", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
             }
-            return "false";
+            return false;
         }
+
         private string TrimVideo(string inputFileName)
         {
             
@@ -543,6 +854,25 @@ namespace VideoRenderer
             return true;
         }
 
+        private VideoMetaData GetVideoMetaData(string fileName, string fileLocation)
+        {
+            Process p = new Process();
+            // Redirect the output stream of the child process.
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.FileName = "cmd.exe";
+            string args = "/C "+ ffProbe + " -v quiet -print_format json -show_format -show_streams " + fileLocation + fileName;
+            p.StartInfo.Arguments = args;
+            p.Start();
+            // Do not wait for the child process to exit before
+            // reading to the end of its redirected stream.
+            // p.WaitForExit();
+            // Read the output stream first and then wait.
+            string output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
+            var result = JsonConvert.DeserializeObject<VideoMetaData>(output);
+            return result;
+        }
         private bool MoveFinishedVideoFromTempToConvertedFolder(string fileName, string convertedName)
         {
             Library.WriteServiceLog("Moving finished video to converted archive");
@@ -706,5 +1036,13 @@ namespace VideoRenderer
             }
 
         }
+    }
+     class VideoConcatData
+    {
+        public string Name { get; set; }
+        public int Width { get; set; }
+
+        public int Height { get; set; }
+        public int Order { get; set; }
     }
 }

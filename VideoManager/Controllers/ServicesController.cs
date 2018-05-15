@@ -22,6 +22,7 @@ using Microsoft.Owin.Security;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Stripe;
+using VideoManager.Models.Data.Enums;
 
 namespace VideoManager.Controllers
 {
@@ -276,7 +277,29 @@ namespace VideoManager.Controllers
                             
                            }
                        }
-                
+                        Service dbService = db.Services.AsNoTracking().Where(x=> x.Id==service.Id).FirstOrDefault();
+                        if(dbService!=null)
+                        {
+                            //Detect changes, and re render video if needed
+                            if (service.HasSlate != dbService.HasSlate)
+                            {
+                                AzureRender.CopyProductionVideoToQueContainer(dbService.Video.ConvertedFilePath);
+                                VideoQueType renderType = VideoQueType.StripSlate;
+                                if (service.HasSlate)
+                                {
+                                     renderType = VideoQueType.AddSlate;
+                                }
+                                AzureRender.AssigningVideosToQueue(service.Id, dbService.Video.ConvertedFilePath, renderType);
+                            }
+                            else if(service.FirstName != dbService.FirstName || service.LastName != dbService.LastName || service.ServiceDate != dbService.ServiceDate)
+                            {
+                                if(service.HasSlate==true)
+                                {
+                                    AzureRender.CopyProductionVideoToQueContainer(dbService.Video.ConvertedFilePath);
+                                    AzureRender.AssigningVideosToQueue(service.Id, dbService.Video.ConvertedFilePath, VideoQueType.ReEditSlate);
+                                }
+                            }
+                        }
                     }
                     db.Entry(service).State = EntityState.Modified;
                     db.SaveChanges();

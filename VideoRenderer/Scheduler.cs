@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using VideoManager.Models.ViewModels;
 using VideoManager.Models.Data.Enums;
+using System.Collections.Generic;
 
 namespace VideoRenderer
 {
@@ -24,7 +25,7 @@ namespace VideoRenderer
         {
             timer1 = new Timer();
             //Don't make this much shorter
-            this.timer1.Interval = 30000; //Every 30 seconds
+            this.timer1.Interval = 20000; //Every 30 seconds
             this.timer1.Elapsed += new System.Timers.ElapsedEventHandler(this.timer1_Tick);
             timer1.Enabled = true;
             setVariablesForStart();
@@ -41,7 +42,6 @@ namespace VideoRenderer
         }
         private void timer1_Tick(object sender, ElapsedEventArgs e)
         {
-            Library.WriteServiceLog("Timer Tick and is rendering == "+GlobalVariables.IsRendering.ToString());
             var isAzureVM = ConfigurationManager.AppSettings["IsAzureVM"];
             if(isAzureVM!="false")
             {
@@ -51,28 +51,56 @@ namespace VideoRenderer
             }
             string vmMachineName = Environment.MachineName;
             DataAccess da = new DataAccess();
+            RenderViewModel renderDataa = new RenderViewModel()
+            {
+                RawFileNames = "sintel.mp4",
+                ConvertedFileName = "resize_sintel_opener.mp4",
+                Duration = 0,
+                Start = 0,
+                FirstName = "Auggie",
+                LastName = "Wolchansky",
+                FoundVideoToRender = true,
+                FuneralHomeName = "DevHome",
+                ServiceId = 16,
+                VideoQueId = 19,
+                VideoQueType = VideoQueType.FullWithSlate
+            };
+            
+            if(GlobalVariables.IsRendering==false)
+            {
+                GlobalVariables.IsRendering = true;
+                RenderVideo renderr = new RenderVideo(renderDataa);
+                List<string> vids = new List<string>();
+                vids.Add("sintel.mp4");
+                vids.Add("fish.mp4");
+                vids.Add("cfs.mp4");
 
+                renderr.ConcatenateVideoFiles(vids, true);
+            }
+           
+            GlobalVariables.IsRendering = true;
 
             if(GlobalVariables.IsRendering == false)
             {
                 GlobalVariables.IsRendering = true;
-                RenderViewModel renderData = da.GetRenderData(vmMachineName);
+                //RenderViewModel renderData = da.GetRenderData(vmMachineName);
 
                 //Test Data
-                //RenderViewModel renderData = new RenderViewModel()
-                //{
-                //    RawFileNames = "5543_devHome_uploading_1046_devhome_bigbuck.mp4",
-                //    ConvertedFileName = "patton_converted.mp4",
-                //    Duration = 1756,
-                //    Start = 28,
-                //    FirstName = "Auggie",
-                //    LastName = "Wolchansky",
-                //    FoundVideoToRender = true,
-                //    FuneralHomeName = "DevHome",
-                //    ServiceId = 5751,
-                //    VideoQueId = 4567
-                //};
-             
+                RenderViewModel renderData = new RenderViewModel()
+                {
+                    RawFileNames = "done.mp4,movflags.mp4",
+                    ConvertedFileName = "audioTest.mp4",
+                    Duration = 0,
+                    Start = 0,
+                    FirstName = "Auggie",
+                    LastName = "Wolchansky",
+                    FoundVideoToRender = true,
+                    FuneralHomeName = "DevHome",
+                    ServiceId = 16,
+                    VideoQueId = 19,
+                    VideoQueType = VideoQueType.FullNoSlate
+                };
+
                 if (renderData!=null && renderData.FoundVideoToRender == true)
                 {
                     Library.WriteServiceLog("Succefully got Render data.");
@@ -80,13 +108,22 @@ namespace VideoRenderer
                     switch (renderData.VideoQueType)
                     {
                         case VideoQueType.FullNoSlate:
-                        render.StartRender(false);
+                            render.StartRender(false);
                             break;
                         case VideoQueType.FullWithSlate:
                             render.StartRender(true);
                             break;
+                        case VideoQueType.AddSlate:
+                            render.AddSlate();
+                            break;
+                        case VideoQueType.StripSlate:
+                            render.RemoveSlate();
+                            break;
+                        case VideoQueType.ReEditSlate:
+                            render.EditSlate();
+                            break;
                     }
-                   
+
                 }
                 else
                 {

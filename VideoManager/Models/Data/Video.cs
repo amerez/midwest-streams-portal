@@ -54,20 +54,20 @@ namespace VideoManager.Models.Data
         public DateTime? EncodeEndTime { get; set; }
 
         public int? OldVideoId { get; set; }
+        public bool HasSlate { get; set; }
 
+        //[NotMapped]
+        //public string FamilyUsername { get; set; }
+        //[NotMapped]
+        //public string FamilyEmail { get; set; }
+        //[NotMapped]
+        //public string FamilyPassword { get; set; }
+        //[NotMapped]
+        //public string ViewingUsername { get; set; }
+        //[NotMapped]
+        //public string ViewingPassword { get; set; }
 
-		//[NotMapped]
-		//public string FamilyUsername { get; set; }
-		//[NotMapped]
-		//public string FamilyEmail { get; set; }
-		//[NotMapped]
-		//public string FamilyPassword { get; set; }
-		//[NotMapped]
-		//public string ViewingUsername { get; set; }
-		//[NotMapped]
-		//public string ViewingPassword { get; set; }
-
-		//Jeff are we using this?
+        //Jeff are we using this?
         //public int QueuePosition(ApplicationDbContext db)
         //{
         //    List<int> ids = db.Videos.Where(v => v.Status == VideoStatus.UploadFinished).OrderBy(v => v.CreateDate).Select(v => v.Service.Id).ToList();
@@ -76,5 +76,5 @@ namespace VideoManager.Models.Data
         //    else
         //        return ids.IndexOf(this.Service.Id);
         //}
-	}
+    }
 }

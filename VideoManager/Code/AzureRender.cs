@@ -27,7 +27,7 @@ namespace VideoManager.Code
 {
     public class AzureRender
     {
-        public static async Task<bool> AssigningVideosToQueue(int id, string fileNames)
+        public static async Task<bool> AssigningVideosToQueue(int id, string fileNames, VideoQueType type)
         {
             //int VMsAvailable = 4;
             //creating local context to avoid threading issues
@@ -75,7 +75,7 @@ namespace VideoManager.Code
                 //LOCAL RENDER CODE
                 q.VMName = "MSI";
                 q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
-                q.VideoQueType = VideoQueType.FullWithSlate;
+                q.VideoQueType = type;
                 context.VideoQueues.Add(q);
                 context.SaveChanges();
                 //Turn on azure VM
@@ -85,8 +85,12 @@ namespace VideoManager.Code
 
                 string[] videoFiles = fileNames.Split(',');
 
-                //Upload files to Azure                                      
-                var UploadFilesResult = await UploadFilesToAzure(videoFiles, "videos-in-queue").ConfigureAwait(false);
+                //Upload files to Azure
+                bool UploadFilesResult = true;
+                if(type==VideoQueType.FullNoSlate || type== VideoQueType.FullWithSlate)
+                {
+                     UploadFilesResult = await UploadFilesToAzure(videoFiles, "videos-in-queue").ConfigureAwait(false);
+                }
 
                 //Signal Render Machine everything is done
                 if (UploadFilesResult)
@@ -96,7 +100,8 @@ namespace VideoManager.Code
                 else
                 {
                     q.VideoStatus = VideoQueueStatus.Error;
-                    context.Entry(q).State = EntityState.Modified; 
+                    context.Entry(q).State = EntityState.Modified;
+                    Error.ReportError(ErrorSeverity.Severe, "AzureRender", "AssignVideosToQue", "105");
                 }
                 context.SaveChanges();
                Task.Yield();
@@ -145,6 +150,18 @@ namespace VideoManager.Code
         {
       
             //var result = VirtualMachinesOperationsExtensions
+            return true;
+        }
+
+        public static async Task<bool> CopyProductionVideoToQueContainer(string fileName)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer sourceContainer = blobClient.GetContainerReference("videos");
+            CloudBlobContainer targetContainer = blobClient.GetContainerReference("videos-in-queue");
+            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(fileName);
+            CloudBlockBlob targetBlob = targetContainer.GetBlockBlobReference(fileName);
+            targetBlob.StartCopyAsync(sourceBlob);
             return true;
         }
         //public static async Task<bool> TurnOnAzureVM(string AzureVMNumber)

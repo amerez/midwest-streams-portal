@@ -235,15 +235,17 @@
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\WindowsAzure.Storage.9.1.1\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp">
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SendGrid.SmtpApi">
@@ -514,6 +516,14 @@
     <Compile Include="Migrations\201709102342566_Added Video Que Type.cs" />
     <Compile Include="Migrations\201709102342566_Added Video Que Type.Designer.cs">
       <DependentUpon>201709102342566_Added Video Que Type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802022227127_addedHasSlateTOVideo.cs" />
+    <Compile Include="Migrations\201802022227127_addedHasSlateTOVideo.Designer.cs">
+      <DependentUpon>201802022227127_addedHasSlateTOVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802022326074_addedSlateToService.cs" />
+    <Compile Include="Migrations\201802022326074_addedSlateToService.Designer.cs">
+      <DependentUpon>201802022326074_addedSlateToService.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
@@ -1814,6 +1824,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709102342566_Added Video Que Type.resx">
       <DependentUpon>201709102342566_Added Video Que Type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802022227127_addedHasSlateTOVideo.resx">
+      <DependentUpon>201802022227127_addedHasSlateTOVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802022326074_addedSlateToService.resx">
+      <DependentUpon>201802022326074_addedSlateToService.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

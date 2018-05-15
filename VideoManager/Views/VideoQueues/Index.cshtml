@@ -10,12 +10,12 @@
     <thead>
         <tr>
             <th>Video Id</th>
-            <th>Resource Group Name</th>
             <th>VM Name</th>
             <th>Azure Blob Name</th>
             <th>Video Que Type</th>
             <th>Status</th>
             <th>VideoQ Id</th>
+
           
             <td></td>
         </tr>
@@ -24,12 +24,12 @@
     {
         <tr>
             <td>@item.VideoId</td>
-            <td>@item.ResourceGroupName</td>
             <td>@item.VMName</td>
             <td>@item.BlobPath</td>
-            <td>@item.VideoStatus.ToString()</td>
+            <td>@item.VideoQueType.ToString()</td>
             <td>@item.VideoStatus.ToString()</td>
             <td>@item.Id</td>
+ 
 
             <td><a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-default btn-xs call"><i class="fa fa-folder"></i> Edit </a>
                 <a href="@Url.Action("Delete", new{id=item.Id})" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>

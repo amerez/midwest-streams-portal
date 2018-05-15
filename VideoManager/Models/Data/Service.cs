@@ -61,6 +61,7 @@ namespace VideoManager.Models.Data
         public int? LiveStreamId { get; set; }
 
         public virtual LiveStream LiveStream { get; set; }
+        public bool HasSlate { get; set; }
 
 
     }
