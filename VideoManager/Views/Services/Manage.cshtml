@@ -479,7 +479,7 @@ else
                                 <br />
                                 <span class="bold">Username:</span>  @Model.ViewingUser.UserName
                                 <br />
-                                <span class="bold">Password:</span>  @Model.ViewingPassword
+                                <span class="bold">Password:</span>  <span id="secured-service-password">@Model.ViewingPassword</span>
                             </div>
 
                             if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
@@ -491,8 +491,9 @@ else
                                 <p>*The video is still being processed. Once the video is done you can acess the video with the credentials listed above. </p>
                             }
 
-                            <a href="#" class="btn btn-lg btn-info btn-block sharesecured-modal-button" data-toggle="modal" data-target="#ShareSecuredModal">Share Secured Link</a>
+                            <a href="#" class="btn btn-lg btn-info btn-block sharesecured-modal-button" data-toggle="modal" data-target="#ShareSecuredModal" style="margin-bottom:10px;">Share Secured Link</a>
                             <text>*If you would like to embed this video on your website uncheck the "Secured" checkbox and click "Save".</text>
+                            <button id="change-service-password" class="btn btn-lg btn-info btn-block sharesecured-modal-button">Change Service Password</button>
                         }
                         else
                         {
@@ -900,7 +901,23 @@ else
                 }
             });
 
+
+            $("#change-service-password").click(function () {
+
+                $.ajax({
+                    url: '../changepassword/' + serviceIdSet,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        console.log(data);
+                        $("#secured-service-password").html(data.password);
+                    }
+                });
+                return false;
+            });
         });
+
 
     </script>
 

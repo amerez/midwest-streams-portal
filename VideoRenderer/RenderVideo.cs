@@ -298,10 +298,10 @@ namespace VideoRenderer
                     var p = new Process
                     {
                         StartInfo =
-                    {
-                        FileName = BatchFilePath + "CreateTempConcatFile.bat",
-                        Arguments = argumentsString
-                    }
+                        {
+                            FileName = BatchFilePath + "CreateTempConcatFile.bat",
+                            Arguments = argumentsString
+                        }
                     };
                     p.Start();
                     p.WaitForExit();
@@ -321,6 +321,8 @@ namespace VideoRenderer
                
             }
 
+            //If the videos are the same aspect ratio you can concat without reencoding
+            //Otherwise they will need to be re encoded
             if(sameAspectRatio)
             {
                 //Batch files require files to be in a pipedelimited string
@@ -368,7 +370,7 @@ namespace VideoRenderer
                 string inputFiles = "";
                 string filterText = "";
                 int count = 0;
-                VideoConcatData largestVid = videoConcatModel.OrderByDescending(x => x.Width).FirstOrDefault();
+                VideoConcatData largestVid = videoConcatModel.OrderByDescending(x => x.Height).FirstOrDefault();
                 string largestWidth = largestVid.Width.ToString();
                 string largestHeight = largestVid.Height.ToString();
                 string mapping = "";
@@ -377,7 +379,7 @@ namespace VideoRenderer
                     string countStr = count.ToString();
                     inputFiles = inputFiles + " -i " + RawFileArchivePath+"\\"+ vid.Name;
                     //If this is the largest video don't apply filter to add black bars 
-                    if(count == largestVid.Order)
+                    if(count == largestVid.Order || vid.Height==largestVid.Height && vid.Width==largestVid.Width)
                     {
                         filterText = filterText + "[" + countStr + ":v]setsar=1[" + countStr + "v];";
                     }
@@ -391,24 +393,15 @@ namespace VideoRenderer
 
                 string videoCount = videoConcatModel.Count().ToString();
                 string concatVideoFileName = TempEditFolder+"\\"+ videoFiles[0].Substring(0, videoFiles[0].Length - 4) + "_concat.mp4";
-                string argumentString = FfMpegPathAndExecuteable + " " + "\"" + inputFiles + "\"" + " " +"\""+ filterText + "\""+ " " + mapping + " " + videoCount + " "+concatVideoFileName;
+                string argumentString = String.Format(@"{0} {1} {2} {3} {4} {5}", FfMpegPathAndExecuteable, inputFiles, filterText, mapping, videoCount, concatVideoFileName);
                 //Declare the process
-                var proc = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = BatchFilePath + "ConcatFilter.bat",
-                        Arguments = argumentString
-                    }
-                };
+                string args = FfMpegPathAndExecuteable  + inputFiles + " -filter_complex \"" + filterText  + mapping+ "concat=n="+videoCount+":v=1:a=1[outv][outa]\" -map \"[outv]\" -map \"[outa]\" -c:v libx264 -crf 23 "+concatVideoFileName;
+                bool result = executeCommandLineCommand(args);
 
-                Library.WriteServiceLog("Combing Videos. Using the Re-Render Method");
-                proc.Start();
-                proc.WaitForExit();
-                if (proc.ExitCode == 0)
+                if (result)
                 {
-                    Library.WriteServiceLog("Succefully concatenated videos");
-                    return "bob";
+                    Library.WriteServiceLog("Successfully concatenated videos");
+                    return "success";
                 }
                 else
                 {
@@ -871,8 +864,31 @@ namespace VideoRenderer
             string output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
             var result = JsonConvert.DeserializeObject<VideoMetaData>(output);
+            if(result.format==null)
+            {
+                Error.ReportError(ErrorSeverity.Severe, "While getting the metadata for video it returned null. Video either does not exist, or is corrupted.", "RenderVideo", "GetVideoMetaData", "879","N/A",0);
+            }
             return result;
         }
+
+        private bool executeCommandLineCommand(string arguments)
+        {
+            Process p = new Process();
+            // Redirect the output stream of the child process.
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = false;
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.Arguments = "/C "+arguments;
+            p.Start();
+            p.WaitForExit();
+            if(p.ExitCode==0)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
         private bool MoveFinishedVideoFromTempToConvertedFolder(string fileName, string convertedName)
         {
             Library.WriteServiceLog("Moving finished video to converted archive");

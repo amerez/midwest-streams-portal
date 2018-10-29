@@ -25,10 +25,8 @@ namespace VideoManager.Code
             if(service.ViewingUser==null)
             {
                 ApplicationUser viewingUser = new ApplicationUser();
-                var rndNum = new Random(DateTime.Now.Second);
-                var rawPW = System.Web.Security.Membership.GeneratePassword(8, 0);
-                rawPW = Regex.Replace(rawPW, @"[^a-zA-Z0-9]", m => rndNum.Next(0, 10).ToString());
 
+                var rawPW = GeneratePassword();
                 userName = RemoveSpecialCharacters(userName);
                 viewingUser.UserName = userName;
                 viewingUser.Name = service.FirstName +"'s Family";
@@ -50,6 +48,39 @@ namespace VideoManager.Code
                 db.SaveChanges();
 
             }
+        }
+
+        public string ChangeServicePassword(Service service, ApplicationDbContext db)
+        {
+            string password = "";
+            if(service.ViewingUser!=null)
+            {
+                UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+         
+                var userId = service.ViewingUserId;
+                UserManager.RemovePassword(userId);
+                password = GeneratePassword();
+                UserManager.AddPassword(userId, password);
+                service.ViewingPassword = password;
+                db.Entry(service).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return password;
+
+        }
+
+        private static string GeneratePassword()
+        {
+            var rndNum = new Random(DateTime.Now.Second);
+            string password = System.Web.Security.Membership.GeneratePassword(6, 0);
+            password = Regex.Replace(password, @"[^a-zA-Z0-9]", m => rndNum.Next(0, 10).ToString());
+            //Replace hard to read characters
+            password = password.Replace("l", "");
+            password = password.Replace("I", "J");
+            password = password.Replace("1", "4");
+
+            return password;
+
         }
         public static string RemoveSpecialCharacters(string str)
         {

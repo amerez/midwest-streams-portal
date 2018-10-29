@@ -206,6 +206,15 @@ namespace VideoManager.Controllers
 
             return View(prevService);
         }
+        [HttpPost]
+        [Authorize]
+        public ActionResult ChangePassword(int? id)
+        {
+            SecuredServiceHelper secured = new SecuredServiceHelper();
+            Service service = db.Services.Find(id);
+            string password = secured.ChangeServicePassword(service, db);
+            return Json(new { password = password });
+        }
 
         [Authorize(Roles = "FuneralHome, Admin, FuneralHomeOwner")]
         public ActionResult NoModal(int? id)
