@@ -84,7 +84,16 @@ namespace VideoManager.Code
 
 
             var token = GetAccessTokenAsync();
+
+            //Start Shane Debug
+            var myResult = token.Result;
+            var myToke = token.Result.AccessToken;
+
+
+            //End shane debug  
             var credential = new TokenCredentials(token.Result.AccessToken);
+
+            var myg = CreateResourceGroupDebug(credential, groupName, subscriptionId, location);
 
             var rgResult = CreateResourceGroup(credential, groupName, subscriptionId, location);
 
@@ -173,6 +182,23 @@ namespace VideoManager.Code
 
             var resourceGroup = new ResourceGroup { Location = location };
             return await resourceManagementClient.ResourceGroups.CreateOrUpdateAsync(groupName, resourceGroup);
+        }
+
+        public ResourceGroup CreateResourceGroupDebug(TokenCredentials credential, string groupName, string subscriptionId, string location)
+        {
+            var resourceManagementClient = new ResourceManagementClient(credential) { SubscriptionId = subscriptionId };
+
+
+            //var rpResult = resourceManagementClient.Providers.Register("Microsoft.Storage");
+
+            //rpResult = resourceManagementClient.Providers.Register("Microsoft.Network");
+
+            //rpResult = resourceManagementClient.Providers.Register("Microsoft.Compute");
+
+            var resourceGroup = new ResourceGroup { Location = location };
+            return resourceGroup;
+            //resourceManagementClient.ResourceGroups.CreateOrUpdate(groupName, resourceGroup);
+            //return resourceManagementClient.ResourceGroups.CreateOrUpdate(groupName, resourceGroup);
         }
 
         public ResourceGroup CreateResourceGroup(TokenCredentials credential, string groupName, string subscriptionId, string location)
@@ -530,10 +556,10 @@ namespace VideoManager.Code
         private static async Task<AuthenticationResult> GetAccessTokenAsync()
         {
 
-            var cc = new ClientCredential("eeb1eb9c-8416-445b-832c-feec564c9da1", "0bU+o1n3ETH8mlGfAZ7KwpDrKTb2FYIbaUJAwplV0bs=");
+            var cc = new ClientCredential("eeb1eb9c-8416-445b-832c-feec564c9da1", "8cncsqqu4jvijmCCHScdOwFe+mYkhl6omEt9RWUMCS8=");
             var context = new AuthenticationContext("https://login.windows.net/1f30f5d8-d3b7-4d2c-bcc5-b642e19893e0");
             var token = context.AcquireTokenAsync("https://management.azure.com/", cc).Result;
-
+       
             if (token == null)
             {
                 throw new InvalidOperationException("Could not get the token");
