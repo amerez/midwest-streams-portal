@@ -379,7 +379,7 @@ namespace VideoRenderer
                     string countStr = count.ToString();
                     inputFiles = inputFiles + " -i " + RawFileArchivePath+"\\"+ vid.Name;
                     //If this is the largest video don't apply filter to add black bars 
-                    if(count == largestVid.Order || vid.Height==largestVid.Height && vid.Width==largestVid.Width)
+                    if (vid.Height == largestVid.Height && vid.Width == largestVid.Width)
                     {
                         filterText = filterText + "[" + countStr + ":v]setsar=1[" + countStr + "v];";
                     }
