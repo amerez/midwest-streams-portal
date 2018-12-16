@@ -49,7 +49,7 @@ namespace VideoManager.Code
            WowzaResponse wr = JsonConvert.DeserializeObject<WowzaResponse>(response.Content);
             if(wr!=null && wr.live_stream!=null)
             {
-                Models.Data.LiveStream liveStream = CreateAndStoreLiveStream(service, wr.live_stream.id, wr.live_stream.player_hds_playback_url);
+                Models.Data.LiveStream liveStream = CreateAndStoreLiveStream(service, wr.live_stream.id, wr.live_stream.player_hls_playback_url);
                SendEmailWithStreamCode(liveStream.ServiceId, wr, liveStream.StartStreamAccessToken);
                 return liveStream;
             }
@@ -108,7 +108,7 @@ namespace VideoManager.Code
         private static bool SendEmailWithStreamCode(int? mwsLiveStreamId, WowzaResponse wowza, Guid accessToken )
         {
             string IOSCode = BuildAppOpenCode(wowza);
-            string EmailText = "You have created a live stream. First you need to start the stream. To start the stream please click the following link:" + ConfigurationManager.AppSettings["portalPath"] + "/services/startlivestream/" + mwsLiveStreamId.ToString() +"?token=" + accessToken.ToString() + "<br/><br/> IOS Code <br/>" + IOSCode;
+            string EmailText = "You have created a live stream. First you need to start the stream. To start the stream please click the following link:" + ConfigurationManager.AppSettings["portalPath"] + "/services/startlivestream/" + mwsLiveStreamId.ToString() +"?token=" + accessToken.ToString() + "<br/><br/> Connection Code: "+wowza.live_stream.connection_code;
             Email.sendLiveStreamingCode(EmailText);
             return true;
         }

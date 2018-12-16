@@ -113,10 +113,10 @@ namespace VideoRenderer
         //Main method to render videos
         public async void StartRender(bool includeSlate)
         {
-            InitiateRenderProcess();
-            var success = await DownloadVideosFromBlob();
-            if (success == false)
-                return;
+            //InitiateRenderProcess();
+            //var success = await DownloadVideosFromBlob();
+            //if (success == false)
+              //  return;
 
             //If there is multiple video files we need to concatenate the video files
             string concatenatedVideoFile = _videoFiles[0];
@@ -418,7 +418,7 @@ namespace VideoRenderer
         }
 
         //Merging the
-        private string MergeSlateToService(string videoFile1, string videoFile2, string outputFileName)
+        public string MergeSlateToService(string videoFile1, string videoFile2, string outputFileName)
         {
             var prefix = TempEditFolder + "\\";
             //Get Video File MetaData and ensure the width and height ratio match
@@ -610,7 +610,7 @@ namespace VideoRenderer
                     CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                     CloudBlobContainer container = blobClient.GetContainerReference("videos-in-queue");
                     CloudBlockBlob blockBlob = container.GetBlockBlobReference(file);
-                    await blockBlob.DownloadToFileAsync(RawFileArchivePath + "\\" + file, FileMode.Create);
+                    blockBlob.DownloadToFile(RawFileArchivePath + "\\" + file, FileMode.Create);
                 }
                 da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoQueueStatus.Downloaded);
                 return true;
