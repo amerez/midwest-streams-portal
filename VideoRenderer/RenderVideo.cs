@@ -695,7 +695,7 @@ namespace VideoRenderer
             //ffmpeg has some weird escape rules. Double quotes don't show, and : break the entire thing even when escaped. Write the values to a file and use the path for drawtext textfile value
 
             //Create the file with Name input value
-            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt";
+            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt"; 
             
             if (!File.Exists(slideShowNameInputValueFile))
             {
