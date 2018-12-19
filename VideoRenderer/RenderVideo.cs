@@ -634,10 +634,10 @@ namespace VideoRenderer
 
             Library.WriteServiceLog("Service Id: " + _renderParameters.ServiceId);
             Library.WriteServiceLog("Funeral Home Name: " + _renderParameters.FuneralHomeName);
-            Library.WriteServiceLog("Raw File Names: " + _renderParameters.ServiceId);
-            Library.WriteServiceLog("Converted File Name: " + _renderParameters.ServiceId);
-            Library.WriteServiceLog("Start: " + _renderParameters.ServiceId);
-            Library.WriteServiceLog("Duration: " + _renderParameters.ServiceId);
+            Library.WriteServiceLog("Raw File Names: " + _renderParameters.RawFileNames);
+            Library.WriteServiceLog("Converted File Name: " + _renderParameters.ConvertedFileName);
+            Library.WriteServiceLog("Start: " + _renderParameters.Start);
+            Library.WriteServiceLog("Duration: " + _renderParameters.Duration);
             
 
             GlobalVariables.IsRendering = true;
@@ -692,23 +692,61 @@ namespace VideoRenderer
         }
         public bool CreateSlideShow(string firstName, string lastName, DateTime serviceDate, string funeralHomeName, string outputFileName)
         {
+            //ffmpeg has some weird escape rules. Double quotes don't show, and : break the entire thing even when escaped. Write the values to a file and use the path for drawtext textfile value
 
-            Library.WriteServiceLog("Beginning to create slide show");
-            //ffmpeg has some weird escape rules. Double quotes don't show, and : break the entire thing even when escaped.
-            string ffmpegEscapedNameString = firstName + " " + lastName;
+            //Create the file with Name input value
+            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt";
+            
+            if (!File.Exists(slideShowNameInputValueFile))
+            {
+                File.Create(slideShowNameInputValueFile);
+                TextWriter tw = new StreamWriter(slideShowNameInputValueFile);
+                tw.Write("{0}", firstName + " " + lastName);
+                tw.Close();
+                Library.WriteServiceLog("Slide Show Name Input Value File Created");
+            }
+            else if(File.Exists(slideShowNameInputValueFile))
+            {
+                using (TextWriter tw = new StreamWriter(slideShowNameInputValueFile, false))
+                {
+                    tw.Write("{0}", firstName + " " + lastName);
+                    Library.WriteServiceLog("Slide Show Name Input Value File updated");
+                }
+            }
 
-            ffmpegEscapedNameString = ffmpegEscapedNameString.Replace("'", "\'").Replace("\"", "\'").Replace("\\", "\\\\\\\"").Replace(":", " ");
-            Library.WriteServiceLog("Name Parameters: " + ffmpegEscapedNameString);
+            //Create the file with Funeral Name input value
+            string slideShowFuneralHomeInputValueFile = BatchFilePath + "SlideShowFuneralHomeInputValue.txt";
+
+            if (!File.Exists(slideShowFuneralHomeInputValueFile))
+            {
+                File.Create(slideShowFuneralHomeInputValueFile);
+                TextWriter tw = new StreamWriter(slideShowFuneralHomeInputValueFile);
+                tw.Write("{0}", funeralHomeName);
+                tw.Close();
+                Library.WriteServiceLog("Slide Show Funeral Name Input Value File Created");
+            }
+            else if (File.Exists(slideShowFuneralHomeInputValueFile))
+            {
+                using (TextWriter tw = new StreamWriter(slideShowFuneralHomeInputValueFile, false))
+                {
+                    tw.Write("{0}", funeralHomeName);
+                    Library.WriteServiceLog("Slide Show Funeral Name Input Value File updated");
+                }
+            }
 
             string ffmpegEscapedDateString = serviceDate.ToString("MMMM dd, yyyy");
             Library.WriteServiceLog("Date Parameter: " + ffmpegEscapedDateString);
 
-            string ffmpegEscapedFuneralHomeNameString = funeralHomeName.Replace("'", "\'").Replace("\"", "\'").Replace("\\", "\\\\\\\"").Replace(":", " ");
-            Library.WriteServiceLog("FuneralHomeName Parameter: " + ffmpegEscapedFuneralHomeNameString);
-
+            Library.WriteServiceLog("Beginning to create slide show");
+            
+            
             outputFileName = TempEditFolder + "\\" + outputFileName;
 
-            string argumentsString = FfMpegPathAndExecuteable + " " + BatchFilePath + "open.mp4" + " " + outputFileName + " \"" + ffmpegEscapedNameString + "\"" + " \"" + ffmpegEscapedDateString + "\" \"" + ffmpegEscapedFuneralHomeNameString + "\"";
+            //Create ffmpeg drawtext textfile variable approved file paths
+            string ffmpegApprovedFullNamePath = slideShowNameInputValueFile.Replace("\\","/").Replace(":/","\\\\:/");
+            string ffmpegApprovedFuneralNamePath = slideShowFuneralHomeInputValueFile.Replace("\\", "/").Replace(":/", "\\\\:/");
+
+            string argumentsString = FfMpegPathAndExecuteable + " " + BatchFilePath + "open.mp4" + " " + outputFileName + " \"" + ffmpegApprovedFullNamePath + "\"" + " \"" + ffmpegEscapedDateString + "\" \"" + ffmpegApprovedFuneralNamePath + "\"";
 
             var p = new Process
             {
