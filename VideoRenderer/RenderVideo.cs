@@ -695,57 +695,29 @@ namespace VideoRenderer
             //ffmpeg has some weird escape rules. Double quotes don't show, and : break the entire thing even when escaped. Write the values to a file and use the path for drawtext textfile value
 
             //Create the file with Name input value
-            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt"; 
-            
-            if (!File.Exists(slideShowNameInputValueFile))
-            {
-                File.Create(slideShowNameInputValueFile);
-                TextWriter tw = new StreamWriter(slideShowNameInputValueFile);
-                tw.Write("{0}", firstName + " " + lastName);
-                tw.Close();
-                Library.WriteServiceLog("Slide Show Name Input Value File Created");
-            }
-            else if(File.Exists(slideShowNameInputValueFile))
-            {
-                using (TextWriter tw = new StreamWriter(slideShowNameInputValueFile, false))
-                {
-                    tw.Write("{0}", firstName + " " + lastName);
-                    Library.WriteServiceLog("Slide Show Name Input Value File updated");
-                }
-            }
+            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt";
+
+            //Create ffmpeg approved Full Name input value
+            string ffmpegApprovedFullNamePath = CreateInputValueFile(slideShowNameInputValueFile, firstName + " " + lastName);
+
 
             //Create the file with Funeral Name input value
             string slideShowFuneralHomeInputValueFile = BatchFilePath + "SlideShowFuneralHomeInputValue.txt";
 
-            if (!File.Exists(slideShowFuneralHomeInputValueFile))
-            {
-                File.Create(slideShowFuneralHomeInputValueFile);
-                TextWriter tw = new StreamWriter(slideShowFuneralHomeInputValueFile);
-                tw.Write("{0}", funeralHomeName);
-                tw.Close();
-                Library.WriteServiceLog("Slide Show Funeral Name Input Value File Created");
-            }
-            else if (File.Exists(slideShowFuneralHomeInputValueFile))
-            {
-                using (TextWriter tw = new StreamWriter(slideShowFuneralHomeInputValueFile, false))
-                {
-                    tw.Write("{0}", funeralHomeName);
-                    Library.WriteServiceLog("Slide Show Funeral Name Input Value File updated");
-                }
-            }
-
+            //Create ffmpeg approved Funeral Name input value
+            string ffmpegApprovedFuneralNamePath = CreateInputValueFile(slideShowFuneralHomeInputValueFile, funeralHomeName);
+            
+            //Create Date input value
             string ffmpegEscapedDateString = serviceDate.ToString("MMMM dd, yyyy");
             Library.WriteServiceLog("Date Parameter: " + ffmpegEscapedDateString);
+
 
             Library.WriteServiceLog("Beginning to create slide show");
             
             
             outputFileName = TempEditFolder + "\\" + outputFileName;
 
-            //Create ffmpeg drawtext textfile variable approved file paths
-            string ffmpegApprovedFullNamePath = slideShowNameInputValueFile.Replace("\\","/").Replace(":/","\\\\:/");
-            string ffmpegApprovedFuneralNamePath = slideShowFuneralHomeInputValueFile.Replace("\\", "/").Replace(":/", "\\\\:/");
-
+           
             string argumentsString = FfMpegPathAndExecuteable + " " + BatchFilePath + "open.mp4" + " " + outputFileName + " \"" + ffmpegApprovedFullNamePath + "\"" + " \"" + ffmpegEscapedDateString + "\" \"" + ffmpegApprovedFuneralNamePath + "\"";
 
             var p = new Process
@@ -774,6 +746,32 @@ namespace VideoRenderer
             return false;
 
         }
+
+        private string CreateInputValueFile(string fileName, string fileInputText)
+        {
+            if (!File.Exists(fileName))
+            {
+                File.Create(fileName);
+                TextWriter tw = new StreamWriter(fileName);
+                tw.Write("{0}", fileInputText);
+                tw.Close();
+                Library.WriteServiceLog("Slide Show Input Value File Created");
+            }
+            else if (File.Exists(fileName))
+            {
+                using (TextWriter tw = new StreamWriter(fileName, false))
+                {
+                    tw.Write("{0}", fileInputText);
+                    Library.WriteServiceLog("Slide Show Input Value File updated");
+                }
+            }
+
+            string ffmpegApprovedPath = fileName.Replace("\\", "/").Replace(":/", "\\\\:/");
+
+            return ffmpegApprovedPath;
+
+        }
+
         private bool UploadConvertedVideoToAzure(string convertedFileName)
         {
       
