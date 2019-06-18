@@ -298,7 +298,8 @@ namespace VideoManager.Controllers
                 PrimaryContact = funeralHomeView.PrimaryContact,
                 PrimaryContactEmail = funeralHomeView.PrimaryContactEmail,
                 PrimaryContactPhoneNumber = funeralHomeView.PrimaryContactPhoneNumber,
-                DevHome = funeralHomeView.DevHome
+                DevHome = funeralHomeView.DevHome,
+                
 			};
       
 			if(db.Users.Where(u=>u.UserName == funeralHomeView.UserName).Count()>1)
@@ -406,6 +407,32 @@ namespace VideoManager.Controllers
 
             }
             return Json(new { foo = "bar", baz = "Blech" });
+        }
+
+        [HttpPost]
+        public ActionResult ViewedAnnouncment(int? announcmentId)
+        {
+            var userId = User.Identity.GetUserId();
+            FuneralHome home = db.FuneralHomes.Where(h => h.UserId == userId).FirstOrDefault();
+            if (home.Setting != null)
+            {
+                Announcment a = db.Announcments.Find(announcmentId);
+                if(a!=null)
+                {
+                    List<Announcment> announcments = new List<Announcment>();
+                    if(home.AnnouncmentsViewed!=null)
+                    {
+                        announcments = home.AnnouncmentsViewed;
+                    }
+                    announcments.Add(a);
+                    home.AnnouncmentsViewed = announcments;
+                    db.Entry(home).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(new { success = "true" });
+                }
+
+            }
+            return Json(new { success="false" });
         }
 
         // POST: FuneralHomes/Delete/5

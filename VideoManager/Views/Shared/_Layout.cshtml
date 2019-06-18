@@ -85,9 +85,9 @@
                             {
                                 @Html.MenuItem("Upload New Service", "Manage", "Services")
                                 @Html.MenuItem("All Services", "Index", "Services")
-                                @Html.MenuItem("Analytics", "Index", "Analytics")   
+                                @Html.MenuItem("Analytics", "Index", "Analytics")
                                 @Html.MenuItem("Help Center", "Contact", "Home")
-                              
+
                             }
                             else
                             {
@@ -99,7 +99,7 @@
                                 @Html.MenuItem("Owners", "Index", "Owners")
                                 @Html.MenuItem("Logins", "Index", "Account")
                                 @Html.MenuItem("Email", "SendMassEmail", "Email")
-                              
+
                                 @Html.MenuItem("CRM", "ContactList", "CRM")
                             }
                         </ul>
@@ -126,11 +126,13 @@
         <p>&copy; @DateTime.Now.Year - Midwest Streams</p>
     </div>
 
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/plugins")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/Site.js"></script>
+
 
     <script>
         $.backstretch("../../Content/images/bg.jpg", { speed: 1050 });
@@ -158,7 +160,7 @@
 
             //Tool Tips
             $('#securedToolTip').tooltipster({
-                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Secure This Service</h2><p>Click this box if you will not be putting the video on your obituary page.<br/>Instead we will send the family a secure link to the service video.</p></div>')
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Make this service private</h2><p>Click this box if you will not be putting the video on your obituary page.<br/>Instead viewers can watch the service via a link and typing in a username and password.</p></div>')
             });
             $('#videoTitleToolTip').tooltipster({
                 content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Choose a title for your video</h2><p>By default we will title your service "First Name Last Name\'s Service."<br/>If this is a different type of video (i.e. Prayer Service or Time of Sharing)<br/>you can choose a different title here. </p><img src="../../Content/images/videoTitle.jpg" width="300"/></div>')
@@ -169,7 +171,9 @@
             $('#TotalVideoViewsToolTip').tooltipster({
                 content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Why is this number different than the analytics on the main page?</h2><p>This is our new analytics code. These analytics filter out spam, and short video views. These analytics do not include any views before June 1st 2015.</p></div>')
             });
-
+            $('#slateToolTip').tooltipster({
+                content: $('<div class="joyride-content-wrapper" role="dialog"><h2>Add an Intro Video</h2><p>Check this box if you would like to include a short 20 second intro video. This video will include the name and date of the service. Please ensure the information is input correctly, before uploading the video.</p></div>')
+            });
 
         });
     </script>
@@ -217,7 +221,7 @@
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
             }, i[r].l = 1 * new Date(); a = s.createElement(o),
-			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
         ga('create', 'UA-52631408-1', 'auto');
@@ -233,8 +237,8 @@
             <script>
                 var operatorJoined = false;
                 purechatApi.on('chatbox:ready', function () {
-                    purechatApi.set('visitor.name', '@User.Identity.Name'); // Sets the visitor name to "Joe Doe" 
-                }); 
+                    purechatApi.set('visitor.name', '@User.Identity.Name'); // Sets the visitor name to "Joe Doe"
+                });
             </script>
         }
 

@@ -232,13 +232,9 @@
 }
 <div class="row">
     <div class="col-md-10 col-md-offset-2">
-
-        <div class="btn btn-default">
-            @Html.ActionLink("Cancel", "Index")
-        </div>
-
-        <div class="btn btn-default">
-            @Html.ActionLink("Change Password", "SetPassword", new { id = Model.FuneralHomeId })
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-default">Cancel</a>
+            <a href="@Url.Action("SetPassword", new { id = Model.FuneralHomeId })" class="btn btn-default">Change Password</a>
         </div>
         </div>
 </div>

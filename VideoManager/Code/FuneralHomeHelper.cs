@@ -46,6 +46,7 @@ namespace VideoManager.Code
                     FuneralHomeId = fh.Id,
                     WebsiteProvider = wp,
                     DisplayTutorial = true,
+                    AzureVMSize = "Standard_D4_v2"
                 };
                 fh.Setting = settings;
                 db.Entry(fh).State = EntityState.Modified;

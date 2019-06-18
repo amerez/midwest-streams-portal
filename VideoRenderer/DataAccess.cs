@@ -33,8 +33,8 @@ namespace VideoRenderer
             try
             {
                 RenderViewModel renderData = JsonConvert.DeserializeObject<RenderViewModel>(response.Content);
-                Library.WriteServiceLog("Found video to render!");
-                Library.WriteServiceLog("Render Data: Group Name: " + renderData.ResourceGroupName);
+                Library.WriteServiceLog("Got data from Render API");
+                Library.WriteServiceLog("Render Data: " + renderData);
                 return renderData;
             }
             catch(Exception e)

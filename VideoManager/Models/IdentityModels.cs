@@ -79,5 +79,6 @@ namespace VideoManager.Models
         public System.Data.Entity.DbSet<VideoManager.Models.Data.VideoQueue> VideoQueues { get; set; }
         public System.Data.Entity.DbSet<VideoManager.Models.Data.DownloadAnalytic> DownloadAnalytics { get; set; }
         public System.Data.Entity.DbSet<VideoManager.Models.Data.CRMNotification> CRMNotifications { get; set; }
+        public System.Data.Entity.DbSet<VideoManager.Models.Data.Announcment> Announcments { get; set; }
     }
 }

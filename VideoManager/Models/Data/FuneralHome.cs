@@ -69,5 +69,7 @@ namespace VideoManager.Models.Data
 
         public bool DevHome { get; set; }
 
+        public List<Announcment> AnnouncmentsViewed { get; set; }
+
     }
 }

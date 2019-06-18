@@ -400,6 +400,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
+    <Compile Include="Controllers\AnnouncmentsController.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\CompetitorWatchController.cs" />
@@ -517,6 +518,14 @@
     <Compile Include="Migrations\201802022326074_addedSlateToService.Designer.cs">
       <DependentUpon>201802022326074_addedSlateToService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903190132075_AddedAnnouncmentTable.cs" />
+    <Compile Include="Migrations\201903190132075_AddedAnnouncmentTable.Designer.cs">
+      <DependentUpon>201903190132075_AddedAnnouncmentTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.cs" />
+    <Compile Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.Designer.cs">
+      <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
     <Compile Include="Models\Data\CRMFuneralHomeHistoryComment.cs" />
@@ -529,6 +538,7 @@
     <Compile Include="Models\Data\CWFuneralHome.cs" />
     <Compile Include="Models\Data\CRMOwnerContact .cs" />
     <Compile Include="Models\Data\Enums\VideoQueType.cs" />
+    <Compile Include="Models\Data\Announcment.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\combined.video.js" />
@@ -1499,6 +1509,11 @@
     <Content Include="Views\CRM\UserLog.cshtml" />
     <Content Include="Views\Admin\VertinReport.cshtml" />
     <Content Include="Views\Billing\OrderConfirmed.cshtml" />
+    <Content Include="Views\Announcments\Create.cshtml" />
+    <Content Include="Views\Announcments\Delete.cshtml" />
+    <Content Include="Views\Announcments\Details.cshtml" />
+    <Content Include="Views\Announcments\Edit.cshtml" />
+    <Content Include="Views\Announcments\Index.cshtml" />
     <None Include="Web.azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1717,6 +1732,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802022326074_addedSlateToService.resx">
       <DependentUpon>201802022326074_addedSlateToService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903190132075_AddedAnnouncmentTable.resx">
+      <DependentUpon>201903190132075_AddedAnnouncmentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.resx">
+      <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

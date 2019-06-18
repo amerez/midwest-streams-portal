@@ -10,6 +10,26 @@ namespace VideoRenderer
 {
     public class  Test
     {
+        public static void CompleteTest()
+        {
+            RenderViewModel renderDataa = new RenderViewModel()
+            {
+                RawFileNames = "helke1.mp4,helke2.mp4",
+                ConvertedFileName = "Helke320TestWithNoSlate.mp4",
+                Duration = 0,
+                Start = 0,
+                FirstName = "Shane",
+                LastName = "White",
+                FoundVideoToRender = true,
+                FuneralHomeName = "DevHome",
+                ServiceId = 40,
+                VideoQueId = 30,
+                VideoQueType = VideoQueType.FullNoSlate,
+                ServiceDate = DateTime.Now
+            };
+            RenderVideo render = new RenderVideo(renderDataa);
+            render.StartRender(false);
+        }
         public static void ConcatTest()
         {
             //This works. Test for three files with different aspect ratios.
@@ -32,11 +52,12 @@ namespace VideoRenderer
             List<string> vids = new List<string>();
             vids.Add("helke1.mp4");
             vids.Add("helke2.mp4");
+            render.CreateSlideShow("Shane", "White", DateTime.Now, "Your Funeral Home Name", "slate.mp4");
             //render.ConcatenateVideoFiles(vids, true);
             //render.CreateSlideShow("Shane", "White", DateTime.Now, "Mollys Funeral Home", "slideshow.mp4");
-            // render.MergeSlateToService("helke1.mp4", "slideshow.mp4", "output.mp4");
+            render.MergeSlateToService("slate.mp4", "hi.mp4", "output.mp4");
             // render.StartRender(false);
-            render.CreateSlideShow("Bobbys", "Thorton", DateTime.Now, "Bobs Home", "slate.mp4"); 
+
         }
 
         public static void Download()
@@ -60,6 +81,26 @@ namespace VideoRenderer
             string[] _videoFiles = videoFiles.Split(',');
             renderer.ConcatenateVideoFiles(_videoFiles.ToList(), true);
 
+        }
+        public static void TrimTest()
+        {
+            RenderViewModel renderDataa = new RenderViewModel()
+            {
+                RawFileNames = "sintel.mp4",
+                ConvertedFileName = "jan2nd_full_slate.mp4",
+                Duration = 345,
+                Start = 20,
+                FirstName = "Auggie",
+                LastName = "Wolchansky",
+                FoundVideoToRender = true,
+                FuneralHomeName = "DevHome",
+                ServiceId = 16,
+                VideoQueId = 30,
+                VideoQueType = VideoQueType.FullWithSlate,
+                ServiceDate = DateTime.Now
+            };
+            RenderVideo render = new RenderVideo(renderDataa);
+            render.TrimVideo("sintel_concat.mp4");
         }
   
     }

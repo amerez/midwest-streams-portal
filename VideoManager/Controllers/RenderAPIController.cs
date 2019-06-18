@@ -56,6 +56,7 @@ namespace VideoManager.Controllers
         [HttpPost]
         public ActionResult GetRenderData(string machineName)
         {
+            var testQs = db.VideoQueues.ToList();
             VideoQueue vq = db.VideoQueues.Where(q => q.VMName == machineName && q.VideoStatus == VideoQueueStatus.UploadedToAzureRenderFarm).FirstOrDefault();
             RenderViewModel rvm = new RenderViewModel();
             if (vq == null)

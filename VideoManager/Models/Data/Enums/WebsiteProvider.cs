@@ -18,6 +18,7 @@ namespace VideoManager.Models.Data.Enums
         WordPress,
         OtherIframe,
         Aurora,
-        DJ
+        DJ,
+        Hamiltons
     }
 }

@@ -60,9 +60,9 @@ namespace VideoRenderer
             public string r_frame_rate { get; set; }
             public string avg_frame_rate { get; set; }
             public string time_base { get; set; }
-            public int start_pts { get; set; }
+            public long start_pts { get; set; }
             public string start_time { get; set; }
-            public int duration_ts { get; set; }
+            public long duration_ts { get; set; }
             public string duration { get; set; }
             public string bit_rate { get; set; }
             public string bits_per_raw_sample { get; set; }

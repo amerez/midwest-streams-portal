@@ -43,7 +43,8 @@ namespace VideoManager.Code
                 q.CreateDate = DateTime.Now;
                 q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
                 //Use free server located in Wahpeton to Render videos if avaliable
-                var wahpRenderQ = context.VideoQueues.Where(x => x.VMName == "WIN-8GJ4I6440BF").FirstOrDefault();
+                //Look into purchasing a render server for the house
+                //var wahpRenderQ = context.VideoQueues.Where(x => x.VMName == "WIN-8GJ4I6440BF").FirstOrDefault();
                 //if (wahpRenderQ == null)
                 //{
                 //    q.VMName = "WIN-8GJ4I6440BF";

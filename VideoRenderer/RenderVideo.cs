@@ -61,12 +61,9 @@ namespace VideoRenderer
             //Create opening slate
             CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
 
-            //Merge slideshow and service
-            List<string> openerAndService = new List<string>();
-            openerAndService.Add("opener.mp4");
-            openerAndService.Add(video);
-            video = ConcatenateVideoFiles(openerAndService, false);
-            //FinishPartialRender(video);
+            video = MergeSlateToService("opener.mp4", video, "video-with-new-slate.mp4");
+
+            FinishPartialRender(video);
 
         }
 
@@ -74,6 +71,7 @@ namespace VideoRenderer
         {
             InitiateRenderProcess();
             _renderParameters.Start = SlateLength;
+
             var success = await DownloadVideosFromBlob();
             if (success == false)
                 return;
@@ -113,10 +111,10 @@ namespace VideoRenderer
         //Main method to render videos
         public async void StartRender(bool includeSlate)
         {
-            //InitiateRenderProcess();
-            //var success = await DownloadVideosFromBlob();
-            //if (success == false)
-              //  return;
+            InitiateRenderProcess();
+            var success = await DownloadVideosFromBlob();
+            if (success == false)
+                return;
 
             //If there is multiple video files we need to concatenate the video files
             string concatenatedVideoFile = _videoFiles[0];
@@ -165,9 +163,6 @@ namespace VideoRenderer
             //Extract Thumbnail
             string thumbnailName = ExtractThumbnail(_renderParameters.ConvertedFileName, thumbnailSnapShot);
 
-            //DELETE THIS. ONLY TO CUT METHOD SHORT FOR EASIER RENDER TESTING
-            CleanUpRenderEnviroment();
-            return;
 
             //Upload Thumbnail to Azure
             UploadThumbnailToAzure(thumbnailName);
@@ -195,8 +190,8 @@ namespace VideoRenderer
                 //Delete temp video files. And set rendering var to false
                 CleanUpRenderEnviroment();
             }
-                
 
+            return;
         }
         public void TestBatch()
         {
@@ -229,10 +224,6 @@ namespace VideoRenderer
                 //Delete temp video files. And set rendering var to false
                 CleanUpRenderEnviroment();
             }
-
-            ////Move the file to Converted folder
-            if (!MoveFinishedVideoFromTempToConvertedFolder(video, _renderParameters.ConvertedFileName))
-                return;
         }
 
         private void DeleteRenderMachine()
@@ -392,16 +383,17 @@ namespace VideoRenderer
                 }
 
                 string videoCount = videoConcatModel.Count().ToString();
-                string concatVideoFileName = TempEditFolder+"\\"+ videoFiles[0].Substring(0, videoFiles[0].Length - 4) + "_concat.mp4";
-                string argumentString = String.Format(@"{0} {1} {2} {3} {4} {5}", FfMpegPathAndExecuteable, inputFiles, filterText, mapping, videoCount, concatVideoFileName);
+                string concatFileName = videoFiles[0].Substring(0, videoFiles[0].Length - 4) + "_concat.mp4";
+                string concatVideoFileNameAndPath = TempEditFolder+"\\"+ concatFileName;
+                string argumentString = String.Format(@"{0} {1} {2} {3} {4} {5}", FfMpegPathAndExecuteable, inputFiles, filterText, mapping, videoCount, concatVideoFileNameAndPath);
                 //Declare the process
-                string args = FfMpegPathAndExecuteable  + inputFiles + " -filter_complex \"" + filterText  + mapping+ "concat=n="+videoCount+":v=1:a=1[outv][outa]\" -map \"[outv]\" -map \"[outa]\" -c:v libx264 -crf 23 "+concatVideoFileName;
+                string args = FfMpegPathAndExecuteable  + inputFiles + " -filter_complex \"" + filterText  + mapping+ "concat=n="+videoCount+":v=1:a=1[outv][outa]\" -map \"[outv]\" -map \"[outa]\" -c:v libx264 -crf 23 "+ concatVideoFileNameAndPath;
                 bool result = executeCommandLineCommand(args);
 
                 if (result)
                 {
                     Library.WriteServiceLog("Successfully concatenated videos");
-                    return "success";
+                    return concatFileName;
                 }
                 else
                 {
@@ -418,32 +410,32 @@ namespace VideoRenderer
         }
 
         //Merging the
-        public string MergeSlateToService(string videoFile1, string videoFile2, string outputFileName)
+        public string MergeSlateToService(string slate, string service, string outputFileName)
         {
             var prefix = TempEditFolder + "\\";
             //Get Video File MetaData and ensure the width and height ratio match
-            Stream vid1Data = GetVideoMetaData(videoFile1, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault();
-            Stream vid2Data = GetVideoMetaData(videoFile2, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault(); ;
+            Stream slateDate = GetVideoMetaData(slate, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault();
+            Stream vidData = GetVideoMetaData(service, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault(); ;
 
             //Videos can not be merged if they arent exactly the same aspect ratio
-            if(vid1Data!=null && vid2Data!=null)
+            if(slateDate != null && slateDate != null)
             {
-                int width1 = vid1Data.width;
-                int height1 = vid1Data.height;
-                int width2 = vid2Data.width;
-                int height2 = vid2Data.height;
+                int width1 = slateDate.width;
+                int height1 = slateDate.height;
+                int width2 = vidData.width;
+                int height2 = vidData.height;
                 if (width1!=width2 || height1!=height2)
                 {
-                    string videoFile1Resized =  "resized_" + videoFile1;
-                    ResizeVideo(prefix + videoFile1, width2, height2, prefix + videoFile1Resized);
-                    videoFile1 = videoFile1Resized;
+                    string videoFile1Resized =  "resized_" + slate;
+                    ResizeVideo(prefix + slate, width2, height2, prefix + videoFile1Resized);
+                    slate = videoFile1Resized;
                 }
             }
 
 
 
        
-                string argumentString = String.Format(@"{0} {1} {2} {3}", FfMpegPathAndExecuteable, prefix + videoFile1, prefix + videoFile2, prefix + outputFileName);
+                string argumentString = String.Format(@"{0} {1} {2} {3}", FfMpegPathAndExecuteable, prefix + slate, prefix + service, prefix + outputFileName);
                 //Declare the process
                 var proc = new Process
                 {
@@ -457,16 +449,14 @@ namespace VideoRenderer
                 Library.WriteServiceLog("Combing Videos. Using the Re-Render Method");
                 proc.Start();
                 proc.WaitForExit();
-                if (proc.ExitCode == 0)
+           if (proc.ExitCode == 0)
                 {
                     Library.WriteServiceLog("Succefully concatenated videos");
                     return outputFileName;
                 }
                 else
                 {
-                    Library.WriteErrorLog("Failed to run the Compress-ReRender batch file. Most likely videos are different codecs");
-                    Library.WriteErrorLog("Now trying to merge the videos using a safer method. This method does not include the fade effect");
-                    Library.WriteServiceLog("FAILED TO COMPRESS VIDEO! SEE ffmpeglog.txt FOR MORE DETAILS");
+                    Library.WriteErrorLog("Failed to run the Compress-ReRender batch file.");
                     string errorDescription = "Batch file 'ConcatVideosReRender.bat' failed. Argument String: " + argumentString;
                     Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "MergeSlateToService", "364", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
                     HandleErrors();
@@ -509,7 +499,7 @@ namespace VideoRenderer
             return false;
         }
 
-        private string TrimVideo(string inputFileName)
+        public string TrimVideo(string inputFileName)
         {
             
             da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoQueueStatus.Rendering);
@@ -523,21 +513,30 @@ namespace VideoRenderer
             Library.WriteServiceLog("StartTime: " + formattedInputTime);
             Library.WriteServiceLog("Duration: " + formattedDuration);
 
-            //if the video is less than 5 seconds long, it's probably a mistake and shouldn't be trimmed at all
-            if(_renderParameters.Duration<5)
-            {
-                Library.WriteServiceLog("Duration less than 5 seconds. Not trimming video");
-                File.Move(inputFileNameAndPath, outputFileNameAndPath);
-                return outputFileName;
-            }
+     
 
             string argumentString = String.Format(@"{0} {1} {2} {3} {4}", FfMpegPathAndExecuteable, inputFileNameAndPath, outputFileNameAndPath, formattedInputTime, formattedDuration );
+            string batchFileName = BatchFilePath + "Trim.bat";
             Library.WriteServiceLog("Beggining to trim video");
+
+            //if the video is less than 5 seconds long, it's probably a mistake and shouldn't be trimmed at all. 
+            if (_renderParameters.Duration < 5)
+            {
+                if (_renderParameters.Start < 5)
+                {
+                    Library.WriteServiceLog("Duration less than 5 seconds. Not trimming video");
+                    File.Move(inputFileNameAndPath, outputFileNameAndPath);
+                    return outputFileName;
+                }
+                //Or if the start time is greater than 5 we are trying to cut just the start of the video with an unkown length
+                batchFileName = BatchFilePath + "TrimUnknownDuration.bat";
+
+            }
             var proc = new Process
             {
                 StartInfo =
                     {
-                        FileName = BatchFilePath + "Trim.bat",
+                        FileName = batchFileName,
                         Arguments = argumentString
                     }
             };
@@ -553,7 +552,7 @@ namespace VideoRenderer
                 Library.WriteServiceLog("Error trimming video!");
                 string errorDescription = "Batch file 'Trim.bat' failed. Argument String: " + argumentString;
                 Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "TrimVideo", "132", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
-                HandleErrors();
+                //HandleErrors();
             }
             return "false";
         }
@@ -630,7 +629,7 @@ namespace VideoRenderer
         private bool InitiateRenderProcess()
         {
             Library.WriteServiceLog("////////////////////////////////////////////");
-            Library.WriteServiceLog("Initiating Render Process. Setting Global Variables, Logging Render Params, and creating SEM file.");
+            Library.WriteServiceLog("Initiating Render Process. Setting Global Variables, and Logging Render Params");
 
             Library.WriteServiceLog("Service Id: " + _renderParameters.ServiceId);
             Library.WriteServiceLog("Funeral Home Name: " + _renderParameters.FuneralHomeName);
@@ -648,9 +647,6 @@ namespace VideoRenderer
             //Clear Temp Folder for any leftovers
             CleanTempEditFolder();
 
-            //Create a file so system admins can easily see if we are rendering or not.
-            var semFile = new StreamWriter(BatchFilePath + "Converting.SEM");
-            semFile.Close();
             return true;
         }
         private void ClearRawFileDirectory()
@@ -675,34 +671,21 @@ namespace VideoRenderer
                 dir.Delete(true);
             }
         }
-        private bool FinishRenderProcess()
-        {
-            try
-            {
-                if (File.Exists(BatchFilePath + "Converting.SEM"))
-                {
-                    File.Delete(BatchFilePath + "Converting.SEM");
-                }
-            }
-            catch (Exception e)
-            {
-                RenderErrors.ReportError(ErrorSeverity.Warning, e, "Error deleting Semi File", "RenderVideo", "FinishRenderProcess", "105", _renderParameters.ServiceId, _renderParameters.FuneralHomeName);
-            }
-            return true;
-        }
+
         public bool CreateSlideShow(string firstName, string lastName, DateTime serviceDate, string funeralHomeName, string outputFileName)
         {
+            string ffmpegInputPath = BatchFilePath+"ffmpegInputs\\";
             //ffmpeg has some weird escape rules. Double quotes don't show, and : break the entire thing even when escaped. Write the values to a file and use the path for drawtext textfile value
-
+            string uniqueTimeStamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
             //Create the file with Name input value
-            string slideShowNameInputValueFile = BatchFilePath + "SlideShowNameInputValue.txt";
+            string slideShowNameInputValueFile = ffmpegInputPath + "SlideShowNameInputValue" + uniqueTimeStamp + ".txt";
 
             //Create ffmpeg approved Full Name input value
             string ffmpegApprovedFullNamePath = CreateInputValueFile(slideShowNameInputValueFile, firstName + " " + lastName);
 
 
             //Create the file with Funeral Name input value
-            string slideShowFuneralHomeInputValueFile = BatchFilePath + "SlideShowFuneralHomeInputValue.txt";
+            string slideShowFuneralHomeInputValueFile = ffmpegInputPath + "SlideShowFuneralHomeInputValue"+uniqueTimeStamp+".txt";
 
             //Create ffmpeg approved Funeral Name input value
             string ffmpegApprovedFuneralNamePath = CreateInputValueFile(slideShowFuneralHomeInputValueFile, funeralHomeName);
@@ -733,6 +716,7 @@ namespace VideoRenderer
             if (p.ExitCode == 0)
             {
                 Library.WriteServiceLog("Succesfully created slideshow");
+                DeleteFfmpegInputFiles(ffmpegInputPath);
                 return true;
             }
             else
@@ -751,15 +735,16 @@ namespace VideoRenderer
         {
             if (!File.Exists(fileName))
             {
-                File.Create(fileName);
-                TextWriter tw = new StreamWriter(fileName);
+                File.Create(fileName).Dispose();
+                StreamWriter tw = new StreamWriter(fileName);
                 tw.Write("{0}", fileInputText);
                 tw.Close();
                 Library.WriteServiceLog("Slide Show Input Value File Created");
+                Library.WriteServiceLog("ffmpeg Slide Show Input Text: " + fileInputText);
             }
             else if (File.Exists(fileName))
             {
-                using (TextWriter tw = new StreamWriter(fileName, false))
+                using (StreamWriter tw = new StreamWriter(fileName, false))
                 {
                     tw.Write("{0}", fileInputText);
                     Library.WriteServiceLog("Slide Show Input Value File updated");
@@ -769,6 +754,32 @@ namespace VideoRenderer
             string ffmpegApprovedPath = fileName.Replace("\\", "/").Replace(":/", "\\\\:/");
 
             return ffmpegApprovedPath;
+
+        }
+        private bool DeleteFfmpegInputFiles(string directoryPath)
+        {
+            Library.WriteServiceLog("Deleting FFMPEG slide show text videos. Path: "+directoryPath);
+          
+                try
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(directoryPath);
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    foreach (DirectoryInfo dir in di.GetDirectories())
+                    {
+                        dir.Delete(true);
+                    }
+                    return true;
+                }
+                catch(Exception e)
+                {
+                    Library.WriteServiceLog("Could not delete file. Error: "+e.Message);
+                    Library.WriteErrorLog(e);
+                    return false;
+                }
 
         }
 
@@ -1028,20 +1039,7 @@ namespace VideoRenderer
         {
             Library.WriteServiceLog("Cleaning up render enviroment.");
             GlobalVariables.IsRendering = false;
-            try
-            {
-                if (File.Exists(BatchFilePath + "Converting.SEM"))
-                {
-                    File.Delete(BatchFilePath + "Converting.SEM");
-                }
-            }
-            catch (Exception e)
-            {
-                Library.WriteServiceLog("Error deleting semi file");
-                Library.WriteServiceLog("Error: " + e.Message);
-                Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanUpRenderEnviroment", "660", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
-            }
-          
+
             //Delete All Raw and temp videos
             ClearRawFileDirectory();
             CleanTempEditFolder();

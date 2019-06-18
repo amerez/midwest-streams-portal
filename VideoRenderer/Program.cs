@@ -14,16 +14,17 @@ namespace VideoRenderer
         /// </summary>
         static void Main()
         {
-            //ServiceBase[] ServicesToRun;
-            //ServicesToRun = new ServiceBase[] 
-            //{ 
-            //    new Scheduler() 
-            //};
-            //ServiceBase.Run(ServicesToRun);
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
+            {
+                 new Scheduler()
+            };
+            ServiceBase.Run(ServicesToRun);
 
-            Test.ConcatTest();
+            //Test.ConcatTest();
             //Test.Download();
-            
+            //Test.CompleteTest();
+
         }
     }
 }

@@ -45,6 +45,25 @@ namespace VideoManager.Controllers
             return View("NotFound");
 
         }
+
+        public ActionResult Announcments()
+        {
+            if (User.IsInRole("Admin") || User.Identity.Name == "devHome")
+            {
+                List<Announcment> acms = db.Announcments.ToList();
+                return View(acms);
+            }
+            return View("NotFound");
+        }
+
+        public ActionResult CreateAnnouncment()
+        {
+            if (User.IsInRole("Admin") || User.Identity.Name == "devHome")
+            {
+                return View();
+            }
+            return View("NotFound");
+        }
         [HttpPost]
         public ActionResult Fifteen()
         {

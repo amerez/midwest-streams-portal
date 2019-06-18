@@ -65,7 +65,7 @@ else
 
 }
 
-
+@Html.ValidationMessage("RenderInProgress")
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -86,14 +86,14 @@ else
 
             <div class="col-lg-6">
                 @{
-    if (ViewBag.FuneralHomeId != null)
-    {
-        <div class="form-group">
-            Funeral Home
-            @Html.DropDownList("FuneralHomeId", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.FuneralHomeId, "", new { @class = "text-danger" })
-        </div>
-    }
+                    if (ViewBag.FuneralHomeId != null)
+                    {
+                        <div class="form-group">
+                            Funeral Home
+                            @Html.DropDownList("FuneralHomeId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.FuneralHomeId, "", new { @class = "text-danger" })
+                        </div>
+                    }
                 }
                 <div class="form-group">
                     @Html.LabelFor(model => model.FirstName)
@@ -127,55 +127,55 @@ else
                     <div class="col-xs-6">
                         <br />
                         @Html.CheckBoxFor(model => model.IsSecured, new { @class = "is-secured-cb" })
-                        <label for="inputLastName">Secured</label>
+                        <label for="inputLastName">Private</label>
                         <span class="glyphicon glyphicon-question-sign" id="securedToolTip" aria-hidden="true" title="If you do not wish to post this service on your website, click this check mark and we will email them a link that they can securely watch the service."></span>
                     </div>
                     <div class="col-xs-6">
                         <br />
                         @Html.CheckBoxFor(model => model.HasSlate, new { @class = "has-slate-cb" })
-                        <label for="inputLastName">Include Opening Slate</label>
-                        <span class="glyphicon glyphicon-question-sign" id="securedToolTip" aria-hidden="true" title="If you do not wish to post this service on your website, click this check mark and we will email them a link that they can securely watch the service."></span>
+                        <label for="inputLastName">Include Intro Video</label>
+                        <span class="glyphicon glyphicon-question-sign" id="slateToolTip" aria-hidden="true" title="If you check this box we will include a short clip titling the video before the service starts."></span>
                     </div>
 
                 </div>
                 @*Was confusing to directors, so just removed this functionality. When an email is typed in, once the video is complete we would send a notification to the family.*@
                 @*<div class="form-group family-contact-email" style="@((Model.ContactEmail == null) ? "display:none;" : "")">
-                    @Html.LabelFor(model => model.ContactEmail)  <span class="glyphicon glyphicon-question-sign" id="contactEmailToolTip" aria-hidden="true" title="We will send the family an email letting them know the service is avaliable online. This field is required on Secured Services."></span>
-                    @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "family@gmail.com" } })
-                    @Html.ValidationMessageFor(model => model.ContactEmail)
-                </div>*@
+                        @Html.LabelFor(model => model.ContactEmail)  <span class="glyphicon glyphicon-question-sign" id="contactEmailToolTip" aria-hidden="true" title="We will send the family an email letting them know the service is avaliable online. This field is required on Secured Services."></span>
+                        @Html.EditorFor(model => model.ContactEmail, new { htmlAttributes = new { @class = "form-control", placeholder = "family@gmail.com" } })
+                        @Html.ValidationMessageFor(model => model.ContactEmail)
+                    </div>*@
 
 
 
 
 
                 @{
-    if (Model != null && Model.Video != null && User.IsInRole("Admin"))
-    {
-        <div class="row form-group">
-            <div class="col-xs-6">
-                <label for="inputLastName">Status</label>
-                @Html.EnumDropDownListFor(model => model.Video.Status, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Video.Status)
-            </div>
+                    if (Model != null && Model.Video != null && User.IsInRole("Admin"))
+                    {
+                        <div class="row form-group">
+                            <div class="col-xs-6">
+                                <label for="inputLastName">Status</label>
+                                @Html.EnumDropDownListFor(model => model.Video.Status, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Video.Status)
+                            </div>
 
-        </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="">Converted Path</label>
-                            @Html.EditorFor(model => model.Video.ConvertedFilePath, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Video.ConvertedFilePath)
                         </div>
-                    </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="">Converted Path</label>
+                                @Html.EditorFor(model => model.Video.ConvertedFilePath, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Video.ConvertedFilePath)
+                            </div>
+                        </div>
 
 
-    }
-    if (User.IsInRole("Admin") && Model != null)
-    {
-        <div class="row form-group">
-            <a href="@Url.Action("ManualConvert", new{id=@Model.Id})" class="btn btn-default">Manually Start Conversion</a>
-        </div>
-    }
+                    }
+                    if (User.IsInRole("Admin") && Model != null)
+                    {
+                        <div class="row form-group">
+                            <a href="@Url.Action("ManualConvert", new{id=@Model.Id})" class="btn btn-default">Manually Start Conversion</a>
+                        </div>
+                    }
                 }
             </div>
             <div class="col-lg-6">
@@ -195,7 +195,7 @@ else
 
     <div>
         @{
-    bool videoTitleValidated = true;
+            bool videoTitleValidated = true;
         }
         @if (Model != null && Model.VideoTitle != null)
         {
@@ -235,20 +235,20 @@ else
                         </div>
                         <div class="col-lg-8 add-files-group">
                             All videos must be in a .mp4 format
-                         @{
-                            if (Model.FuneralHome.UserName == "devHome")
-                            {
-                                if (Model.LiveStream == null)
+                            @{
+                                if (Model.FuneralHome.UserName == "devHome")
                                 {
-                                    <a href="@Url.Action("golive", new { ServiceId = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
-                                }
+                                    if (Model.LiveStream == null)
+                                    {
+                                        <a href="@Url.Action("golive", new { ServiceId = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
+                                    }
 
+                                }
                             }
-}
 
                         </div>
 
@@ -280,34 +280,34 @@ else
                         </text>
                         break;
                     case VideoManager.Models.Data.VideoStatus.ConversionStarted:
-                    <text>
-                        <div class="video-upload-container">
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <h3 class="videoHeader">Video</h3><br>
-                                </div>
-                                <div class="col-lg-9">
-                                    <h2>Service Succesfully Uploaded</h2>
-                                    <p>Our servers are now processing the video</p>
+                        <text>
+                            <div class="video-upload-container">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <h3 class="videoHeader">Video</h3><br>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <h2>Service Succesfully Uploaded</h2>
+                                        <p>Our servers are now processing the video</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </text>
+                        </text>
                         break;
                     case VideoManager.Models.Data.VideoStatus.Error:
-                    <text>
-                        <div class="video-upload-container">
+                        <text>
+                            <div class="video-upload-container">
 
-                            <div class="error_message">
-                                <h2>Error</h2>
-                                <p>An error occured and we are currently trying to fix the issue. Please contact support if this issue is not resolved in 24 hours.</p>
-                            </div><h3 class="videoHeader">Video</h3>
+                                <div class="error_message">
+                                    <h2>Error</h2>
+                                    <p>An error occured and we are currently trying to fix the issue. Please contact support if this issue is not resolved in 24 hours.</p>
+                                </div><h3 class="videoHeader">Video</h3>
 
-                            @Html.DisplayFor(model => model.Video.DisplayFileName)
+                                @Html.DisplayFor(model => model.Video.DisplayFileName)
 
 
-                        </div>
-                    </text>
+                            </div>
+                        </text>
                         break;
                     case VideoManager.Models.Data.VideoStatus.UploadStarted:
                         //Usually a failed upload, allow user to reupload
@@ -347,7 +347,7 @@ else
 
 
             }
-			<!--Embed codes-->
+            <!--Embed codes-->
             <div class="row">
                 @if (Model.PDF == null)
                 {
@@ -410,7 +410,7 @@ else
                                 </a>
                                 <h3>Views</h3>
                                 @{
-                    var pageHits = Model.PDF.PageHits.ToString();
+                                    var pageHits = Model.PDF.PageHits.ToString();
                                 }
 
                                 <span>@pageHits</span>
@@ -426,115 +426,128 @@ else
                 }
                 @{
 
-                //string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
-                //analytics
-                string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
-                if (Model.FuneralHome.Setting != null)
-                {
-                    switch (Model.FuneralHome.Setting.WebsiteProvider)
+                    //string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+                    //analytics
+                    string videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                    if (Model.FuneralHome.Setting != null)
                     {
+                        switch (Model.FuneralHome.Setting.WebsiteProvider)
+                        {
 
-                        case VideoManager.Models.Data.Enums.WebsiteProvider.FuneralOne:
-                            {
-                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
-                                break;
-                            }
-                        case VideoManager.Models.Data.Enums.WebsiteProvider.Other:
-                            {
-                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
-                                break;
-                            }
-                        case VideoManager.Models.Data.Enums.WebsiteProvider.Aurora:
-                            {
-                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"360\" height=\"250\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
-                                break;
-                            }
-                        case VideoManager.Models.Data.Enums.WebsiteProvider.Frazer:
-                            {
-                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" style=\"width: 103%; height: 400px;\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
-                                break;
-                            }
-                        case VideoManager.Models.Data.Enums.WebsiteProvider.DJ:
-                            {
-                                videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id;
-                                break;
-                            }
-                        default:
-                            {
-                                videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"648\" height=\"400\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
-                                break;
-                            }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.FuneralOne:
+                                {
+                                    videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                                    break;
+                                }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.Other:
+                                {
+                                    videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + Model.Id;
+                                    break;
+                                }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.Aurora:
+                                {
+                                    videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"360\" height=\"250\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                    break;
+                                }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.Frazer:
+                                {
+                                    videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" style=\"width: 103%; height: 400px;\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                    break;
+                                }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.DJ:
+                                {
+                                    videoEmbedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id;
+                                    break;
+                                }
+                            case VideoManager.Models.Data.Enums.WebsiteProvider.Hamiltons:
+                                {
+                                    videoEmbedCode = "<a href=\"https://portal.midweststreams.com/services/view/" + Model.Id + "\" style=\"-moz-box-shadow: 0px 10px 14px -7px #276873;-webkit-box-shadow: 0px 10px 14px -7px #276873;\r\n\tbox-shadow: 0px 10px 14px -7px #276873;\r\n\tbackground:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7eabc0), color-stop(1, #408c99));\r\n\tbackground:-moz-linear-gradient(top, #7eabc0 5%, #408c99 100%);\r\n\tbackground:-webkit-linear-gradient(top, #7eabc0 5%, #408c99 100%);\r\n\tbackground:-o-linear-gradient(top, #7eabc0 5%, #408c99 100%);\r\n\tbackground:-ms-linear-gradient(top, #7eabc0 5%, #408c99 100%);\r\n\tbackground:linear-gradient(to bottom, #7eabc0 5%, #408c99 100%);\tbackground-color:#7eabc0;\r\n\t-moz-border-radius:8px;\r\n\t-webkit-border-radius:8px;\r\n\tborder-radius:8px;\r\n\tdisplay:inline-block;\r\n\tcursor:pointer;\r\n\tcolor:#ffffff;\r\n\tfont-family:Arial;\r\n\tfont-size:20px;\r\n\tfont-weight:bold;\r\n\tpadding:13px 32px;\r\n\ttext-decoration:none;\r\n\ttext-shadow:0px 1px 0px #3d768a;\r\n\t\">View Service</a>";
+                                    break;
+                                }
+                            default:
+                                {
+                                    videoEmbedCode = "<iframe src=\"" + System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + Model.Id + "\" scrolling=\"no\" width=\"648\" height=\"400\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                                    break;
+                                }
+                        }
+
                     }
 
-                }
-
-                <div class="col-lg-6 embed-container">
-                    @if (Model.IsSecured == true)
-                    {
-                        if (Model.ViewingUser != null)
+                    <div class="col-lg-6 embed-container">
+                        @if (Model.IsSecured == true)
                         {
-                            <h3>Video Credentials</h3>
-                            <div class="video-embed-code-container .video-embed-code-container-secured">
-                                *This service can be viewed at portal.midweststreams.com
-                                <br />
-                                <span class="bold">Username:</span>  @Model.ViewingUser.UserName
-                                <br />
-                                <span class="bold">Password:</span>  <span id="secured-service-password">@Model.ViewingPassword</span>
-                            </div>
-
-                            if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                            if (Model.ViewingUser != null)
                             {
-                                <a href="@Url.Action("View", new { id = Model.Id })"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                                <h3>Video Credentials</h3>
+                                <div class="video-embed-code-container .video-embed-code-container-secured">
+                                    *This service can be viewed at portal.midweststreams.com
+                                    <br />
+                                    <span class="bold">Username:</span>  @Model.ViewingUser.UserName
+                                    <br />
+                                    <span class="bold">Password:</span>  <span id="secured-service-password">@Model.ViewingPassword</span>
+                                </div>
+
+                                if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                                {
+                                    <a href="@Url.Action("View", new { id = Model.Id })"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                                }
+                                else
+                                {
+                                    <p>*The video is still being processed. Once the video is done you can acess the video with the credentials listed above. </p>
+                                }
+                                <button id="change-service-password" class="btn btn-lg btn-info btn-block sharesecured-modal-button">Change Service Password</button>
+                                <text>*If you would like to embed this video on your website uncheck the "Private" checkbox and click "Save".</text>
+
                             }
                             else
                             {
-                                <p>*The video is still being processed. Once the video is done you can acess the video with the credentials listed above. </p>
+                                <h3>Video Credentials</h3>
+                                <div class="video-embed-code-container .video-embed-code-container-secured">
+                                    Once the video is ready the username and password will be displayed here
+                                </div>
                             }
 
-                            <a href="#" class="btn btn-lg btn-info btn-block sharesecured-modal-button" data-toggle="modal" data-target="#ShareSecuredModal" style="margin-bottom:10px;">Share Secured Link</a>
-                            <text>*If you would like to embed this video on your website uncheck the "Secured" checkbox and click "Save".</text>
-                            <button id="change-service-password" class="btn btn-lg btn-info btn-block sharesecured-modal-button">Change Service Password</button>
+
                         }
                         else
                         {
-                            <h3>Video Credentials</h3>
-                            <div class="video-embed-code-container .video-embed-code-container-secured">
-                                Once the video is ready the username and password will be displayed here
-                            </div>
-                        }
-
-
-                    }
-                    else
-                    {
-                        <h3>Copy this code to embed your video</h3>
-                        <textarea class="video-embed-code-container" rows="7">
+                            <h3>Copy this code to embed your video</h3>
+                            <textarea class="video-embed-code-container" rows="7">
                             @videoEmbedCode
                         </textarea>
-                        <br />
-                        if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
-                        {
-                            <a href="@Url.Action("View", new { id = Model.Id })"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                            <br />
+                            if (Model.Video != null)
+                            {
+                                if (Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                                {
+                                    <a href="@Url.Action("View", new { id = Model.Id })"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a>
+                                }
+                                else
+                                {
+                                    <p>Video Status: Rendering <i class="fa fa-refresh" aria-hidden="true"></i></p>
+                                }
+
+                            }
+                            else
+                            {
+
+                                <p>Copy and paste this code onto your website at anytime. After you upload a video, we will automatically publish it to your website as soon as the video is ready.</p>
+                            }
+
+                            if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                            {
+
+                                var pageHits = Model.Video.Analytics.Count();
+
+                                <div class="col-lg-5 col-lg-offset-4 text-center">
+                                    <a href="@Url.Action("Index","Analytics", new { id= Model.Id })" style="margin-bottom:18px; padding:5px;" class="btn btn-sm btn-info btn-block" type="submit">ADVANCED ANALYTICS</a>
+                                    <h3>Views</h3>
+                                    <span>@pageHits</span>
+                                </div>
+                            }
+
                         }
-                        else
-                        {
-                            <p>*Once the video is done being processed we will automatically publish it on your webpage</p>
-                        }
-
-                        if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
-                        {
-
-                            var pageHits = Model.Video.Analytics.Count();
-
-                            <div class="col-lg-5 col-lg-offset-4 text-center">
-                                <a href="@Url.Action("Index","Analytics", new { id= Model.Id })" style="margin-bottom:18px; padding:5px;" class="btn btn-sm btn-info btn-block" type="submit">ADVANCED ANALYTICS</a>
-                                <h3>Views</h3>
-                                <span>@pageHits</span>
-                            </div>
-                        }
-
-                    }
-                </div>
+                    </div>
 
 
 
@@ -789,7 +802,7 @@ else
         </div>
     </div>
 }
-@if (Model != null && Model.Video != null && Model.IsSecured == true && Model.Video.Status== VideoManager.Models.Data.VideoStatus.ConversionFinished)
+@if (Model != null && Model.Video != null && Model.IsSecured == true && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
 {
     <!--Share Secured Link Modal-->
     <div class="modal fade" id="ShareSecuredModal" tabindex="-1" role="dialog" aria-labelledby="ShareSecuredModal" aria-hidden="true">
@@ -797,7 +810,7 @@ else
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h4 class="modal-title modal-title-pdf">Share secured link with others</h4>
+                    <h4 class="modal-title modal-title-pdf">Share private link with others</h4>
                     <p>*Enter the emails in the box below, separated by a comma. </p>
                 </div>
                 <div class="modal-body">

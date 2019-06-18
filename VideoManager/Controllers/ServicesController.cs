@@ -65,8 +65,35 @@ namespace VideoManager.Controllers
                             ViewBag.DisplayTutorial = true;
                         }
                     }
+
+                    var today = DateTime.Now;
+                    List<Announcment> announcments = db.Announcments.Where(a => a.ExpirationDate > today).ToList();
+                    List<Announcment> seenAnnouncments = home.AnnouncmentsViewed;
+
+                    if(seenAnnouncments==null && announcments.Count>0)
+                    {
+                        ViewBag.AnnouncmentHeading = announcments.FirstOrDefault().Header;
+                        ViewBag.AnnouncmentBody = announcments.FirstOrDefault().Body;
+                        ViewBag.AnnouncmentId = announcments.FirstOrDefault().Id;
+                    }
+                    else
+                    {
+                        foreach (var a in announcments)
+                        {
+                            //Check if announcment has been viewed
+                            if (seenAnnouncments.IndexOf(a) == -1)
+                            {
+                                ViewBag.AnnouncmentHeading = a.Header;
+                                ViewBag.AnnouncmentBody = a.Body;
+                                ViewBag.AnnouncmentId = a.Id;
+                                break;
+                            }
+                        }
+                    }
+                  
                 }
             }
+         
             setViewBagAnalytics(services);
             return View(services);
         }
@@ -289,6 +316,16 @@ namespace VideoManager.Controllers
                         Service dbService = db.Services.AsNoTracking().Where(x=> x.Id==service.Id).FirstOrDefault();
                         if(dbService!=null)
                         {
+                            //Don't allow user to change anything if we are currently rendering a video
+                            var videoQs = db.VideoQueues.Where(s => s.VideoId == service.Id).FirstOrDefault();
+                            if(videoQs!=null)
+                            {
+     
+                                ModelState.Clear();
+                                ModelState.AddModelError("RenderInProgress", "Cannot save changes because the video is rendering. Please wait for video to be done rendering, refresh the page and save your changes.");
+                                return View(dbService);
+                            }
+
                             //Detect changes, and re render video if needed
                             if (service.HasSlate != dbService.HasSlate)
                             {

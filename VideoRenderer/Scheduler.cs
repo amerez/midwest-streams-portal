@@ -51,55 +51,13 @@ namespace VideoRenderer
             }
             string vmMachineName = Environment.MachineName;
             DataAccess da = new DataAccess();
-            RenderViewModel renderDataa = new RenderViewModel()
-            {
-                RawFileNames = "sintel.mp4",
-                ConvertedFileName = "resize_sintel_opener.mp4",
-                Duration = 0,
-                Start = 0,
-                FirstName = "Auggie",
-                LastName = "Wolchansky",
-                FoundVideoToRender = true,
-                FuneralHomeName = "DevHome",
-                ServiceId = 16,
-                VideoQueId = 19,
-                VideoQueType = VideoQueType.FullWithSlate
-            };
-            
-            if(GlobalVariables.IsRendering==false)
-            {
-                GlobalVariables.IsRendering = true;
-                RenderVideo renderr = new RenderVideo(renderDataa);
-                List<string> vids = new List<string>();
-                vids.Add("sintel.mp4");
-                vids.Add("fish.mp4");
-                vids.Add("cfs.mp4");
 
-                renderr.ConcatenateVideoFiles(vids, true);
-            }
-           
-            GlobalVariables.IsRendering = true;
 
             if(GlobalVariables.IsRendering == false)
             {
                 GlobalVariables.IsRendering = true;
-                //RenderViewModel renderData = da.GetRenderData(vmMachineName);
+                RenderViewModel renderData = da.GetRenderData(vmMachineName);
 
-                //Test Data
-                RenderViewModel renderData = new RenderViewModel()
-                {
-                    RawFileNames = "done.mp4,movflags.mp4",
-                    ConvertedFileName = "audioTest.mp4",
-                    Duration = 0,
-                    Start = 0,
-                    FirstName = "Auggie",
-                    LastName = "Wolchansky",
-                    FoundVideoToRender = true,
-                    FuneralHomeName = "DevHome",
-                    ServiceId = 16,
-                    VideoQueId = 19,
-                    VideoQueType = VideoQueType.FullNoSlate
-                };
 
                 if (renderData!=null && renderData.FoundVideoToRender == true)
                 {
@@ -188,11 +146,6 @@ namespace VideoRenderer
             GlobalVariables.IsRendering = false;
 
             ConfigurationManager.RefreshSection("appSettings");
-
-            if (File.Exists(BatchFilePath + "Converting.SEM"))
-            {
-                File.Delete(BatchFilePath + "Converting.SEM");
-            }
         }
     }
     /// <summary>

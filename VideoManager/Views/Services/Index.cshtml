@@ -28,9 +28,9 @@
                 </p>
             </li>
             @*<li data-id="notify-tutorial" data-button="Next: Settings" data-options="tipLocation:left" class="icon-tutorial-class">
-                <h2>Notify Your Clients</h2>
-                <p>When your video is ready, click the envelope to send the family a notification email.</p>
-            </li>*@
+                    <h2>Notify Your Clients</h2>
+                    <p>When your video is ready, click the envelope to send the family a notification email.</p>
+                </li>*@
             <li data-id="edit-tutorial" data-button="Next: Trash" data-options="tipLocation:left" class="icon-tutorial-class">
                 <h2>Edit a Service</h2>
                 <p>Change any service details here.</p>
@@ -134,22 +134,22 @@
 
                     <td class="icon-box">
                         @{
-                if (item.Video != null)
-                {
-                    if (item.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
-                    {
-                        <a href="@Url.Action("View", new { id=item.Id })" class="table-link"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
-                            <a href="@Url.Action("Download", new { id=item.Id })"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
-                    }
-                    if (item.Video.Status == VideoManager.Models.Data.VideoStatus.UploadStarted)
-                    {
-                        <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
-                    }
-                }
-                else
-                {
-                    <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
-                }
+                            if (item.Video != null)
+                            {
+                                if (item.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                                {
+                                    <a href="@Url.Action("View", new { id=item.Id })" class="table-link"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+                                    <a href="@Url.Action("Download", new { id=item.Id })"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+                                }
+                                if (item.Video.Status == VideoManager.Models.Data.VideoStatus.UploadStarted)
+                                {
+                                    <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+                                }
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Manage", new { id=item.Id })"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></a>
+                            }
 
                         }
                         @*<a href="@Url.Action("Notify", new { id=item.Id })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>*@
@@ -173,47 +173,96 @@
 }
 
 
-    <div class="row">
-@if (ViewBag.totalVideoViews != 0 && ViewBag.totalVideoViews != null)
-{
+<div class="row">
+    @if (ViewBag.totalVideoViews != 0 && ViewBag.totalVideoViews != null)
+    {
         <div class="col-lg-6 analytics">
             <h4>Total Video Views</h4>
             @ViewBag.totalVideoViews
         </div>
-}
-@if (ViewBag.totalPDFViews != 0 && ViewBag.totalPDFViews != null)
-{
+    }
+    @if (ViewBag.totalPDFViews != 0 && ViewBag.totalPDFViews != null)
+    {
         <div class="col-lg-6 analytics">
             <h4>Total PDF Views </h4>
             @ViewBag.totalPDFViews
         </div>
-}
-
-    </div>
-    @if (User.IsInRole("Admin"))
-    {
-        if (ViewBag.VideoConversion != null && ViewBag.PDFConversion != null)
-        {
-            <div class="row">
-                <div class="col-lg-3 analytics">
-                    <h4>Video Conversion Rate</h4>
-                    @ViewBag.VideoConversion %
-                </div>
-                <div class="col-lg-3 analytics">
-                    <h4>PDF Conversion Rate</h4>
-                    @ViewBag.PDFConversion %
-                </div>
-                <div class="col-lg-3 analytics">
-                    <h4>Total Services</h4>
-                    @ViewBag.totalServices
-                </div>
-                <div class="col-lg-3 analytics">
-                    <h4>30-Day Servies</h4>
-                    @ViewBag.monthServices
-                </div>
-            </div>
-
-        }
     }
 
+</div>
+@if (User.IsInRole("Admin"))
+{
+    if (ViewBag.VideoConversion != null && ViewBag.PDFConversion != null)
+    {
+        <div class="row">
+            <div class="col-lg-3 analytics">
+                <h4>Video Conversion Rate</h4>
+                @ViewBag.VideoConversion %
+            </div>
+            <div class="col-lg-3 analytics">
+                <h4>PDF Conversion Rate</h4>
+                @ViewBag.PDFConversion %
+            </div>
+            <div class="col-lg-3 analytics">
+                <h4>Total Services</h4>
+                @ViewBag.totalServices
+            </div>
+            <div class="col-lg-3 analytics">
+                <h4>30-Day Servies</h4>
+                @ViewBag.monthServices
+            </div>
+        </div>
 
+    }
+}
+
+@{
+    if (ViewBag.AnnouncmentHeading != null)
+    {
+        <div class="modal fade" id="product-alert-modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog video-modal-dialog">
+                <div class="modal-content" style="min-width:700px">
+                    <div class="modal-header">
+                        <h1>@ViewBag.AnnouncmentHeading</h1>
+                    </div>
+                    <div id="announcment-body" class="modal-body">
+                        @Html.Raw(ViewBag.AnnouncmentBody)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="announcment-dismiss" data-dismiss="modal" class="btn btn-primary">Save for later</button>
+                        <button type="button" data-announcmentId="@ViewBag.AnnouncmentId " id="save-announcment" class="btn btn-secondary">I've got it</button>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#product-alert-modal').modal('show');
+            $("#save-announcment").click(function () {
+                var aId = $(this).attr("data-announcmentId");
+                var postData = { announcmentId: aId };
+                var postUrl = "/FuneralHomes/ViewedAnnouncment";
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    data: postData
+                });
+                $("#announcment-body").html("");
+                $('#product-alert-modal').modal('hide');
+            });
+            $("#announcment-dismiss").click(function () {
+                $("#announcment-body").html("");
+            })
+        });
+    </script>
+
+}

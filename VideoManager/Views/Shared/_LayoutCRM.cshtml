@@ -86,7 +86,7 @@
                             }
                             else
                             {
-                            <img alt="" src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=square" />
+                            <img alt="" width="45" src="https://graph.facebook.com/@ViewBag.BaseUserFacebookId/picture?type=square" />
                             }
 
                             <span class="username">@ViewBag.BaseUserFirstName @ViewBag.BaseUserLastName</span>
@@ -185,6 +185,7 @@
                             <li><a href="@Url.Action("AddBusinessContact","CRM")">Create</a></li>
                         </ul>
                     </li>
+
                     <li class="sub-menu">
                         <a href="javascript:;">
                             <i class="fa fa-lock"></i>
@@ -193,6 +194,7 @@
                         <ul class="sub">
                             <li><a href="@Url.Action("Index", "VideoQueues")">Video Que</a></li>
                             <li><a href="@Url.Action("Tools","Admin")">Create Render VM</a></li>
+                            <li><a href="@Url.Action("Index","Announcments")">Announcments</a></li>
                         </ul>
                     </li>
                 </ul>
