@@ -29,8 +29,8 @@ namespace VideoRenderer
             this.timer1.Elapsed += new System.Timers.ElapsedEventHandler(this.timer1_Tick);
             timer1.Enabled = true;
             setVariablesForStart();
-             string versionNum = ConfigurationManager.AppSettings["versionNumber"];
-            Library.WriteServiceLog("Service has started! Version #"+versionNum);
+            string versionNum = ConfigurationManager.AppSettings["versionNumber"];
+            Library.WriteServiceLog("Service has started! Version #" + versionNum);
         }
 
 
@@ -61,7 +61,6 @@ namespace VideoRenderer
 
                 if (renderData!=null && renderData.FoundVideoToRender == true)
                 {
-                    Library.WriteServiceLog("Succefully got Render data.");
                     RenderVideo render = new RenderVideo(renderData);
                     switch (renderData.VideoQueType)
                     {

@@ -34,7 +34,11 @@ namespace VideoRenderer
             {
                 RenderViewModel renderData = JsonConvert.DeserializeObject<RenderViewModel>(response.Content);
                 Library.WriteServiceLog("Got data from Render API");
-                Library.WriteServiceLog("Render Data: " + renderData);
+                LogRenderData(renderData);
+
+
+
+
                 return renderData;
             }
             catch(Exception e)
@@ -230,7 +234,30 @@ namespace VideoRenderer
 
         }
 
-
+        private void LogRenderData(RenderViewModel renderData)
+        {
+            if(renderData.FoundVideoToRender==true)
+            {
+                Library.WriteServiceLog("Render Data: {");
+                Library.WriteServiceLog("FoundVideoToRender: " + renderData.FoundVideoToRender);
+                Library.WriteServiceLog("FuneralHomeName: " + renderData.FuneralHomeName);
+                Library.WriteServiceLog("FirstName: " + renderData.FirstName);
+                Library.WriteServiceLog("LastName: " + renderData.LastName);
+                Library.WriteServiceLog("RawFileNames: " + renderData.RawFileNames);
+                Library.WriteServiceLog("ConvertedFileName: " + renderData.ConvertedFileName);
+                Library.WriteServiceLog("Duration: " + renderData.Duration);
+                Library.WriteServiceLog("ResourceGroupName: " + renderData.ResourceGroupName);
+                Library.WriteServiceLog("ServiceDate: " + renderData.ServiceDate);
+                Library.WriteServiceLog("ServiceId: " + renderData.ResourceGroupName);
+                Library.WriteServiceLog("ServiceDate: " + renderData.ServiceDate);
+                Library.WriteServiceLog("ServiceId: " + renderData.ServiceId);
+                Library.WriteServiceLog("Start: " + renderData.Start);
+                Library.WriteServiceLog("VideoQueId: " + renderData.VideoQueId);
+                Library.WriteServiceLog("VideoQueType: " + renderData.VideoQueType);
+                Library.WriteServiceLog("}");
+            }
+      
+        }
 
         public bool DeleteVideoQue(int id)
         {

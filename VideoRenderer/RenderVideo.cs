@@ -63,7 +63,9 @@ namespace VideoRenderer
 
             video = MergeSlateToService("opener.mp4", video, "video-with-new-slate.mp4");
 
-            FinishPartialRender(video);
+            string friendlyVid = MakeVideoWebFriendly(video);
+
+            FinishPartialRender(friendlyVid);
 
         }
 
@@ -81,7 +83,8 @@ namespace VideoRenderer
 
             string video = TrimVideo(_videoFiles[0]);
 
-            FinishPartialRender(video);
+            string friendlyVid = MakeVideoWebFriendly(video);
+            FinishPartialRender(friendlyVid);
 
         }
 
@@ -98,6 +101,8 @@ namespace VideoRenderer
             if (!MoveFileFromRawFolderToTempEdit(video))
                 return;
 
+            da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoQueueStatus.Rendering);
+
             //Create opening slate
             CreateSlideShow(_renderParameters.FirstName, _renderParameters.LastName, _renderParameters.ServiceDate, _renderParameters.FuneralHomeName, "opener.mp4");
 
@@ -105,7 +110,9 @@ namespace VideoRenderer
   
             video = MergeSlateToService("opener.mp4",video, "video-with-slate.mp4");
 
-            FinishPartialRender(video);
+            string friendlyVid = MakeVideoWebFriendly(video);
+
+            FinishPartialRender(friendlyVid);
 
         }
         //Main method to render videos
@@ -129,6 +136,7 @@ namespace VideoRenderer
                 if (!MoveFileFromRawFolderToTempEdit(_videoFiles[0]))
                     return;
             }
+            da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoQueueStatus.Rendering);
 
             //Trim The Video
             string trimVideodName = TrimVideo(concatenatedVideoFile);
@@ -154,10 +162,12 @@ namespace VideoRenderer
                 //Compress the video
                 compressedFileName = CompressVideo(trimVideodName);
             }
-         
+
+            //Make video webfriendly. *Moving metadata to front of file
+            string friendlyName = MakeVideoWebFriendly(compressedFileName);
 
             ////Move the file to Converted folder
-            if (!MoveFinishedVideoFromTempToConvertedFolder(compressedFileName, _renderParameters.ConvertedFileName))
+            if (!MoveFinishedVideoFromTempToConvertedFolder(friendlyName, _renderParameters.ConvertedFileName))
                 return;
 
             //Extract Thumbnail
@@ -282,7 +292,7 @@ namespace VideoRenderer
                     fileName = TempEditFolder + "\\" + video;
                 }
                 
-                //No need to create temp files if we are going to be doing a re-render
+                //Create temp files if not same aspect ratio so we can merge them quickly
                 if(sameAspectRatio)
                 {
                     string argumentsString = FfMpegPathAndExecuteable + " " + fileName + " " + tempFileName;
@@ -376,7 +386,7 @@ namespace VideoRenderer
                     }
                     else
                     {
-                        filterText = filterText + "["+countStr+":v]scale=" + largestWidth + ":" +largestHeight +":force_original_aspect_ratio=decrease,setsar=1,pad="+largestWidth+":"+largestHeight+":(ow-iw)/2:(oh-ih)/2["+ countStr + "v];";
+                        filterText = filterText + "["+countStr+":v]scale=" + largestHeight + ":" +largestWidth +":force_original_aspect_ratio=decrease,setsar=1,pad="+largestHeight+":"+largestWidth+":(ow-iw)/2:(oh-ih)/2["+ countStr + "v];";
                     }
                     mapping = mapping + "[" + countStr + "v][" + countStr + ":a]";
                     count++;
@@ -412,13 +422,17 @@ namespace VideoRenderer
         //Merging the
         public string MergeSlateToService(string slate, string service, string outputFileName)
         {
+            //TODO AZURE ERROR IS IN HERE
+            Library.WriteServiceLog("Merging slate to service");
             var prefix = TempEditFolder + "\\";
             //Get Video File MetaData and ensure the width and height ratio match
             Stream slateDate = GetVideoMetaData(slate, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault();
-            Stream vidData = GetVideoMetaData(service, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault(); ;
+            Library.WriteServiceLog("Got metadata from slate");
+            Stream vidData = GetVideoMetaData(service, prefix).streams.Where(v => v.codec_type == "video").FirstOrDefault();
+            Library.WriteServiceLog("Got metadata from video");
 
             //Videos can not be merged if they arent exactly the same aspect ratio
-            if(slateDate != null && slateDate != null)
+            if (slateDate != null && slateDate != null)
             {
                 int width1 = slateDate.width;
                 int height1 = slateDate.height;
@@ -426,6 +440,7 @@ namespace VideoRenderer
                 int height2 = vidData.height;
                 if (width1!=width2 || height1!=height2)
                 {
+                    Library.WriteServiceLog("Video is not the same size as slate. Resizing Slate.");
                     string videoFile1Resized =  "resized_" + slate;
                     ResizeVideo(prefix + slate, width2, height2, prefix + videoFile1Resized);
                     slate = videoFile1Resized;
@@ -896,6 +911,7 @@ namespace VideoRenderer
 
         private VideoMetaData GetVideoMetaData(string fileName, string fileLocation)
         {
+            Library.WriteServiceLog("Getting Video MetaData. FileName:" + fileName + " fileLocation: " + fileLocation);
             Process p = new Process();
             // Redirect the output stream of the child process.
             p.StartInfo.UseShellExecute = false;
@@ -903,13 +919,20 @@ namespace VideoRenderer
             p.StartInfo.FileName = "cmd.exe";
             string args = "/C "+ ffProbe + " -v quiet -print_format json -show_format -show_streams " + fileLocation + fileName;
             p.StartInfo.Arguments = args;
+            Library.WriteServiceLog("Created process");
+            Library.WriteServiceLog("args below");
+            Library.WriteServiceLog(args);
+            Library.WriteServiceLog("Starting process");
             p.Start();
+            Library.WriteServiceLog("Reading output");
             // Do not wait for the child process to exit before
             // reading to the end of its redirected stream.
             // p.WaitForExit();
             // Read the output stream first and then wait.
             string output = p.StandardOutput.ReadToEnd();
+            Library.WriteServiceLog("Waiting for exit");
             p.WaitForExit();
+            Library.WriteServiceLog("Deserializing object");
             var result = JsonConvert.DeserializeObject<VideoMetaData>(output);
             if(result.format==null)
             {
@@ -1062,6 +1085,45 @@ namespace VideoRenderer
                     Error.ReportError(ErrorSeverity.Warning, e, "RenderVideo", "CleanTempEditFolder", "682", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
                 }
             }
+        }
+
+        private string MakeVideoWebFriendly(string inputFileName)
+        {
+            //Get filenames situated, and format the arguments.
+            string inputFileNameAndPath = TempEditFolder + "\\" + inputFileName;
+            string outputFileName = inputFileName.Substring(0, inputFileName.Length - 4) + "_webfriendly.mp4";
+            string outputFileNameAndPath = TempEditFolder + "\\" + outputFileName;
+            string ffmpegLogPath = BatchFilePath + "ffmpegLog.txt";
+            string argumentString = String.Format(@"{0} {1} {2} {3}", FfMpegPathAndExecuteable, inputFileNameAndPath, outputFileNameAndPath, ffmpegLogPath);
+
+            //Declare the process
+            var proc = new Process
+            {
+                StartInfo =
+                    {
+                        FileName = BatchFilePath + "WebFriendly.bat",
+                        Arguments = argumentString
+                    }
+            };
+
+            Library.WriteServiceLog("Making the video web friendly");
+            proc.Start();
+            proc.WaitForExit();
+            if (proc.ExitCode == 0)
+            {
+                Library.WriteServiceLog("Succefully made video web friendly");
+                da.UpdateVideoQueStatus(_renderParameters.VideoQueId, VideoQueueStatus.Finished);
+                return outputFileName;
+            }
+            else
+            {
+                Library.WriteServiceLog("FAILED TO Make VIDEO WEB FRIENDLY! SEE ffmpeglog.txt FOR MORE DETAILS");
+                string errorDescription = "Batch file 'WebFriendly.bat' failed. Argument String: " + argumentString;
+                Error.ReportError(ErrorSeverity.Severe, errorDescription, "RenderVideo", "Make Video Web Friendly", "1112", _renderParameters.FuneralHomeName, _renderParameters.ServiceId);
+                HandleErrors();
+            }
+            return "false";
+
         }
 
         ///<summary>
