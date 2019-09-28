@@ -59,9 +59,11 @@ namespace VideoManager.ARMTemplates
 
                             return template;
         }
+
         public static string GetAzureVirtualMachineTemplate()
         {
-            string imageLocation = ConfigurationManager.AppSettings["azureRenderTemplateVHDLocation"]; 
+            string imageId = ConfigurationManager.AppSettings["RenderImageResourceId"];
+            string imageName = ConfigurationManager.AppSettings["RenderImageName"];
             string template = "{"+
     "\"$schema\": \"https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#\","+
     "\"contentVersion\": \"1.0.0.0\","+
@@ -157,7 +159,7 @@ namespace VideoManager.ARMTemplates
     "\"vmName\": \"[parameters('customVmName')]\","+
     "\"nicName\": \"[concat(parameters('customVmName'),'Nic')]\","+
     "\"publicIPAddressType\": \"Dynamic\","+
-    "\"apiVersion\": \"2015-06-15\","+
+    "\"apiVersion\": \"2018-06-01\","+
     "\"templatelink\": \"[concat('https://raw.githubusercontent.com/singhkay/azure-quickstart-templates/master/101-vm-from-user-image/',parameters('newOrExistingVnet'),'vnet.json')]\""+
   "},"+
   "\"resources\": ["+
@@ -237,17 +239,14 @@ namespace VideoManager.ARMTemplates
     "      \"adminPassword\": \"[parameters('adminPassword')]\""+
     "    },"+
     " \"storageProfile\": {"+
+    "     \"imageReference\":{"+
+    "      \"id\":\""+imageId+"\"" +
+    "        },"+
     "      \"osDisk\": {"+
     "        \"osType\": \"Windows\","+
-    "        \"name\": \"RenderMachineImage-osDisk.b7ac55af-f5e3-4f2b-a86a-63cffbeeddc3.vhd\","+
-    "        \"createOption\": \"FromImage\","+
-    "        \"image\": {"+
-    "          \"uri\": \""+imageLocation+"\""+
-    "        },"+
-    "        \"vhd\": {"+
-    "          \"uri\": \"[parameters('tempVHDDiskLocation')]\""+
-    "        },"+
-    "        \"caching\": \"ReadWrite\""+
+    "        \"name\": \""+imageName+"\"," +
+    "        \"createOption\": \"FromImage\""+
+
     "      }"+
     "    },"+
     "    \"networkProfile\": {"+

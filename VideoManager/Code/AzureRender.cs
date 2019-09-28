@@ -41,6 +41,7 @@ namespace VideoManager.Code
 
 
                 q.CreateDate = DateTime.Now;
+                q.VideoQueType = type;
                 q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
                 //Use free server located in Wahpeton to Render videos if avaliable
                 //Look into purchasing a render server for the house
@@ -54,31 +55,32 @@ namespace VideoManager.Code
                 //}
                 //else
                 //{
-                //    string PrefixName = serv.Id + "-" + serv.FuneralHome.Name;
-                //    PrefixName = Regex.Replace(PrefixName, "[^A-Za-z0-9-_]", "");
-                //    var groupName = PrefixName + "-RenderGroup";
-                //    groupName = Regex.Replace(groupName, "[^A-Za-z0-9-_]", "");
-                //    var vmName = serv.Id + "vm";
-                //    q.VMName = vmName;
-                //    q.VideoStatus = VideoQueueStatus.Created;
-                //    q.ResourceGroupName = groupName;
-                //    context.VideoQueues.Add(q);
-                //    context.SaveChanges();
+                string timeStamp = DateTime.Now.ToString("hhmm");
+                    string PrefixName = serv.Id + "-" + serv.FuneralHome.Name;
+                    PrefixName = Regex.Replace(PrefixName, "[^A-Za-z0-9-_]", "");
+                    var groupName = PrefixName + "-RenderGroup";
+                    groupName = Regex.Replace(groupName, "[^A-Za-z0-9-_]", "")+"-"+timeStamp;
+                    var vmName = serv.Id + "vm";
+                    q.VMName = vmName;
+                    q.VideoStatus = VideoQueueStatus.Created;
+                    q.ResourceGroupName = groupName;
+                    context.VideoQueues.Add(q);
+                    context.SaveChanges();
 
-                //    VMmanager man = new VMmanager();
-                //    man.CreateAndDeployRenderVM(serv, groupName, vmName);
-                //}
+                    VMmanager man = new VMmanager();
+                    man.CreateAndDeployRenderVM(serv, groupName, vmName);
+                // }
 
-                // q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
-                // context.Entry(q).State = EntityState.Modified;
-                //var result = context.SaveChanges();
+                q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
+                context.Entry(q).State = EntityState.Modified;
+                context.SaveChanges();
 
                 //LOCAL RENDER CODE
-                q.VMName = "MSI";
-                q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
-                q.VideoQueType = type;
-                context.VideoQueues.Add(q);
-                context.SaveChanges();
+                //q.VMName = "MSI";
+                //q.VideoStatus = VideoQueueStatus.UploadingToAzureRenderFarm;
+                //q.VideoQueType = type;
+                //context.VideoQueues.Add(q);
+                //context.SaveChanges();
                 //Turn on azure VM
 
 

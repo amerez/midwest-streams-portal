@@ -355,8 +355,8 @@ else
                         <div class="col-lg-6">
                             PDF
                             <a href="@Url.Action("CreatePDF", new { id= Model.Id })" class="btn btn-lg btn-info btn-block" type="submit">ADD FUNERAL PROGRAM PDF</a>
-                            Following upload code will be generated allowing you to place the file on the obituary page on your website.
-                            File Format accepted: PDF
+                            After uploading your PDF, a link will be generated that you can place on your obituary page.
+                            <br/> File Format accepted: PDF
                         </div>
                     </div>
                 }
@@ -387,7 +387,7 @@ else
                         embedCode = System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/pdfs/iframe/" + Model.PDF.ServiceId;
                     }
                     <div class="col-lg-6 embed-container">
-                        <h3>Copy this code to embed your PDF</h3>
+                        <h3>Copy this Code to Embed your PDF</h3>
                         <textarea class="pdf-embed-code-container" rows="7">
                             @embedCode
                         </textarea>
@@ -511,7 +511,7 @@ else
                         }
                         else
                         {
-                            <h3>Copy this code to embed your video</h3>
+                            <h3>Copy this Code to Embed your Video</h3>
                             <textarea class="video-embed-code-container" rows="7">
                             @videoEmbedCode
                         </textarea>
@@ -531,7 +531,7 @@ else
                             else
                             {
 
-                                <p>Copy and paste this code onto your website at anytime. After you upload a video, we will automatically publish it to your website as soon as the video is ready.</p>
+                                <p>Copy and paste this code onto your website at anytime. After you upload a video, we will automatically publish it to your website once the video is ready.</p>
                             }
 
                             if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)

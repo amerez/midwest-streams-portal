@@ -1110,6 +1110,7 @@
     <Content Include="Content\images\ui-icons_ef8c08_256x240.png" />
     <Content Include="Content\images\ui-icons_ffd27a_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\images\video-title.png" />
     <Content Include="Content\images\videoPlaceHolder.jpg" />
     <Content Include="Content\images\videoTitle.jpg" />
     <Content Include="Content\images\winterBench.jpg" />

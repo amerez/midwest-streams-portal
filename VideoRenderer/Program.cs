@@ -21,9 +21,10 @@ namespace VideoRenderer
             };
             ServiceBase.Run(ServicesToRun);
 
-            //Test.ConcatTest();
+            // Test.ConcatTest();
             //Test.Download();
             //Test.CompleteTest();
+            //Test.MergeTest();
 
         }
     }

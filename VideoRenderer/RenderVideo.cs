@@ -456,7 +456,7 @@ namespace VideoRenderer
                 {
                     StartInfo =
                     {
-                        FileName = BatchFilePath + "ConcatVideosReRender.bat",
+                        FileName = BatchFilePath + "ConcatVideosReRenderDebug.bat",
                         Arguments = argumentString
                     }
                 };

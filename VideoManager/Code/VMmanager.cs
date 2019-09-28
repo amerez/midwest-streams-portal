@@ -594,13 +594,13 @@ namespace VideoManager.Code
             return await resourceManagementClient.Deployments.CreateOrUpdateAsync(groupName, vmName, deployment);
         }
 
-        public static DeploymentExtended CreateTemplateDeployment(TokenCredentials credential, string groupName, string vmName, string subscriptionId, string storageName, string VMSize)
+        public static async Task<DeploymentExtended> CreateTemplateDeployment(TokenCredentials credential, string groupName, string vmName, string subscriptionId, string storageName, string VMSize)
         {
 
          
             var deployment = new Deployment();
 
-
+            //string tempVhdLocation = "https://midweststreamsdevdisks.blob.core.windows.net/vhds/" + storageName + ".vhd";
             string tempVhdLocation =  "https://armrenderdisks312.blob.core.windows.net/vhds/"+storageName+".vhd";
             string azureParams = AzureVMParameters.GetAzureVMTemplateParameters(vmName, groupName, tempVhdLocation, VMSize);
             string azureTemplate = AzureVMParameters.GetAzureVirtualMachineTemplate();
@@ -613,7 +613,7 @@ namespace VideoManager.Code
                 Parameters = azureParams
             };
             var resourceManagementClient = new ResourceManagementClient(credential) { SubscriptionId = subscriptionId };
-            var result =  resourceManagementClient.Deployments.CreateOrUpdate(groupName, vmName, deployment);
+             var result =  await resourceManagementClient.Deployments.CreateOrUpdateAsync(groupName, vmName, deployment);
             string BatchFilePath = ConfigurationManager.AppSettings["logFilePath"];
             var sr = new StreamWriter(BatchFilePath + "templateDeployLog.txt");
             sr.WriteLine("Deployed Azure VM");

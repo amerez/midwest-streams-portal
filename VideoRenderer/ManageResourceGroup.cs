@@ -65,7 +65,7 @@ namespace VideoRenderer
                         Library.WriteServiceLog("Error: " + e.Message);
                         Library.WriteServiceLog("Inner Exception: " + e.InnerException);
                         Library.WriteServiceLog("Retry Count: " + retries.ToString());
-                        if (retries > 5)
+                        if (retries > 4)
                         {
                             string vmMachineName = System.Environment.MachineName;
                             RenderErrors.ReportError(VideoManager.Code.ErrorSeverity.Severe, e, "Error deleting resource group", "ManageResourceGroup", "DeleteResourceGroup", 0, groupName);
@@ -135,10 +135,9 @@ namespace VideoRenderer
         private static async Task<AuthenticationResult> GetAccessTokenAsync()
         {
 
-            var cc = new ClientCredential("eeb1eb9c-8416-445b-832c-feec564c9da1", "0bU+o1n3ETH8mlGfAZ7KwpDrKTb2FYIbaUJAwplV0bs=");
+            var cc = new ClientCredential("eeb1eb9c-8416-445b-832c-feec564c9da1", "8cncsqqu4jvijmCCHScdOwFe+mYkhl6omEt9RWUMCS8=");
             var context = new AuthenticationContext("https://login.windows.net/1f30f5d8-d3b7-4d2c-bcc5-b642e19893e0");
             var token = context.AcquireTokenAsync("https://management.azure.com/", cc).Result;
-
             if (token == null)
             {
                 throw new InvalidOperationException("Could not get the token");
