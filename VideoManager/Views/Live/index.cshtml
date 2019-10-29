@@ -72,6 +72,9 @@
             <div class="row">
                 <div class="col-lg-12 analytics-box-sub-box">
                     <div class="analytics-box-subheader">
+                        @{ 
+                      
+                        }
                         <h5 class="">Stream Key</h5>
                         <p>5JXyz</p>
                     </div>
@@ -98,10 +101,23 @@
                     @Html.ValidationMessageFor(model => model.DeathDay)
                 </div>
             </div>
-            <div class="row form-group">
-                <a href="#" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#createStreamModal">Go Live!</a>
+            @{
+                string toggleButton = "none";
+                string toggleTextArea = "block";
+                if (Model.LiveStreamId == null)
+                {
+                    toggleButton = "block";
+                    toggleTextArea = "none";
+                }
+            }
+
+            <div id="startLiveButton" class="row form-group" style="display:@toggleButton">
+                <div class="col-lg-1 col-lg-offset-4">
+                    <a href="#" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#createStreamModal">Go Live!</a>
+                </div>
             </div>
-            @*<div class="row">
+            <div id="liveEmbedCode" style="display:@toggleTextArea">
+                <div class="row">
                     <div class="col-lg-12 analytics-box-sub-box">
                         <div class="analytics-box-subheader">
                             <h5 class="">Embed this on your website</h5>
@@ -109,12 +125,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-10 analytics-box-sub-box">
+                    <div class="col-lg-10">
                         <div class="live-box-embed">
                             <textarea class="video-embed-code-container" rows="4"> <a href="www.google.com"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a></textarea>
                         </div>
                     </div>
-                </div>*@
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -179,6 +197,10 @@
                 dataType: "json",
                 traditional: true,
                 data: postData
+            });
+            posting.done(function (json, responseText, jsonResponse) {
+                $("#startLiveButton").hide();
+                $("#liveEmbedCode").show();
             });
         });
     </script>

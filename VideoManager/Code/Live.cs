@@ -34,7 +34,7 @@ namespace VideoManager.Code
                     transcoder_type = "transcoded",
                     use_stream_source = false
                 };
-            var client = new RestClient("https://cloud.wowza.com/api/v1/live_streams");
+            var client = new RestClient("https://api.cloud.wowza.com/api/v1.3/live_streams");
             client.AddDefaultHeader("wsc-api-key", wscapikey);
             client.AddDefaultHeader("wsc-access-key", wscaccesskey);
 
@@ -98,7 +98,8 @@ namespace VideoManager.Code
                 ServiceId = service.Id,
                 StreamId = streamId,
                 SourceURL = playbackUrl,
-                StartStreamAccessToken = guidid
+                StartStreamAccessToken = guidid,
+                
             };
             ApplicationDbContext db = new ApplicationDbContext();
             db.LiveStreams.Add(ls);
