@@ -240,11 +240,11 @@ else
                                 {
                                     if (Model.LiveStream == null)
                                     {
-                                        <a href="@Url.Action("golive", new { ServiceId = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
+                                        <a href="@Url.Action("index", "Live", new { id = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
+                                        <a href="@Url.Action("index","Live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
                                     }
 
                                 }
@@ -685,6 +685,12 @@ else
                 </div>
                 <!--Here's the video uploader/editor stuff-->
                 <div class="form-group">
+                    <div class="video-controls-container" style="display:none">
+                        <button id="video-previous-five" class="btn btn-default"><i class="fa fa-chevron-left" aria-hidden="true"></i><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                        <button id="video-previous-one" class="btn btn-default"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                        <button id="video-next-one" class="btn btn-default"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                        <button id="video-next-five" class="btn btn-default"><i class="fa fa-chevron-right" aria-hidden="true"></i><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    </div>
                     <div class="controls col-md-12">
                         <!--i changed this from col-md-6 to col-mid-12 -Joe-->
                         <div class="form-group row form-inline time-container time-container-start">

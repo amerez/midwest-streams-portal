@@ -1,0 +1,186 @@
+﻿@model VideoManager.Models.Data.Service
+@{
+    ViewBag.Title = "Live";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles
+{
+    <style>
+        .analytics-header {
+            text-align: center;
+        }
+
+            .analytics-header h1 {
+                font-size: 55px;
+                text-decoration: underline;
+            }
+
+        .analytics-box {
+            border: solid 3px #4d9dc9;
+            background-color: #f9faf9;
+            margin-top: 30px;
+        }
+
+        .analytics-box-header {
+            text-align: center;
+            background: #4d9dc9;
+            padding: 15px 0px;
+        }
+
+            .analytics-box-header h4 {
+                font-weight: 600;
+                font-size: 24px;
+            }
+
+        .analytics-box-sub-box {
+            text-align: center;
+            padding: 5px;
+            margin: 10px 0px;
+        }
+
+        .analytics-box-subheader h5 {
+            font-size: 20px;
+            text-decoration: underline;
+            color: #234d64;
+        }
+
+        .live-box-embed {
+            margin-left: 10%;
+        }
+    </style>
+}
+<div class="analytics-header">
+    <h1>Live Streaming Beta Program</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="analytics-box">
+            <div class="analytics-box-header">
+                <h4>Heading Here</h4>
+                <p>*More details</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Instructions</h5>
+                        <p>Put some instructions here... Bla bla... Bla</p><p>Where you guys from? Valley city? Ya you should stay there.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 analytics-box-sub-box">
+                    <div class="analytics-box-subheader">
+                        <h5 class="">Stream Key</h5>
+                        <p>5JXyz</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="analytics-box">
+            <div class="analytics-box-header">
+                <h4>Embed code</h4>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-xs-6">
+                    <label for="inputLastName">Service Date</label>
+                    @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", placeholder = "08/12/2014" } })
+                    @Html.ValidationMessageFor(model => model.Birthday)
+                </div>
+                <div class="col-xs-6">
+                    <label for="inputLastName">Service Time</label>
+                    @Html.EditorFor(model => model.DeathDay, new { htmlAttributes = new { @class = "form-control", placeholder = "08/12/2014" } })
+                    @Html.ValidationMessageFor(model => model.DeathDay)
+                </div>
+            </div>
+            <div class="row form-group">
+                <a href="#" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#createStreamModal">Go Live!</a>
+            </div>
+            @*<div class="row">
+                    <div class="col-lg-12 analytics-box-sub-box">
+                        <div class="analytics-box-subheader">
+                            <h5 class="">Embed this on your website</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 analytics-box-sub-box">
+                        <div class="live-box-embed">
+                            <textarea class="video-embed-code-container" rows="4"> <a href="www.google.com"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></a></textarea>
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+</div>
+<div class="row">
+    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+
+    <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0; margin-top: 10em"></div>
+
+    <script type="text/javascript">
+        WowzaPlayer.create('playerElement',
+            {
+                "license": "PLAY1-7r88f-Rfwdk-zXdVp-VnJeu-xZx9n",
+                "title": "This is a video",
+                "description": "This%20video%20is%20being%20hosted%20on%20MWS",
+                "sourceURL": "",
+                "autoPlay": false,
+                "volume": "75",
+                "mute": false,
+                "loop": false,
+                "audioOnly": false,
+                "uiShowQuickRewind": true,
+                "uiQuickRewindSeconds": "30"
+            }
+        );
+    </script>
+</div>
+
+
+<div class="modal fade" id="createStreamModal" tabindex="-1" role="dialog" aria-labelledby="createStreamModal" aria-hidden="true">
+    <div class="modal-dialog video-modal-dialog">
+        <div class="modal-content video-modal-content">
+            <div class="modal-header video-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Create a Live Stream</h4>
+            </div>
+            <div class="modal-body">
+                <!--I removed alert-dismissable class from the div in the line below this -Joe-->
+                <div class="bootstrapAlertToggle alert alert-info" role="alert">
+                    <p id="instruction-header">Live Streaming Beta Program:</p> <span id="instruction-text">By clicking the 'Start' button you agree that you have taken the live webcasting training, and that you will be charged $40 for this service.</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createStream" class="btn btn-primary">Start</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $("#createStream").click(function () {
+
+            $('#createStreamModal').modal('hide');
+            var postData = { serviceId: @Model.Id };
+            var postUrl = "/Live/Create";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+        });
+    </script>
+}
+

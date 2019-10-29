@@ -356,7 +356,8 @@ $(function () {
 	    $('#next-video-text').text("Upload Next Video");
 	    $('#instruction-header').text("Upload Next Video");
 	    $('#instruction-text').text('If your service is contained in two or more videos click "Upload Next Video"');
-	    $("#videoFinish").show();
+        $("#videoFinish").show();
+
 	
 	}
 	function showResumableUploadMessage(nextFileName, showFileArrangmentWarning)
@@ -783,7 +784,8 @@ $(function () {
 	    $('#instruction-header').text("Set Start Time");
 	    $('#instruction-text').text('Play through the first video, find the ideal start time, pause the video, and click "Set Start". ');
 	    $("video:first").addClass("highlighted-video-item-active");
-	    $("video:not(:first)").addClass("highlighted-video-item-disable");
+        $("video:not(:first)").addClass("highlighted-video-item-disable");
+        $(".video-controls-container").show();
 	});
 
 	$(".video-modal-body").on("click", "#setInDone", function () {
@@ -810,7 +812,8 @@ $(function () {
 	    $("#setOutDone").hide();
 	    $(".startUpload").show();
 	    $("video:first").removeClass("highlighted-video-item-disable");
-	    $("video:last").removeClass("highlighted-video-item-active");
+        $("video:last").removeClass("highlighted-video-item-active");
+        $(".video-controls-container").hide();
 	});
 	$("body").on("click", "#testButton", function () {
 
@@ -867,6 +870,35 @@ $(function () {
 	    $("#outHours").val(0);
 	});
 
+    //Video seek Buttons
+    $("#video-previous-five").click(function () {
+        currentTime = $('.highlighted-video-item-active').get(0).currentTime;
+        if (currentTime > 4) {
+            currentTime = currentTime - 4;
+        }
+        else {
+            currentTime = 0;
+        }
+        $('.highlighted-video-item-active').get(0).currentTime = currentTime;
+    });
+    $("#video-previous-one").click(function () {
+        currentTime = $('.highlighted-video-item-active').get(0).currentTime;
+        if (currentTime > 1) {
+            currentTime = currentTime - 1;
+        }
+        else {
+            currentTime = 0;
+        }
+        $('.highlighted-video-item-active').get(0).currentTime = currentTime;
+    });
+    $("#video-next-one").click(function () {
+        currentTime = $('.highlighted-video-item-active').get(0).currentTime;
+        $('.highlighted-video-item-active').get(0).currentTime = currentTime+1;
+    });
+    $("#video-next-five").click(function () {
+        currentTime = $('.highlighted-video-item-active').get(0).currentTime;
+        $('.highlighted-video-item-active').get(0).currentTime = currentTime+5;
+    });
     function EnableDragAndDrop()
     {
         if (!isIE) {
