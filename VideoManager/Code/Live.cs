@@ -10,6 +10,7 @@ namespace VideoManager.Code
 {
     public class LiveCode
     {
+        public const string WowzaApi = "https://api.cloud.wowza.com/api/v1.3/";
         public static Models.Data.LiveStream CreateLiveStream(Service service)
         {
             string wscapikey = ConfigurationManager.AppSettings["wowzaApiKey"];
@@ -34,7 +35,7 @@ namespace VideoManager.Code
                     transcoder_type = "transcoded",
                     use_stream_source = false
                 };
-            var client = new RestClient("https://api.cloud.wowza.com/api/v1.3/live_streams");
+            var client = new RestClient(WowzaApi+"live_streams");
             client.AddDefaultHeader("wsc-api-key", wscapikey);
             client.AddDefaultHeader("wsc-access-key", wscaccesskey);
 
@@ -49,8 +50,7 @@ namespace VideoManager.Code
            WowzaResponse wr = JsonConvert.DeserializeObject<WowzaResponse>(response.Content);
             if(wr!=null && wr.live_stream!=null)
             {
-                Models.Data.LiveStream liveStream = CreateAndStoreLiveStream(service, wr.live_stream.id, wr.live_stream.player_hls_playback_url);
-               SendEmailWithStreamCode(liveStream.ServiceId, wr, liveStream.StartStreamAccessToken);
+                Models.Data.LiveStream liveStream = CreateAndStoreLiveStream(service, wr.live_stream.id, wr.live_stream.player_hls_playback_url, wr.live_stream.connection_code);
                 return liveStream;
             }
             return null;
@@ -61,7 +61,7 @@ namespace VideoManager.Code
         {
             string wscapikey = ConfigurationManager.AppSettings["wowzaApiKey"];
             string wscaccesskey = ConfigurationManager.AppSettings["wowzaAccessKey"];
-            var client = new RestClient("https://cloud.wowza.com/api/v1/live_streams/"+WowzaLiveStreamId);
+            var client = new RestClient(WowzaApi+"live_streams/"+WowzaLiveStreamId);
             client.AddDefaultHeader("wsc-api-key", wscapikey);
             client.AddDefaultHeader("wsc-access-key", wscaccesskey);
 
@@ -73,24 +73,54 @@ namespace VideoManager.Code
             WowzaResponse wr = JsonConvert.DeserializeObject<WowzaResponse>(response.Content);
             return wr;
         }
-        public static void StartLiveStream(string streamId)
+        public static bool StartLiveStream(string streamId)
         {
             string wscapikey = ConfigurationManager.AppSettings["wowzaApiKey"];
             string wscaccesskey = ConfigurationManager.AppSettings["wowzaAccessKey"];
 
-            var client = new RestClient("https://cloud.wowza.com/api/v1/live_streams");
+            var client = new RestClient(WowzaApi + "live_streams");
             client.AddDefaultHeader("wsc-api-key", wscapikey);
             client.AddDefaultHeader("wsc-access-key", wscaccesskey);
             string id = streamId;
             var status = 1;
-            var request = new RestRequest(id+"/start", Method.PUT);
+            var request = new RestRequest(id + "/start", Method.PUT);
             request.AddJsonBody(new { status = status });
             var response = client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
 
-            
         }
 
-        private static Models.Data.LiveStream CreateAndStoreLiveStream(Service service, string streamId, string playbackUrl)
+        //Each stream key is only good for 24 hours. 
+        public static string RegenerateStreamKey(string streamId)
+        {
+            string wscapikey = ConfigurationManager.AppSettings["wowzaApiKey"];
+            string wscaccesskey = ConfigurationManager.AppSettings["wowzaAccessKey"];
+
+            var client = new RestClient(WowzaApi + "live_streams");
+            client.AddDefaultHeader("wsc-api-key", wscapikey);
+            client.AddDefaultHeader("wsc-access-key", wscaccesskey);
+            string id = streamId;
+            var status = 1;
+            var request = new RestRequest(id + "/regenerate_connection_code", Method.PUT);
+            request.AddJsonBody(new { status = status });
+            var response = client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                WowzaResponse wr = JsonConvert.DeserializeObject<WowzaResponse>(response.Content);
+                if(wr.live_stream!=null)
+                {
+                    return wr.live_stream.connection_code;
+                }
+               
+            }
+            return "No Connection Code";
+        }
+
+        private static Models.Data.LiveStream CreateAndStoreLiveStream(Service service, string streamId, string playbackUrl, string connectionCode)
         {
             Guid guidid = Guid.NewGuid();
             Models.Data.LiveStream ls = new Models.Data.LiveStream()
@@ -99,6 +129,7 @@ namespace VideoManager.Code
                 StreamId = streamId,
                 SourceURL = playbackUrl,
                 StartStreamAccessToken = guidid,
+                ConnectionCode = connectionCode
                 
             };
             ApplicationDbContext db = new ApplicationDbContext();
@@ -106,10 +137,10 @@ namespace VideoManager.Code
             db.SaveChanges();
             return ls;
         }
-        private static bool SendEmailWithStreamCode(int? mwsLiveStreamId, WowzaResponse wowza, Guid accessToken )
+        public static bool SendEmail(int serviceId, Guid accessToken )
         {
-            string IOSCode = BuildAppOpenCode(wowza);
-            string EmailText = "You have created a live stream. First you need to start the stream. To start the stream please click the following link:" + ConfigurationManager.AppSettings["portalPath"] + "/services/startlivestream/" + mwsLiveStreamId.ToString() +"?token=" + accessToken.ToString() + "<br/><br/> Connection Code: "+wowza.live_stream.connection_code;
+            //string IOSCode = BuildAppOpenCode(wowza);
+            string EmailText = "Here is the link to start the stream. The stream is only good for two hours, so please refrain from hittin the button until a few minutes before the service.  To start the stream please click the following link:" + ConfigurationManager.AppSettings["portalPath"] + "/live/startfromemail/" + serviceId.ToString() +"?token=" + accessToken.ToString();
             Email.sendLiveStreamingCode(EmailText);
             return true;
         }

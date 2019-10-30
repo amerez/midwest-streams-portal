@@ -19,6 +19,8 @@ namespace VideoManager.Models.Data
 
         public bool Started { get; set; }
 
+        public string ConnectionCode { get; set; }
+
         public Guid StartStreamAccessToken { get; set; }
 	}
 }

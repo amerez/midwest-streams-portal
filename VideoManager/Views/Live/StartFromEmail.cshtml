@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "StartFromEmail";
+    Layout = "~/Views/Shared/_LayoutNoNav.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4">
+            <h1>@ViewBag.Status</h1>
+            @{
+                if (ViewBag.Status == "Stream Started!")
+                {
+                    <h3>Connection Code: @ViewBag.ConnectionKey</h3>
+                }
+            }
+
+        </div>
+    </div>
+</div>

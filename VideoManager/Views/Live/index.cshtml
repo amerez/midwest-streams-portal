@@ -72,11 +72,33 @@
             <div class="row">
                 <div class="col-lg-12 analytics-box-sub-box">
                     <div class="analytics-box-subheader">
-                        @{ 
-                      
+                        @{
+                            string keyToggle = "none";
+                            string startToggle = "none";
+                            string connectionCode = "";
+                            string sourceUrl = "";
+                            if (Model.LiveStream != null)
+                            {
+                                if (Model.LiveStream.Started)
+                                {
+                                    keyToggle = "block";
+                                    connectionCode = Model.LiveStream.ConnectionCode;
+                                }
+                                else
+                                {
+                                    startToggle = "block";
+                                }
+                                sourceUrl = Model.LiveStream.SourceURL;
+                            }
+
                         }
-                        <h5 class="">Stream Key</h5>
-                        <p>5JXyz</p>
+                        <div id="connectionKeyContainer" style="display:@keyToggle">
+                            <h5 class="">Stream Key</h5>
+                            <p id="connectionCode">@connectionCode</p>
+                        </div>
+                        <div id="startStreamBtnCtn" style="display:@startToggle">
+                            <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#startStreamModal">Start Stream</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,7 +110,14 @@
             <div class="analytics-box-header">
                 <h4>Embed code</h4>
             </div>
-
+            <div class="row form-group">
+                <div class="col-xs-6">
+                    <label for="First Name">First Name: @Model.FirstName</label>
+                </div>
+                <div class="col-xs-6">
+                    <label for="Last Name">Last Name: @Model.LastName</label>
+                </div>
+            </div>
             <div class="row form-group">
                 <div class="col-xs-6">
                     <label for="inputLastName">Service Date</label>
@@ -102,16 +131,16 @@
                 </div>
             </div>
             @{
-                string toggleButton = "none";
+                string toggleLiveStream = "none";
                 string toggleTextArea = "block";
-                if (Model.LiveStreamId == null)
+                if (Model.LiveStream == null)
                 {
-                    toggleButton = "block";
+                    toggleLiveStream = "block";
                     toggleTextArea = "none";
                 }
             }
 
-            <div id="startLiveButton" class="row form-group" style="display:@toggleButton">
+            <div id="startLiveButton" class="row form-group" style="display:@toggleLiveStream">
                 <div class="col-lg-1 col-lg-offset-4">
                     <a href="#" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#createStreamModal">Go Live!</a>
                 </div>
@@ -136,8 +165,8 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+<div id="videoPlayerContainer" class="row" style="display: @toggleTextArea">
+    <script type="text/javascript" src="https://player.wowza.com/player/latest/wowzaplayer.min.js"></script>
 
     <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0; margin-top: 10em"></div>
 
@@ -145,9 +174,9 @@
         WowzaPlayer.create('playerElement',
             {
                 "license": "PLAY1-7r88f-Rfwdk-zXdVp-VnJeu-xZx9n",
-                "title": "This is a video",
+                "title": "Video will appear here once stream has started",
                 "description": "This%20video%20is%20being%20hosted%20on%20MWS",
-                "sourceURL": "",
+                "sourceURL": "@sourceUrl",
                 "autoPlay": false,
                 "volume": "75",
                 "mute": false,
@@ -183,6 +212,28 @@
     </div>
 </div>
 
+<div class="modal fade" id="startStreamModal" tabindex="-1" role="dialog" aria-labelledby="startStreamModal" aria-hidden="true">
+    <div class="modal-dialog video-modal-dialog">
+        <div class="modal-content video-modal-content">
+            <div class="modal-header video-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Start Live Stream</h4>
+            </div>
+            <div class="modal-body">
+                <!--I removed alert-dismissable class from the div in the line below this -Joe-->
+                <div class="bootstrapAlertToggle alert alert-info" role="alert">
+                    <p id="instruction-header">You are about to start this stream:</p> <span id="instruction-text">*Once started this stream is good for two hours. The stream can only be started once, so be sure to start it right before the service begins. If you are not ready to start this stream right now we can send you an email with a button that will allow you to start the stream when you are ready.</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="startStream" class="btn btn-primary">Start Stream</button>
+                    <button type="button" id="emailStream" class="btn btn-success">Email Me a Link</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
     <script>
@@ -201,6 +252,51 @@
             posting.done(function (json, responseText, jsonResponse) {
                 $("#startLiveButton").hide();
                 $("#liveEmbedCode").show();
+                $("#startStreamBtnCtn").show();
+                $("#videoPlayerContainer").show();
+            });
+        });
+
+         $("#startStream").click(function () {
+                 $('#startStreamModal').modal('hide');
+            var postData = { serviceId: @Model.Id };
+            var postUrl = "/Live/Start";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+             posting.done(function (json, responseText, jsonResponse) {
+                 if (responseText != "success") {
+                     alert("error starting stream");
+                 }
+                 $("#connectionCode").text(json.connectionKey);
+                 console.log(json.connectionKey);
+                $("#startLiveButton").hide();
+                 $("#liveEmbedCode").show();
+                 $("#connectionKeyContainer").show();
+                 $("#startStreamBtnCtn").hide();
+
+            });
+         });
+
+                 $("#emailStream").click(function () {
+                 $('#startStreamModal').modal('hide');
+            var postData = { serviceId: @Model.Id };
+            var postUrl = "/Live/EmailStream";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+             posting.done(function (json, responseText, jsonResponse) {
+                 if (responseText != "success") {
+                     alert("error sending email");
+                 }
             });
         });
     </script>

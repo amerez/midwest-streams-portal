@@ -527,6 +527,10 @@
     <Compile Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.Designer.cs">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910292307137_AddedConnectionCodeToLive.cs" />
+    <Compile Include="Migrations\201910292307137_AddedConnectionCodeToLive.Designer.cs">
+      <DependentUpon>201910292307137_AddedConnectionCodeToLive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
     <Compile Include="Models\Data\CRMFuneralHomeHistoryComment.cs" />
@@ -1517,6 +1521,7 @@
     <Content Include="Views\Announcments\Edit.cshtml" />
     <Content Include="Views\Announcments\Index.cshtml" />
     <Content Include="Views\Live\index.cshtml" />
+    <Content Include="Views\Live\StartFromEmail.cshtml" />
     <None Include="Web.azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1741,6 +1746,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.resx">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910292307137_AddedConnectionCodeToLive.resx">
+      <DependentUpon>201910292307137_AddedConnectionCodeToLive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
