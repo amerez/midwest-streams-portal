@@ -86,12 +86,53 @@ namespace VideoManager.Code
             var request = new RestRequest(id + "/start", Method.PUT);
             request.AddJsonBody(new { status = status });
             var response = client.Execute(request);
+
+          
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Create2HourLimit(streamId);
+                return true;
+            }
+            Email.sendErrorMessage("Unable to create Live Stream. Please check Wowza. StreamId:" + streamId);
+            return false;
+
+        }
+
+        public static bool Create2HourLimit(string streamId)
+        {
+            string wscapikey = ConfigurationManager.AppSettings["wowzaApiKey"];
+            string wscaccesskey = ConfigurationManager.AppSettings["wowzaAccessKey"];
+
+            string streamName = DateTime.Now.Month.ToString("") +"/"+ DateTime.UtcNow.Day.ToString()+" 2 hour limit";
+            string utc2hours = DateTime.UtcNow.AddHours(2).ToString("yyyy-MM-dd HH':'mm':'ss");
+            WowzaSchedule wowzaSchedule = new WowzaSchedule();
+            Schedule schedule = new Schedule()
+            {
+                action_type = "stop",
+                name = streamName,
+                recurrence_type = "once",
+                transcoder_id = streamId,
+                stop_transcoder = utc2hours
+            };
+            wowzaSchedule.schedule = schedule;
+
+            var client = new RestClient(WowzaApi + "schedules");
+            client.AddDefaultHeader("wsc-api-key", wscapikey);
+            client.AddDefaultHeader("wsc-access-key", wscaccesskey);
+
+            var request = new RestRequest(Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(wowzaSchedule);
+            var response = client.Execute(request);
+
+            WowzaSchedule wr = JsonConvert.DeserializeObject<WowzaSchedule>(response.Content);
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
                 return true;
             }
+            Email.sendErrorMessage("Unable to create stop schedule. Please check Wowza. StreamId:" + streamId);
             return false;
-
         }
 
         //Each stream key is only good for 24 hours. 
@@ -283,4 +324,22 @@ namespace VideoManager.Code
     {
         public LiveStream live_stream { get; set; }
     }
+
+    public class Schedule
+    {
+        public string action_type { get; set; }
+        public string name { get; set; }
+        public string recurrence_type { get; set; }
+        public string transcoder_id { get; set; }
+        public string end_repeat { get; set; }
+        public string recurrence_data { get; set; }
+        public string start_repeat { get; set; }
+        public string stop_transcoder { get; set; }
+    }
+
+    public class WowzaSchedule
+    {
+        public Schedule schedule { get; set; }
+    }
+
 }

@@ -43,7 +43,9 @@ namespace VideoManager.Controllers
             {
                 if (service.LiveStream != null)
                 {
+             
                     bool response = LiveCode.StartLiveStream(service.LiveStream.StreamId);
+
                     service.LiveStream.Started = response;
                     if(response)
                     {
