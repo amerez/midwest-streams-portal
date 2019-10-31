@@ -1522,6 +1522,7 @@
     <Content Include="Views\Announcments\Index.cshtml" />
     <Content Include="Views\Live\index.cshtml" />
     <Content Include="Views\Live\StartFromEmail.cshtml" />
+    <Content Include="Views\Live\iframe.cshtml" />
     <None Include="Web.azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

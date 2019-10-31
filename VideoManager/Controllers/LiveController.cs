@@ -43,18 +43,18 @@ namespace VideoManager.Controllers
             {
                 if (service.LiveStream != null)
                 {
-             
+
                     bool response = LiveCode.StartLiveStream(service.LiveStream.StreamId);
 
                     service.LiveStream.Started = response;
-                    if(response)
+                    if (response)
                     {
                         string key = LiveCode.RegenerateStreamKey(service.LiveStream.StreamId);
                         service.LiveStream.ConnectionCode = key;
                         db.SaveChanges();
                         return Json(new { success = response, connectionKey = key });
                     }
-                   
+
                 }
             }
             return Json(new { success = "false" });
@@ -81,7 +81,7 @@ namespace VideoManager.Controllers
             {
                 if (service.LiveStream != null)
                 {
-                    if(service.LiveStream.StartStreamAccessToken !=token)
+                    if (service.LiveStream.StartStreamAccessToken != token)
                     {
                         ViewBag.Status = "Invalid Access Token!";
                         return View();
@@ -102,6 +102,19 @@ namespace VideoManager.Controllers
             }
             ViewBag.Status = "Unable to Start Stream.";
             return View();
+        }
+
+        public ActionResult iframe(int id)
+        {
+            Service service = db.Services.Find(id);
+            if (service != null)
+            {
+                if (service.LiveStream != null)
+                {
+                    return View(service);
+                }
+            }
+            return View("NotFound");
         }
     }
 }
