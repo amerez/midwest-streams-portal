@@ -116,5 +116,18 @@ namespace VideoManager.Controllers
             }
             return View("NotFound");
         }
+
+        public ActionResult view(int id)
+        {
+            Service service = db.Services.Find(id);
+            if (service != null)
+            {
+                if (service.LiveStream != null)
+                {
+                    return View(service);
+                }
+            }
+            return View("NotFound");
+        }
     }
 }
