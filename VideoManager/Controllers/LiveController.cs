@@ -18,7 +18,24 @@ namespace VideoManager.Controllers
             {
                 return View("NotFound");
             }
+            if(service.ServiceDate!=null && service.ServiceDate.TimeOfDay.Ticks !=0)
+            {
+                ViewBag.Time = service.ServiceDate;
+            }
             return View(service);
+        }
+        [HttpPost]
+        public ActionResult SetServiceTime(int serviceId, string serviceTime)
+        {
+            Service service = db.Services.Find(serviceId);
+            if (service != null)
+            {
+                DateTime serviceDate = DateTime.Now;
+                DateTime.TryParse(serviceTime, out serviceDate);
+                service.ServiceDate = serviceDate;
+                db.SaveChanges();
+            }
+            return Json(new { result = "fail" });
         }
 
         [HttpPost]
