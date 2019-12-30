@@ -207,7 +207,14 @@ namespace VideoManager.Controllers
                 if (User.IsInRole("Admin"))
                 {
                     ViewBag.FuneralHomeId = new SelectList(db.FuneralHomes, "Id", "Name");
-                    return View();
+                    Service servy = new Service
+                    {
+                        ServiceDate = DateTime.Now,
+                        DeathDay = DateTime.Now.AddDays(-3),
+                        Birthday = DateTime.Now.AddYears(-80)
+
+                    };
+                    return View(servy);
                 }
                 var userId = User.Identity.GetUserId();
                 FuneralHome home = db.FuneralHomes.Where(f => f.UserId == userId).FirstOrDefault();
