@@ -1010,7 +1010,8 @@ namespace VideoManager.Controllers
                     }
                   
                 }
-            if(Authorize(service))
+           //publicly exposing URL for now
+            if(Authorize(service) || service.IsSecured!=true)
                 {
                     if (service.Video != null)
                     {
