@@ -1517,6 +1517,7 @@
     <Content Include="Views\Announcments\Edit.cshtml" />
     <Content Include="Views\Announcments\Index.cshtml" />
     <Content Include="Views\Live\index.cshtml" />
+    <Content Include="Views\Home\Innovate.cshtml" />
     <None Include="Web.azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

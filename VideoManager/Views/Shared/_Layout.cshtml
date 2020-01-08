@@ -45,27 +45,28 @@
                 @Html.Partial("_LoginPartial")
                 @if (!User.IsInRole("Viewing"))
                 {
-                    <ul class="mobile-nav">
-                        @if (!User.IsInRole("FuneralHomeOwner"))
-                        {
-                            @Html.MenuItem("Upload New Service", "Manage", "Services")
-                            @Html.MenuItem("All Services", "Index", "Services")
-                            @Html.MenuItem("Help Center", "Contact", "Home")
-                        }
-                        else
-                        {
-                            @Html.MenuItem("Funeral Home List", "Home", "Owners")
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            @Html.MenuItem("Homes", "Index", "FuneralHomes")
-                            @Html.MenuItem("Owners", "Index", "Owners")
-                            @Html.MenuItem("Logins", "Index", "Account")
-                            @Html.MenuItem("Email", "SendMassEmail", "Email")
-                            @Html.MenuItem("Analytics", "Index", "Analytics")
-                            @Html.MenuItem("CRM", "Dashboard", "Analytics")
-                        }
-                    </ul>
+                <ul class="mobile-nav">
+                    @if (!User.IsInRole("FuneralHomeOwner"))
+                    {
+                        @Html.MenuItem("Upload New Service", "Manage", "Services")
+                        @Html.MenuItem("All Services", "Index", "Services")
+                        @Html.MenuItem("Make Money", "Innovate", "Home")
+                        @Html.MenuItem("Help Center", "Contact", "Home")
+                    }
+                    else
+                    {
+                        @Html.MenuItem("Funeral Home List", "Home", "Owners")
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.MenuItem("Homes", "Index", "FuneralHomes")
+                        @Html.MenuItem("Owners", "Index", "Owners")
+                        @Html.MenuItem("Logins", "Index", "Account")
+                        @Html.MenuItem("Email", "SendMassEmail", "Email")
+                        @Html.MenuItem("Analytics", "Index", "Analytics")
+                        @Html.MenuItem("CRM", "Dashboard", "Analytics")
+                    }
+                </ul>
                 }
             </div>
 
@@ -86,6 +87,7 @@
                                 @Html.MenuItem("Upload New Service", "Manage", "Services")
                                 @Html.MenuItem("All Services", "Index", "Services")
                                 @Html.MenuItem("Analytics", "Index", "Analytics")
+                                @Html.MenuItem("Make Money", "Innovate", "Home")
                                 @Html.MenuItem("Help Center", "Contact", "Home")
 
                             }

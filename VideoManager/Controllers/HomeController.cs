@@ -107,6 +107,11 @@ namespace VideoManager.Controllers
             return View();
         }
 
+        public ActionResult Innovate()
+        {
+            return View();
+        }
+
         #region Helpers
         private IAuthenticationManager AuthenticationManager
         {
