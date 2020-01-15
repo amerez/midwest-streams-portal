@@ -51,6 +51,7 @@ namespace VideoManager.Code
             if(wr!=null && wr.live_stream!=null)
             {
                 Models.Data.LiveStream liveStream = CreateAndStoreLiveStream(service, wr.live_stream.id, wr.live_stream.player_hls_playback_url, wr.live_stream.connection_code);
+                liveStream.Started = false;
                 return liveStream;
             }
             return null;

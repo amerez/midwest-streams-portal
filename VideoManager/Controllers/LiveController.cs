@@ -50,7 +50,7 @@ namespace VideoManager.Controllers
 
                 }
             }
-            return Json(new { result = "bla" });
+            return Json(new { service.LiveStream });
         }
         [HttpPost]
         public ActionResult Start(int serviceId)
@@ -68,6 +68,7 @@ namespace VideoManager.Controllers
                     {
                         string key = LiveCode.RegenerateStreamKey(service.LiveStream.StreamId);
                         service.LiveStream.ConnectionCode = key;
+                        service.LiveStream.Started = true;
                         db.SaveChanges();
                         return Json(new { success = response, connectionKey = key });
                     }
