@@ -1,0 +1,87 @@
+﻿@model VideoManager.Models.Data.Service
+@{
+    Layout = null;
+    string videoTitle = "Live Stream";
+}
+@if (Model.ServiceDate.Date >= DateTime.Now.Date)
+{
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <link rel="icon" href="~/Content/images/FaviconMWS.png" type="image/x-icon">
+        <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+        <style>
+            body {
+                font-family: Lato;
+            }
+
+            .placeholder {
+                height: 300px;
+                width: 500px;
+                background-color: black;
+                color: white;
+                font-size: 36px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        @if (Model.LiveStream != null)
+        {
+            if (Model.LiveStream.Started == true)
+            {
+                <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+                <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0"></div>
+                <script type="text/javascript">
+    WowzaPlayer.create('playerElement',
+        {
+            "license": "PLAY1-7r88f-Rfwdk-zXdVp-VnJeu-xZx9n",
+            "title": "@videoTitle",
+            "description": "",
+            "sourceURL": "@Model.LiveStream.SourceURL",
+            "autoPlay": false,
+            "volume": "75",
+            "mute": false,
+            "loop": false,
+            "audioOnly": false,
+            "uiShowQuickRewind": true,
+            "uiQuickRewindSeconds": "30"
+        }
+    );
+                </script>
+            }
+            else
+            {
+                string serviceStart = Model.ServiceDate.ToString("MMM dd");
+                if (Model.ServiceDate.Date == DateTime.Now.Date)
+                {
+                    serviceStart = Model.ServiceDate.ToString("h:mm tt");
+                    if (Model.ServiceDate.ToString("mm") == "00")
+                    {
+                        serviceStart = Model.ServiceDate.ToString("h tt");
+                    }
+
+                }
+                if(Model.ServiceDate.Date == DateTime.Now.AddDays(1).Date)
+                {
+                    serviceStart = Model.ServiceDate.ToString("h:mm tt");
+                    if (Model.ServiceDate.ToString("mm") == "00")
+                    {
+                        serviceStart = Model.ServiceDate.ToString("h tt");
+                    }
+                    serviceStart = "Tommorow " + serviceStart;
+                }
+                <div class="placeholder">
+                    <p>Live Stream Starting<br/>@serviceStart </p>
+                </div>
+            }
+
+        }
+
+    </body>
+
+</html>
+}
