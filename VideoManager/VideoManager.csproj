@@ -527,6 +527,10 @@
     <Compile Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.Designer.cs">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910292307137_AddedConnectionCodeToLive.cs" />
+    <Compile Include="Migrations\201910292307137_AddedConnectionCodeToLive.Designer.cs">
+      <DependentUpon>201910292307137_AddedConnectionCodeToLive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\202001201706474_dvdForSaleSetting.cs" />
     <Compile Include="Migrations\202001201706474_dvdForSaleSetting.Designer.cs">
       <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>
@@ -1751,6 +1755,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.resx">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910292307137_AddedConnectionCodeToLive.resx">
+      <DependentUpon>201910292307137_AddedConnectionCodeToLive.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001201706474_dvdForSaleSetting.resx">
       <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>

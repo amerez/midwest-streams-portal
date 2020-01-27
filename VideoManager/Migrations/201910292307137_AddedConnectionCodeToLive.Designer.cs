@@ -5,22 +5,22 @@ namespace VideoManager.Migrations
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
-    
+
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
     public sealed partial class AddedConnectionCodeToLive : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(AddedConnectionCodeToLive));
-        
+
         string IMigrationMetadata.Id
         {
             get { return "201910292307137_AddedConnectionCodeToLive"; }
         }
-        
+
         string IMigrationMetadata.Source
         {
             get { return null; }
         }
-        
+
         string IMigrationMetadata.Target
         {
             get { return Resources.GetString("Target"); }
