@@ -51,7 +51,9 @@ namespace VideoManager.Models.ViewModels
         public Dictionary<string, string> AzureVMSize { get; set; }
 
         public string SelectedAzureVM { get; set; }
-	}
+
+        public bool DVDForSale { get; set; }
+    }
 	
 
 

@@ -356,7 +356,7 @@ else
                             PDF
                             <a href="@Url.Action("CreatePDF", new { id= Model.Id })" class="btn btn-lg btn-info btn-block" type="submit">ADD FUNERAL PROGRAM PDF</a>
                             After uploading your PDF, a link will be generated that you can place on your obituary page.
-                            <br/> File Format accepted: PDF
+                            <br /> File Format accepted: PDF
                         </div>
                     </div>
                 }
@@ -540,9 +540,19 @@ else
                                 var pageHits = Model.Video.Analytics.Count();
 
                                 <div class="col-lg-5 col-lg-offset-4 text-center">
-                                    <a href="@Url.Action("Index","Analytics", new { id= Model.Id })" style="margin-bottom:18px; padding:5px;" class="btn btn-sm btn-info btn-block" type="submit">ADVANCED ANALYTICS</a>
+                                    <div style="display:inline; width:500px;">
+                                        @{
+                                            if (Model.FuneralHome != null && Model.FuneralHome.Setting != null && Model.FuneralHome.Setting.DVDForSale)
+                                            {
+                                                <button type="button" id="requestDvd" class="btn btn-success">Request DVD</button>
+                                            }
+                                        }
+
+                                        <a href="@Url.Action("Index","Analytics", new { id= Model.Id })" style="margin-bottom:18px; padding:5px;" class="btn btn-sm btn-info btn-block" type="submit">ADVANCED ANALYTICS</a>
+                                    </div>
                                     <h3>Views</h3>
                                     <span>@pageHits</span>
+
                                 </div>
                             }
 
@@ -935,6 +945,43 @@ else
                 });
                 return false;
             });
+            @{
+                string typeformParams = "";
+                if(Model.Video!=null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
+                {
+                    string address = Model.FuneralHome.Address1 +" "+Model.FuneralHome.Address2+" "+Model.FuneralHome.City+" "+Model.FuneralHome.State +" "+Model.FuneralHome.ZipCode;
+                    address = Uri.EscapeDataString(address);
+                    string fhName = Uri.EscapeDataString(Model.FuneralHome.Name);
+                    string personName = Uri.EscapeDataString(Model.FirstName+" "+Model.LastName);
+                    string serviceDate = Uri.EscapeDataString(Model.ServiceDate.ToShortDateString());
+                    string downloadLink = @System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/services/download" + Model.Id;
+                    downloadLink = Uri.EscapeDataString(downloadLink);
+                    typeformParams = "address="+address+"&downloadlink="+downloadLink+"&funeralhome="+fhName+"&serviceid="+Model.Id+"&funeralhomeid="+Model.FuneralHomeId+"&deceasedname="+personName+"&servicedate="+serviceDate;
+                }
+
+            }
+            //DVD
+            $("#requestDvd").click(function () {
+                Swal.fire({
+                    title: 'Hate burning DVDs? We will do it for you!',
+                    text: "For a $29 fee we will burn and ship the DVD for you. You can either have this fee added to your invoice, or you can send the link to the family and they can purcahse it themselves.",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'I want to pay for the DVD',
+                    cancelButtonText: 'I want the family to pay'
+                }).then((result) => {
+                    if (result.value) {
+                        var typeformParams = "@Html.Raw(typeformParams)";
+                       window.location.href = 'https://kylefogarty.typeform.com/to/DgHrPi?'+typeformParams;
+                    }
+                    else {
+                        Swal.fire('Coming Soon');
+                    }
+                })
+            });
+
         });
 
 

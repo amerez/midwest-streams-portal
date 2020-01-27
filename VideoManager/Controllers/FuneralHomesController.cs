@@ -148,19 +148,19 @@ namespace VideoManager.Controllers
                 return View("NotFound");
             }
 			FuneralHome home = db.FuneralHomes.Find(id);
-			FuneralHomeSettingViewModel svm = new FuneralHomeSettingViewModel
-			{
-				FuneralHomeId = home.Id,
-				Address1 = home.Address1,
-				Address2 = home.Address2,
-				City = home.City,
-				Email = home.Email,
-				LogoPath = home.Setting.LogoPath,
-				SlatePath = home.Setting.SlatePath,
-				Name = home.Name,
-				State = home.State,
-				WebsiteProvider = home.Setting.WebsiteProvider,
-				ZipCode = home.ZipCode,
+            FuneralHomeSettingViewModel svm = new FuneralHomeSettingViewModel
+            {
+                FuneralHomeId = home.Id,
+                Address1 = home.Address1,
+                Address2 = home.Address2,
+                City = home.City,
+                Email = home.Email,
+                LogoPath = home.Setting.LogoPath,
+                SlatePath = home.Setting.SlatePath,
+                Name = home.Name,
+                State = home.State,
+                WebsiteProvider = home.Setting.WebsiteProvider,
+                ZipCode = home.ZipCode,
                 FuneralHomeNumber = home.FuneralHomeNumber,
                 PrimaryContact = home.PrimaryContact,
                 PrimaryContactEmail = home.PrimaryContactEmail,
@@ -170,7 +170,8 @@ namespace VideoManager.Controllers
                 DisplayTutorials = home.Setting.DisplayTutorial,
                 WhiteLabel = home.Setting.WhiteLabel,
                 SelectedAzureVM = home.Setting.AzureVMSize,
-                AzureVMSize = VMSizeDictionary.GetAzureVMSize()
+                AzureVMSize = VMSizeDictionary.GetAzureVMSize(),
+                DVDForSale = home.Setting.DVDForSale
 
 			};
 			return View(svm);
@@ -203,7 +204,8 @@ namespace VideoManager.Controllers
                     SearchEngineFriendlyPDF = home.Setting.SEOFriendlyPDF,
                     WhiteLabel = home.Setting.WhiteLabel,
                     SelectedAzureVM = home.Setting.AzureVMSize,
-                    AzureVMSize = VMSizeDictionary.GetAzureVMSize()
+                    AzureVMSize = VMSizeDictionary.GetAzureVMSize(),
+                    DVDForSale = home.Setting.DVDForSale
                 };
                 return View("Settings", svm);
             }
@@ -244,7 +246,7 @@ namespace VideoManager.Controllers
                 {
                     dbHome.Setting.AzureVMSize = svm.SelectedAzureVM;
                 }
-                
+                dbHome.Setting.DVDForSale = svm.DVDForSale;
 				db.SaveChanges();
 				
 			}

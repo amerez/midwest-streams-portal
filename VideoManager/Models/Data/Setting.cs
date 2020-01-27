@@ -23,8 +23,9 @@ namespace VideoManager.Models.Data
         public bool SEOFriendlyPDF { get; set; }
         public bool WhiteLabel { get; set; }
         public string AzureVMSize { get; set; }
+        public bool DVDForSale { get; set; }
 
-	}
+    }
 	
 
 

@@ -527,6 +527,10 @@
     <Compile Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.Designer.cs">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001201706474_dvdForSaleSetting.cs" />
+    <Compile Include="Migrations\202001201706474_dvdForSaleSetting.Designer.cs">
+      <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
     <Compile Include="Models\Data\CRMFuneralHomeHistoryComment.cs" />
@@ -1144,6 +1148,7 @@
     <Content Include="Content\LiveVideo\shaka-player.js" />
     <Content Include="Content\LiveVideo\wowza.css" />
     <Content Include="Content\Styles\SocialStyles.css" />
+    <Content Include="Content\Styles\sweetalert2.css" />
     <Content Include="Content\tooltipster.css" />
     <Content Include="Content\video-js.css" />
     <Content Include="Content\videoplayer\iframe\background.png" />
@@ -1742,6 +1747,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903190211211_AddedAnnouncmentsViewedToFH.resx">
       <DependentUpon>201903190211211_AddedAnnouncmentsViewedToFH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001201706474_dvdForSaleSetting.resx">
+      <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
