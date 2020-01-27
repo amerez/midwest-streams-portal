@@ -531,6 +531,10 @@
     <Compile Include="Migrations\202001201706474_dvdForSaleSetting.Designer.cs">
       <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001271555530_conflictIssues.cs" />
+    <Compile Include="Migrations\202001271555530_conflictIssues.Designer.cs">
+      <DependentUpon>202001271555530_conflictIssues.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data\CRMNotification.cs" />
     <Compile Include="Models\Data\DownloadAnalytic.cs" />
     <Compile Include="Models\Data\CRMFuneralHomeHistoryComment.cs" />
@@ -1750,6 +1754,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001201706474_dvdForSaleSetting.resx">
       <DependentUpon>202001201706474_dvdForSaleSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271555530_conflictIssues.resx">
+      <DependentUpon>202001271555530_conflictIssues.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
