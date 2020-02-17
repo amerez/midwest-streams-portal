@@ -47,7 +47,7 @@ namespace VideoManager.Controllers
                 if (service.LiveStream == null)
                 {
                     service.LiveStream = LiveCode.CreateLiveStream(service);
-
+                    Email.sendAdminMessage("A new live stream has been created. ServiceId: " + service.Id + " funeralHome: " + service.FuneralHome.Name);
                 }
             }
             return Json(new { service.LiveStream });
