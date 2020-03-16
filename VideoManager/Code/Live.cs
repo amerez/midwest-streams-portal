@@ -30,10 +30,11 @@ namespace VideoManager.Code
                     player_responsive = true,
                     player_type = "wowza_player",
                     player_width = 0,
-                    recording = false,
+                    recording = true,
                     target_delivery_protocol = "hls",
                     transcoder_type = "transcoded",
-                    use_stream_source = false
+                    use_stream_source = false,
+                
                 };
             var client = new RestClient(WowzaApi+"live_streams");
             client.AddDefaultHeader("wsc-api-key", wscapikey);

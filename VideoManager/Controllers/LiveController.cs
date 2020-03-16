@@ -129,7 +129,7 @@ namespace VideoManager.Controllers
             {
                 if (service.LiveStream != null)
                 {
-                    return View(service);
+                    return View("iframe", service);
                 }
             }
             return View("NotFound");
