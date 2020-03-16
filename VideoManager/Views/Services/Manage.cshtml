@@ -235,21 +235,7 @@ else
                         </div>
                         <div class="col-lg-8 add-files-group">
                             All videos must be in a .mp4 format
-                            @{
-                                if (Model.FuneralHome.UserName == "devHome")
-                                {
-                                    if (Model.LiveStream == null)
-                                    {
                                         <a href="@Url.Action("index", "Live", new { id = Model.Id })" class="btn btn-lg btn-danger" id="goLive">Go Live!</a>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Url.Action("index","Live", new{id=Model.Id})" class="btn btn-lg btn-danger" id="goLive">Live Details</a>
-                                    }
-
-                                }
-                            }
-
                         </div>
 
                     </div>
