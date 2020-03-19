@@ -34,19 +34,21 @@
     #video-title {
         display: inline-block;
         color: #eaeaea;
-        padding: 0px 10px;
+        padding: 3px 18px;
         margin-top: 2%;
-        margin-left: 5%;
-        background: rgba(0, 0, 0, .85);
+        margin-left: 4%;
+        border-radius: 8px;
+        background: #2b2b2b;
     }
 
         #video-title h1 {
-            font-weight: 300;
-            font-size: 45px;
-            margin-top: 0px;
-            margin-bottom: 4px;
-            height: 57px;
-            border-bottom: #234d64 5px solid;
+    font-weight: 300;
+    font-size: 45px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-bottom: 0px;
+    font-size: 35px !important;
+    height: 45px !important;
         }
 
     .viewing-video-container {
@@ -76,7 +78,7 @@
 </style>
     
     }
-
+<!--The following code constructs the video player. It is only executed if the video is available-->
 @if (_conversionFinsihed)
 {
 
@@ -176,7 +178,8 @@
                 showVolumeButton: "yes",
                 showTime: "yes",
                 showYoutubeQualityButton: "no",
-                showInfoButton: "yes",
+                showInfoButton: "no",
+                showShareButton:"no",
                 showDownloadButton: "no",
                 showFacebookButton: "no",
                 showEmbedButton: "no",
@@ -193,7 +196,7 @@
                 timeOffsetTop: 0,
                 volumeScrubberHeight: 80,
                 volumeScrubberOfsetHeight: 12,
-                timeColor: "#cclala",
+                timeColor: "#868686",
                 youtubeQualityButtonNormalColor: "#919191",
                 youtubeQualityButtonSelectedColor: "#000000",
                 //embed window and info window
@@ -369,9 +372,10 @@
         }
     }
     <div class="col-lg-10 col-lg-offset-@colOffset viewing-video-container">
+        <!--The following code is the video player HTML. It's only displayed if the video is avaiable-->
         @if (_conversionFinsihed)
         {
-
+   
             <div id="videoPlayer"></div>
             <div class="video-overlay" style="display:none;">
                 @if (Model.VideoTitle != null)
