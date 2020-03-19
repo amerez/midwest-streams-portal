@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using VideoManager.Models.Data.Enums;
 
 namespace VideoManager.Models
 {
@@ -46,6 +47,40 @@ namespace VideoManager.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+    }
+
+    public class SignUpViewModel
+    {
+        [Display(Name = "Funeral Home Name"), Required]
+        public string Name { get; set; }
+
+        [UIHint("City"), Required]
+        public string City { get; set; }
+
+        [UIHint("State"), Required]
+        public string State { get; set; }
+
+        [Display(Name = "Zip Code"), RegularExpression(@"(?:\d{5}-\d{4})|(?:\d{5})", ErrorMessage = "Not a valid zip code"), Required]
+        public int ZipCode { get; set; }
+
+        [Display(Name = "Email"), EmailAddress(ErrorMessage = "Not a valid email address.")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [Display(Name = "Login Name"), Required]
+        public string UserName { get; set; }
+
+        public int? OwnerId { get; set; }
+
+        public PaymentStatus PaymentStatus { get; set; }
+
+        [Display(Name = "Dev Home(Will be ignored from analyitcs)")]
+        public bool DevHome { get; set; }
     }
 
     public class RegisterViewModel

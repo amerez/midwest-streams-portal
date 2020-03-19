@@ -98,6 +98,54 @@ namespace VideoManager.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
+        public  ActionResult SignUp(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+
+            var owners = db.Owners.Where(h => true).ToList();
+            ViewBag.OwnerList = owners;
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult SignUp(SignUpViewModel viewModel)
+        {
+             var funeralHome = new FuneralHome()
+            {
+                City = viewModel.City,
+                ZipCode = viewModel.ZipCode,
+                Email = viewModel.Email,
+                UserName = viewModel.UserName,
+                OwnerId = 1,
+                PaymentStatus = PaymentStatus.HasPaid,
+                Name = viewModel.Name,
+                DevHome = true,
+                State = "ND"
+            };
+             if (db.Users.Count(u => u.UserName == viewModel.UserName) > 1)
+             {
+                 ViewBag.ErrorText = "Login name already in use";
+                 return View(viewModel);
+             }
+             if (ModelState.IsValid)
+             {
+                 var fhh = new FuneralHomeHelper();
+                 var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.UserName, WebsiteProvider.Other,viewModel.Password);
+                 if (fhresult.Success == true)
+                 {
+                     return RedirectToAction("Index");
+                 }
+                 else
+                 {
+                     ViewBag.ErrorText = fhresult.UserErrors;
+                 }
+             }
+             return View(viewModel);
+        }
+
         [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
