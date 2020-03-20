@@ -41,23 +41,25 @@
                 font-family: 'Lato';
             }
 
-            #video-title {
-                display: inline-block;
-                color: #eaeaea;
-                padding: 0px 10px;
-                margin-top: 2%;
-                margin-left: 5%;
-                background: rgba(0, 0, 0, .85);
-            }
+     #video-title {
+        display: inline-block;
+        color: #eaeaea;
+        padding: 3px 18px;
+        margin-top: 2%;
+        margin-left: 4%;
+        border-radius: 8px;
+        background: #2b2b2b;
+    }
 
-                #video-title h1 {
-                    font-weight: 300;
-                    font-size: 43px;
-                    margin-top: 0px;
-                    margin-bottom: 4px;
-                    height: 57px;
-                    border-bottom: #234d64 5px solid;
-                }
+        #video-title h1 {
+    font-weight: 300;
+    font-size: 45px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-bottom: 0px;
+    font-size: 35px !important;
+    height: 45px !important;
+        }
 
             .viewing-video-container {
                 position: relative;
@@ -77,7 +79,7 @@
                 position: absolute;
                 right: 26px;
                 bottom: 51px;
-                background: rgba(0, 0, 0, .85);
+                background: rgba(0, 0, 0, 0);
             }
 
                 .logo img {
@@ -116,7 +118,9 @@
 
     if(!is_iPad)
     {
-        FWDUVPUtils.onReady(function () {
+                FWDUVPUtils.onReady(function () {
+
+
 
             new FWDUVPlayer({
                 //main settings
@@ -128,7 +132,7 @@
                 mainFolderPath: "../../content/videoplayer",
                 skinPath: "minimal_skin_white",
                 displayType: "responsive",
-                facebookAppId: "888507064518588",
+                facebookAppId: "",
                 useDeepLinking: "no",
                 rightClickContextMenu: "default",
                 addKeyboardSupport: "yes",
@@ -143,8 +147,8 @@
                 volume: .8,
                 buttonsToolTipHideDelay: 1.5,
                 backgroundColor: "#f9faf9",
-                videoBackgroundColor: "#000000",
-                posterBackgroundColor: "#000000",
+                videoBackgroundColor: "#f9faf9",
+                posterBackgroundColor: "#f9faf9",
                 buttonsToolTipFontColor: "#000000",
                 //logo settings
                 showLogo: "no",
@@ -187,7 +191,7 @@
                 scollbarSpeedSensitivity: .5,
                 playlistBackgroundColor: "#BBBBBB",
                 playlistNameColor: "#000000",
-                thumbnailNormalBackgroundColor: "#000000",
+                thumbnailNormalBackgroundColor: "#ebebeb",
                 thumbnailHoverBackgroundColor: "#dcdcdc",
                 thumbnailDisabledBackgroundColor: "#c0c0c0",
                 searchInputBackgroundColor: "#c0c0c0",
@@ -201,7 +205,8 @@
                 showVolumeButton: "yes",
                 showTime: "yes",
                 showYoutubeQualityButton: "no",
-                showInfoButton: "yes",
+                showInfoButton: "no",
+                showShareButton:"no",
                 showDownloadButton: "no",
                 showFacebookButton: "no",
                 showEmbedButton: "no",
@@ -218,7 +223,7 @@
                 timeOffsetTop: 0,
                 volumeScrubberHeight: 80,
                 volumeScrubberOfsetHeight: 12,
-                timeColor: "#cclala",
+                timeColor: "#868686",
                 youtubeQualityButtonNormalColor: "#919191",
                 youtubeQualityButtonSelectedColor: "#000000",
                 //embed window and info window
@@ -240,8 +245,11 @@
                 adsBorderSelectedColor: "#000000"
             });
             registerAPI();
-
+            $(window).resize(function () {
+                VideoOverlaySize();
+            });
         });
+
     }
     else
     {
@@ -382,7 +390,6 @@
                     $("#video-title").css("margin-top", "13%");
                     $(".logo img").css("width", "45px");
                     $(".logo").css("right", "8px");
-                    $("#video-title h1").css("border-bottom", "#234d64 5px solid");
                 }
 
             }
@@ -393,7 +400,6 @@
                 $("#video-title h1").css("font-size", "25px");
                 $("#video-title h1").css("height", "45px");
                 $("#video-title").css("margin-top", "2%");
-                $("#video-title h1").css("border-bottom", "#234d64 5px solid");
 
             }
 
@@ -406,7 +412,6 @@
             $("#video-title h1").css("height", "58px");
             $(".logo img").css("width", "65px");
             $("#video-title").css("margin-top", "2%");
-            $("#video-title h1").css("border-bottom", "#234d64 5px solid");
         }
     }
     function trackView()
