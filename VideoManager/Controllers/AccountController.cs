@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using VideoManager.Models.Data;
 using VideoManager.Models.Data.Enums;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
+using Stripe;
 
 
 namespace VideoManager.Controllers
@@ -101,19 +103,60 @@ namespace VideoManager.Controllers
         [AllowAnonymous]
         public  ActionResult SignUp(string returnUrl)
         {
+            ViewBag.IsCharged = false;
             ViewBag.ReturnUrl = returnUrl;
 
             var owners = db.Owners.Where(h => true).ToList();
             ViewBag.OwnerList = owners;
+
+            if (Request.Url != null && !string.IsNullOrEmpty(Request.Url.Query))
+            {
+                var viewModel = new SignUpViewModel
+                {
+                    Name = Request.QueryString["fh-name"],
+                    City = Request.QueryString["city"],
+                    State = Request.QueryString["state"],
+                    ZipCode = Convert.ToInt32(Request.QueryString["zip"]),
+                    Email = Request.QueryString["email"]
+                };
+
+                var stripePublishKey = ConfigurationManager.AppSettings["StripeApiKeyPublic"];
+                ViewBag.StripePublishKey = stripePublishKey;
+
+                return View(viewModel);
+            }
 
             return View();
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult SignUp(SignUpViewModel viewModel)
+        public ActionResult SignUp(SignUpViewModel viewModel, string stripeEmail, string stripeToken)
         {
-             var funeralHome = new FuneralHome()
+            if (!string.IsNullOrEmpty(stripeEmail) && !string.IsNullOrEmpty(stripeToken))
+            {
+                var customers = new StripeCustomerService();
+                var charges = new StripeChargeService();
+                var customer = customers.Create(new StripeCustomerCreateOptions
+                {
+                    Email = stripeEmail,
+                    SourceToken = stripeToken
+                });
+                var charge = charges.Create(new StripeChargeCreateOptions
+                {
+                    Amount = 500,//charge in cents
+                    Description = "Sample Charge",
+                    Currency = "usd",
+                    CustomerId = customer.Id
+                });
+
+                ViewBag.IsCharged = true;
+                viewModel.IsCharged = true;
+                return View(viewModel);
+            }
+
+            ViewBag.IsCharged = false;
+            var funeralHome = new FuneralHome()
             {
                 City = viewModel.City,
                 ZipCode = viewModel.ZipCode,
@@ -125,26 +168,30 @@ namespace VideoManager.Controllers
                 DevHome = true,
                 State = "ND"
             };
-             if (db.Users.Count(u => u.UserName == viewModel.UserName) > 1)
-             {
-                 ViewBag.ErrorText = "Login name already in use";
-                 return View(viewModel);
-             }
-             if (ModelState.IsValid)
-             {
-                 var fhh = new FuneralHomeHelper();
-                 var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.UserName, WebsiteProvider.Other,viewModel.Password);
-                 if (fhresult.Success == true)
-                 {
-                     return RedirectToAction("Index");
-                 }
-                 else
-                 {
-                     ViewBag.ErrorText = fhresult.UserErrors;
-                 }
-             }
-             return View(viewModel);
+            if (db.Users.Count(u => u.UserName == viewModel.UserName) > 1)
+            {
+                ViewBag.ErrorText = "Login name already in use";
+                return View(viewModel);
+            }
+
+
+
+            if (ModelState.IsValid)
+            {
+                var fhh = new FuneralHomeHelper();
+                var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.UserName, WebsiteProvider.Other, viewModel.Password);
+                if (fhresult.Success == true)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ViewBag.ErrorText = fhresult.UserErrors;
+                }
+            }
+            return View(viewModel);
         }
+
 
         [Authorize(Roles = "Admin")]
         public ActionResult Create()

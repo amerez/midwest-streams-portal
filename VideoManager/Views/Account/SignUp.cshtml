@@ -69,30 +69,51 @@
             @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Payment</label>
+        <div class="col-sm-6 col-md-6">
+            @if (ViewBag.IsCharged)
+            {
+                <label>You successfully paid <strong>$5.00</strong></label>
+            }
+            else
+            {
+                <script src="//checkout.stripe.com/v2/checkout.js"
+                        class="stripe-button"
+                        data-key="@ViewBag.StripePublishKey"
+                        data-locale="auto"
+                        data-description="Sample Charge"
+                        data-amount="500">
+                </script>
+            }
+            
+        </div>
+
+    </div>
 
     @*<div class="form-group">
-        @Html.LabelFor(model => model.OwnerId, "OwnerId", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-sm-6 col-md-6">
-            @Html.DropDownListFor(model => model.OwnerId, new SelectList(ViewBag.OwnerList, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.OwnerId, "", new { @class = "text-danger" })
+            @Html.LabelFor(model => model.OwnerId, "OwnerId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-sm-6 col-md-6">
+                @Html.DropDownListFor(model => model.OwnerId, new SelectList(ViewBag.OwnerList, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OwnerId, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.PaymentStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-sm-6 col-md-6">
-            @Html.EnumDropDownListFor(model => model.PaymentStatus, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-sm-6 col-md-6">
+                @Html.EnumDropDownListFor(model => model.PaymentStatus, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.DevHome, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-sm-1 col-md-1">
-            @Html.CheckBoxFor(model => model.DevHome, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.DevHome, "", new { @class = "text-danger" })
-        </div>
-    </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.DevHome, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-sm-1 col-md-1">
+                @Html.CheckBoxFor(model => model.DevHome, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DevHome, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-2">
@@ -102,5 +123,4 @@
 </div>
 }
 <p class="text-danger">@ViewBag.ErrorText</p>
-
-
+</script>
