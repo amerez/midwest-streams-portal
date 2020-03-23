@@ -4780,7 +4780,7 @@ var FWDUVPController = function(
 			self.mainPreloader_img = new Image();
 			self.mainPreloader_img.onerror = self.onSkinLoadErrorHandler;
 			self.mainPreloader_img.onload = self.onPreloaderLoadHandler;
-			self.mainPreloader_img.src = self.skinPath_str + "preloader.jpg";
+			self.mainPreloader_img.src = self.skinPath_str + "preloader.png";
 			
 			self.skinPaths_ar = [
 			     {img:self.prevN_img = new Image(), src:self.skinPath_str + "prev-video.png"},
