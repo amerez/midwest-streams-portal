@@ -81,6 +81,8 @@ namespace VideoManager.Models
 
         [Display(Name = "Dev Home(Will be ignored from analyitcs)")]
         public bool DevHome { get; set; }
+
+        public bool IsCharged { get; set; }
     }
 
     public class RegisterViewModel
