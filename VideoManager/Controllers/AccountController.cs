@@ -116,8 +116,9 @@ namespace VideoManager.Controllers
             {
                 int zip = 0;
                 int.TryParse(Request.QueryString["zip"], out zip);
-                int price = 15000;
+                int price = 150;
                 int.TryParse(Request.QueryString["price"], out price);
+                price = price * 100;
                 if(price<9800)
                 {
                     price = 15000;
@@ -152,6 +153,10 @@ namespace VideoManager.Controllers
             {
                 var customers = new StripeCustomerService();
                 var charges = new StripeChargeService();
+                if(viewModel.Price==0)
+                {
+                    viewModel.Price = 15000;
+                }
                 var customer = customers.Create(new StripeCustomerCreateOptions
                 {
                     Email = stripeEmail,
