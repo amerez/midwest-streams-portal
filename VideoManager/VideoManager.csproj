@@ -1096,6 +1096,7 @@
     <Content Include="Content\images\Barn.jpg" />
     <Content Include="Content\images\bg.jpg" />
     <Content Include="Content\images\FaviconMWS.png" />
+    <Content Include="Content\images\kyle.png" />
     <Content Include="Content\images\MWS_Logo_Light.png" />
     <Content Include="Content\images\MWS_Logo.png" />
     <Content Include="Content\images\snowWeeds.jpg" />

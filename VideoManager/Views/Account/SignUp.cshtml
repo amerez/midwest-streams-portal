@@ -74,7 +74,7 @@
         <div class="col-sm-6 col-md-6">
             @if (ViewBag.IsCharged)
             {
-                <label>You successfully paid <strong>$5.00</strong></label>
+                <label>You successfully paid <strong>$150.00</strong></label>
             }
             else
             {
@@ -82,8 +82,9 @@
                         class="stripe-button"
                         data-key="@ViewBag.StripePublishKey"
                         data-locale="auto"
-                        data-description="Sample Charge"
-                        data-amount="500">
+                        data-description="Funeral Webcasting Plan"
+                        data-amount="@Model.Price",
+                        data-email="@Model.Email">
                 </script>
             }
             

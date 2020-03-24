@@ -83,6 +83,8 @@ namespace VideoManager.Models
         public bool DevHome { get; set; }
 
         public bool IsCharged { get; set; }
+
+        public int Price { get; set; }
     }
 
     public class RegisterViewModel

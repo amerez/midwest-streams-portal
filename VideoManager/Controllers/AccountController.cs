@@ -105,28 +105,43 @@ namespace VideoManager.Controllers
         {
             ViewBag.IsCharged = false;
             ViewBag.ReturnUrl = returnUrl;
+            var stripePublishKey = ConfigurationManager.AppSettings["StripeApiKeyPublic"];
+            ViewBag.StripePublishKey = stripePublishKey;
 
             var owners = db.Owners.Where(h => true).ToList();
             ViewBag.OwnerList = owners;
 
+
             if (Request.Url != null && !string.IsNullOrEmpty(Request.Url.Query))
             {
-                var viewModel = new SignUpViewModel
+                int zip = 0;
+                int.TryParse(Request.QueryString["zip"], out zip);
+                int price = 15000;
+                int.TryParse(Request.QueryString["price"], out price);
+                if(price<9800)
+                {
+                    price = 15000;
+                }
+                var xm = new SignUpViewModel
                 {
                     Name = Request.QueryString["fh-name"],
                     City = Request.QueryString["city"],
                     State = Request.QueryString["state"],
-                    ZipCode = Convert.ToInt32(Request.QueryString["zip"]),
-                    Email = Request.QueryString["email"]
+                    ZipCode = zip,
+                    Email = Request.QueryString["email"],
+                    Price = price
                 };
 
-                var stripePublishKey = ConfigurationManager.AppSettings["StripeApiKeyPublic"];
-                ViewBag.StripePublishKey = stripePublishKey;
 
-                return View(viewModel);
+
+                return View(xm);
             }
-
-            return View();
+    
+            var viewModel = new SignUpViewModel
+            {
+                Price = 15000
+            };
+            return View(viewModel);
         }
 
         [AllowAnonymous]
@@ -144,8 +159,8 @@ namespace VideoManager.Controllers
                 });
                 var charge = charges.Create(new StripeChargeCreateOptions
                 {
-                    Amount = 500,//charge in cents
-                    Description = "Sample Charge",
+                    Amount = viewModel.Price,//charge in cents
+                    Description = "MWS - Funeral Webcasting",
                     Currency = "usd",
                     CustomerId = customer.Id
                 });
@@ -166,7 +181,7 @@ namespace VideoManager.Controllers
                 PaymentStatus = PaymentStatus.HasPaid,
                 Name = viewModel.Name,
                 DevHome = true,
-                State = "ND"
+                State = viewModel.State
             };
             if (db.Users.Count(u => u.UserName == viewModel.UserName) > 1)
             {
@@ -179,13 +194,18 @@ namespace VideoManager.Controllers
             if (ModelState.IsValid)
             {
                 var fhh = new FuneralHomeHelper();
-                var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.UserName, WebsiteProvider.Other, viewModel.Password);
+                var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.Email, WebsiteProvider.Other, viewModel.Password);
                 if (fhresult.Success == true)
                 {
-                    return RedirectToAction("Index");
+                    var user = UserManager.Find(viewModel.UserName, viewModel.Password);
+                    SignInAsync(user, false);
+                    this.Session.Add("UserId", user.Id.ToString());
+                    Email.sendWelcomeEmail(funeralHome);
+                    return RedirectToAction("Index", "Services");
                 }
                 else
                 {
+                    Error.ReportError(ErrorSeverity.Fatal, "AccountController", "SignUp", "204");
                     ViewBag.ErrorText = fhresult.UserErrors;
                 }
             }
