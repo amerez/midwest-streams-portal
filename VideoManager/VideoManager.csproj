@@ -1259,6 +1259,7 @@
     <Content Include="Content\videoplayer\minimal_skin_white\playlist-tooltip-pointer.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\playslit-tooltip-background.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\preloader.jpg" />
+    <Content Include="Content\videoplayer\minimal_skin_white\preloader.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-thumbnail-set-over.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-thumbnail-set.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-video-over.png" />
