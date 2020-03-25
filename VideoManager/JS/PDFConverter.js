@@ -268,7 +268,8 @@ function sendCropDatatoServer(imageSource) {
         var thumbnailPath = responseObject.outwardThumbnail;
         var success = responseObject.success;
         if (success == true) {
-            $("#embedCodePlaceHolder").html('<div class="jumbotron"><h2>Copy and Paste the code below into your website</h2>&lt;center&gt;&lt;a href="' + pdfPath + '"&gt;<br>&lt;img style="border:10px outset silver;width: 220px;" src="' + thumbnailPath + '"/&gt;<br>&lt;br&gt;'+pdfTitle+'&lt;/a&gt;&lt;/center&gt</div>');
+           // $("#embedCodePlaceHolder").html('<div class="jumbotron"><h2>Copy and Paste the code below into your website</h2>&lt;center&gt;&lt;a href="' + pdfPath + '"&gt;<br>&lt;img style="border:10px outset silver;width: 220px;" src="' + thumbnailPath + '"/&gt;<br>&lt;br&gt;' + pdfTitle + '&lt;/a&gt;&lt;/center&gt</div>');
+            $("#embedCodePlaceHolder").html('<div class="jumbotron"><h2>Copy and Paste the code below into your website</h2>&lt;center&gt;&lt;a href="' + pdfPath + '" target="_blank"&gt;&lt;br&gt;&lt;img style="border:0;width:220px;box-shadow: 10px 10px 10px rgba(0,0,0,0.3);margin-bottom: 24px;margin-top: 30px;" src="' + thumbnailPath + '" /&gt;&lt;br&gt;&lt;div style=";border: 1px solid #565656b3;max-width: 400px;width: fit-content;padding: 11px 31px;margin-bottom: 40px;font-size: 18px;margin-top: 1px;background: rgba(255,255,255,0.5);font-family: \'Lato\';font-weight: 600; color:#333;text-decoration-line:none"&gt;'+pdfTitle+'&lt;/div&gt;&lt;/a&gt;&lt;center&gt;');
             callExtractText();
         }
         else {
