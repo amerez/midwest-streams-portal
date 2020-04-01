@@ -1160,6 +1160,7 @@
     <Content Include="Content\Styles\sweetalert2.css" />
     <Content Include="Content\tooltipster.css" />
     <Content Include="Content\video-js.css" />
+    <Content Include="Content\videojs\video-js.min.css" />
     <Content Include="Content\videoplayer\iframe\background.png" />
     <Content Include="Content\videoplayer\iframe\bigplay.fw.png" />
     <Content Include="Content\videoplayer\iframe\bigplay.png" />
@@ -1259,6 +1260,7 @@
     <Content Include="Content\videoplayer\minimal_skin_white\playlist-tooltip-pointer.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\playslit-tooltip-background.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\preloader.jpg" />
+    <Content Include="Content\videoplayer\minimal_skin_white\preloader.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-thumbnail-set-over.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-thumbnail-set.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\prev-video-over.png" />
@@ -1343,6 +1345,7 @@
     <Content Include="Scripts\JqueryCollapse\jquery.collapse.js" />
     <Content Include="Scripts\JqueryCollapse\jquery.collapse_cookie_storage.js" />
     <Content Include="Scripts\JqueryCollapse\jquery.collapse_storage.js" />
+    <Content Include="Scripts\videojs\video.min.js" />
     <Content Include="Scripts\videoplayerjs\FWDConsole.js" />
     <Content Include="Scripts\videoplayerjs\FWDIos6Timers.js" />
     <Content Include="Scripts\videoplayerjs\fwdupdatedplayer.js" />
@@ -1415,6 +1418,7 @@
     <Content Include="Scripts\jquery.joyride-2.1.js" />
     <Content Include="Scripts\mediaelement-and-player.min.js" />
     <Content Include="Scripts\mediaelementplayer.css" />
+    <Content Include="Scripts\videojs\videojs-overlay.js" />
     <Content Include="Views\Video\getIframe.cshtml" />
     <Content Include="Views\Video\iframe.cshtml" />
     <Content Include="Views\Video\loadTest.cshtml" />
