@@ -384,7 +384,7 @@ namespace VideoManager
             string sgUsername = ConfigurationManager.AppSettings["sendGridUsername"];
             string sgPassword = ConfigurationManager.AppSettings["sendGridPassword"];
 
-            string funeralNetCode = "<iframe src="+System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/video/iframe/" + id+" scrolling=\"no\" width=\"648\" height=\"400\" frameborder=\"0\"  webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+            string funeralNetCode = "<iframe src="+System.Configuration.ConfigurationManager.AppSettings["portalPath"] + "/video/iframe/" + id+ " scrolling=\"no\" frameborder=\"0\"  webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;width: 100%; max-width: 100% !important;\"> </iframe>";
 			string othersCode = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + convertedFileName;
             string message = "The service has been succesfully uploaded to our system. Funeral Net Site's copy and paste this code into your system: " + funeralNetCode + "\r\n \r\n If you are using a different provider use this code: " + othersCode;
             var myMessage = new SendGridMessage();

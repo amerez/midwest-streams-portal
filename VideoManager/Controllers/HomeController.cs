@@ -91,6 +91,12 @@ namespace VideoManager.Controllers
             return View();
         }
 
+        [Route("apple-app-site-association")]
+        public ActionResult AppleDeepLink()
+        {
+            string deepLink = "{\"applinks\": {\"apps\": [],\"details\": [{\"appID\": \"RP8738PY76.mwslive.com.midweststreams.live\",\"paths\": [ \"/live/startfromemail/*\" ]}]}}";
+            return Content(deepLink);
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

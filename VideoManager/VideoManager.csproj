@@ -1313,6 +1313,7 @@
     <Content Include="Content\videoplayer\minimal_skin_white\youtube-quality-over.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\youtube-quality-pointer.png" />
     <Content Include="Content\videoplayer\minimal_skin_white\youtube-quality.png" />
+    <Content Include="Content\videoplayer\sgrp_global.css" />
     <Content Include="Content\Wijmo\jquery.wijmo-pro.all.3.20152.78.min.js" />
     <Content Include="Content\Wijmo\jquery.wijmo-open.all.3.20152.78.min.js" />
     <Content Include="Content\Wijmo\jquery.wijmo-pro.all.3.20151.69.min.js" />

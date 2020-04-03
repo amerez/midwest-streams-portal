@@ -41,39 +41,39 @@
                 font-family: 'Lato';
             }
 
-     #video-title {
-        display: inline-block;
-        color: #eaeaea;
-        padding: 3px 18px;
-        margin-top: 2%;
-        margin-left: 4%;
-        border-radius: 8px;
-        background: #2b2b2b;
-    }
+            #video-title {
+                display: inline-block;
+                color: #eaeaea;
+                padding: 3px 18px;
+                margin-top: 2%;
+                margin-left: 4%;
+                border-radius: 8px;
+                background: #2b2b2b;
+            }
 
-        #video-title h1 {
-    font-weight: 300;
-    font-size: 45px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    border-bottom: 0px;
-    font-size: 35px !important;
-    height: 45px !important;
-        }
+            #video-title h1 {
+                font-weight: 300;
+                /*font-size: 45px;*/
+                margin-top: 0px;
+                margin-bottom: 0px;
+                border-bottom: 0px;
+                /*font-size: 35px !important;*/
+                height: 45px !important;
+            }
 
             .viewing-video-container {
                 position: relative;
             }
 
-                .viewing-video-container .video-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    pointer-events: none;
-                }
+            .viewing-video-container .video-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: block;
+                pointer-events: none;
+            }
 
             .logo {
                 position: absolute;
@@ -82,9 +82,9 @@
                 background: rgba(0, 0, 0, 0);
             }
 
-                .logo img {
-                    width: 68px;
-                }
+            .logo img {
+                width: 68px;
+            }
 
             .video-overlay {
                 max-width: 980px;
@@ -104,354 +104,382 @@
         @if (_conversionFinsihed)
         {
             <link rel="stylesheet" type="text/css" href="../../content/videoplayer/global.css" />
+            <link rel="stylesheet" type="text/css" href="../../content/videoplayer/sgrp_global.css" />
             @*<script src="~/Scripts/fwduvnonmin.js"></script>*@
             <script src="~/Scripts/FWDUVPlayerD.js"></script>
-    <!-- Setup video player-->
+            <!-- Setup video player-->
             <script type="text/javascript">
-    var hasBeenTracked = false;
-    var playCount = 0;
-    var analyticId = 0;
-    var is_iPad = navigator.userAgent.match(/iPad/i) != null;
-    var portalPath = "@(System.Configuration.ConfigurationManager.AppSettings["portalPath"])";
-    var videoPath = "@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)";
-    var videoTitle = "@(Model.VideoTitle)";
+            var hasBeenTracked = false;
+            var playCount = 0;
+            var analyticId = 0;
+            var is_iPad = navigator.userAgent.match(/iPad/i) != null;
+            var portalPath = "@(System.Configuration.ConfigurationManager.AppSettings["portalPath"])";
+            var videoPath = "@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath)";
+            var videoTitle = "@(Model.VideoTitle)";
 
-    if(!is_iPad)
-    {
-                FWDUVPUtils.onReady(function () {
+            if (!is_iPad) {
+                FWDUVPUtils.onReady(function() {
 
+                    new FWDUVPlayer({
+                        //main settings
+                        useYouTube: "no",
+                        useVimeo: "no",
+                        instanceName: "player1",
+                        parentId: "videoPlayer",
+                        playlistsId: "playlists",
+                        mainFolderPath: "../../content/videoplayer",
+                        skinPath: "minimal_skin_white",
+                        displayType: "responsive",
+                        facebookAppId: "",
+                        useDeepLinking: "no",
+                        rightClickContextMenu: "default",
+                        addKeyboardSupport: "yes",
+                        autoScale: "yes",
+                        showButtonsToolTip: "yes",
+                        stopVideoWhenPlayComplete: "no",
+                        autoPlay: "no",
+                        loop: "no",
+                        shuffle: "no",
+                        maxWidth: 980,
+                        maxHeight: 552,
+                        volume: .8,
+                        buttonsToolTipHideDelay: 1.5,
+                        backgroundColor: "#f9faf9",
+                        videoBackgroundColor: "#f9faf9",
+                        posterBackgroundColor: "#f9faf9",
+                        buttonsToolTipFontColor: "#000000",
+                        //logo settings
+                        showLogo: "no",
+                        hideLogoWithController: "yes",
+                        logoPosition: "topRight",
+                        logoLink: "http://www.midweststreams.com",
+                        logoMargins: 5,
+                        //playlists/categories settings
+                        showPlaylistsButtonAndPlaylists: "no",
+                        showPlaylistsByDefault: "no",
+                        thumbnailSelectedType: "opacity",
+                        startAtPlaylist: 0,
+                        buttonsMargins: 0,
+                        thumbnailMaxWidth: 350,
+                        thumbnailMaxHeight: 350,
+                        horizontalSpaceBetweenThumbnails: 40,
+                        verticalSpaceBetweenThumbnails: 40,
+                        //playlist settings
+                        showPlaylistButtonAndPlaylist: "no",
+                        playlistPosition: "right",
+                        showPlaylistByDefault: "no",
+                        showPlaylistName: "no",
+                        showSearchInput: "no",
+                        showLoopButton: "no",
+                        showShuffleButton: "no",
+                        showNextAndPrevButtons: "no",
+                        forceDisableDownloadButtonForFolder: "yes",
+                        addMouseWheelSupport: "yes",
+                        startAtRandomVideo: "no",
+                        folderVideoLabel: "VIDEO ",
+                        playlistRightWidth: 310,
+                        playlistBottomHeight: 599,
+                        startAtVideo: 0,
+                        maxPlaylistItems: 50,
+                        thumbnailWidth: 70,
+                        thumbnailHeight: 70,
+                        spaceBetweenControllerAndPlaylist: 2,
+                        spaceBetweenThumbnails: 2,
+                        scrollbarOffestWidth: 8,
+                        scollbarSpeedSensitivity: .5,
+                        playlistBackgroundColor: "#BBBBBB",
+                        playlistNameColor: "#000000",
+                        thumbnailNormalBackgroundColor: "#ebebeb",
+                        thumbnailHoverBackgroundColor: "#dcdcdc",
+                        thumbnailDisabledBackgroundColor: "#c0c0c0",
+                        searchInputBackgroundColor: "#c0c0c0",
+                        searchInputColor: "#333333",
+                        youtubeAndFolderVideoTitleColor: "#000000",
+                        youtubeOwnerColor: "#919191",
+                        youtubeDescriptionColor: "#919191",
+                        //controller settings
+                        showControllerWhenVideoIsStopped: "yes",
+                        showNextAndPrevButtonsInController: "no",
+                        showVolumeButton: "yes",
+                        showTime: "yes",
+                        showYoutubeQualityButton: "no",
+                        showInfoButton: "no",
+                        showShareButton: "no",
+                        showDownloadButton: "no",
+                        showFacebookButton: "no",
+                        showEmbedButton: "no",
+                        showFullScreenButton: "yes",
+                        repeatBackground: "yes",
+                        controllerHeight: 37,
+                        controllerHideDelay: 3,
+                        startSpaceBetweenButtons: 7,
+                        spaceBetweenButtons: 8,
+                        scrubbersOffsetWidth: 2,
+                        mainScrubberOffestTop: 14,
+                        timeOffsetLeftWidth: 5,
+                        timeOffsetRightWidth: 3,
+                        timeOffsetTop: 0,
+                        volumeScrubberHeight: 80,
+                        volumeScrubberOfsetHeight: 12,
+                        timeColor: "#868686",
+                        youtubeQualityButtonNormalColor: "#919191",
+                        youtubeQualityButtonSelectedColor: "#000000",
+                        //embed window and info window
+                        embedAndInfoWindowCloseButtonMargins: 0,
+                        borderColor: "#CDCDCD",
+                        mainLabelsColor: "#000000",
+                        secondaryLabelsColor: "#444444",
+                        shareAndEmbedTextColor: "#777777",
+                        inputBackgroundColor: "#c0c0c0",
+                        inputColor: "#333333",
+                        //ads
+                        openNewPageAtTheEndOfTheAds: "no",
+                        adsButtonsPosition: "left",
+                        skipToVideoText: "You can skip to video in: ",
+                        skipToVideoButtonText: "Skip Ad",
+                        adsTextNormalColor: "#888888",
+                        adsTextSelectedColor: "#000000",
+                        adsBorderNormalColor: "#AAAAAA",
+                        adsBorderSelectedColor: "#000000"
+                    });
+                    registerAPI();
+                });
 
-
-            new FWDUVPlayer({
-                //main settings
-                useYouTube: "no",
-                useVimeo: "no",
-                instanceName: "player1",
-                parentId: "videoPlayer",
-                playlistsId: "playlists",
-                mainFolderPath: "../../content/videoplayer",
-                skinPath: "minimal_skin_white",
-                displayType: "responsive",
-                facebookAppId: "",
-                useDeepLinking: "no",
-                rightClickContextMenu: "default",
-                addKeyboardSupport: "yes",
-                autoScale: "yes",
-                showButtonsToolTip: "yes",
-                stopVideoWhenPlayComplete: "no",
-                autoPlay: "no",
-                loop: "no",
-                shuffle: "no",
-                maxWidth: 980,
-                maxHeight: 552,
-                volume: .8,
-                buttonsToolTipHideDelay: 1.5,
-                backgroundColor: "#f9faf9",
-                videoBackgroundColor: "#f9faf9",
-                posterBackgroundColor: "#f9faf9",
-                buttonsToolTipFontColor: "#000000",
-                //logo settings
-                showLogo: "no",
-                hideLogoWithController: "yes",
-                logoPosition: "topRight",
-                logoLink: "http://www.midweststreams.com",
-                logoMargins: 5,
-                //playlists/categories settings
-                showPlaylistsButtonAndPlaylists: "no",
-                showPlaylistsByDefault: "no",
-                thumbnailSelectedType: "opacity",
-                startAtPlaylist: 0,
-                buttonsMargins: 0,
-                thumbnailMaxWidth: 350,
-                thumbnailMaxHeight: 350,
-                horizontalSpaceBetweenThumbnails: 40,
-                verticalSpaceBetweenThumbnails: 40,
-                //playlist settings
-                showPlaylistButtonAndPlaylist: "no",
-                playlistPosition: "right",
-                showPlaylistByDefault: "no",
-                showPlaylistName: "no",
-                showSearchInput: "no",
-                showLoopButton: "no",
-                showShuffleButton: "no",
-                showNextAndPrevButtons: "no",
-                forceDisableDownloadButtonForFolder: "yes",
-                addMouseWheelSupport: "yes",
-                startAtRandomVideo: "no",
-                folderVideoLabel: "VIDEO ",
-                playlistRightWidth: 310,
-                playlistBottomHeight: 599,
-                startAtVideo: 0,
-                maxPlaylistItems: 50,
-                thumbnailWidth: 70,
-                thumbnailHeight: 70,
-                spaceBetweenControllerAndPlaylist: 2,
-                spaceBetweenThumbnails: 2,
-                scrollbarOffestWidth: 8,
-                scollbarSpeedSensitivity: .5,
-                playlistBackgroundColor: "#BBBBBB",
-                playlistNameColor: "#000000",
-                thumbnailNormalBackgroundColor: "#ebebeb",
-                thumbnailHoverBackgroundColor: "#dcdcdc",
-                thumbnailDisabledBackgroundColor: "#c0c0c0",
-                searchInputBackgroundColor: "#c0c0c0",
-                searchInputColor: "#333333",
-                youtubeAndFolderVideoTitleColor: "#000000",
-                youtubeOwnerColor: "#919191",
-                youtubeDescriptionColor: "#919191",
-                //controller settings
-                showControllerWhenVideoIsStopped: "yes",
-                showNextAndPrevButtonsInController: "no",
-                showVolumeButton: "yes",
-                showTime: "yes",
-                showYoutubeQualityButton: "no",
-                showInfoButton: "no",
-                showShareButton:"no",
-                showDownloadButton: "no",
-                showFacebookButton: "no",
-                showEmbedButton: "no",
-                showFullScreenButton: "yes",
-                repeatBackground: "yes",
-                controllerHeight: 37,
-                controllerHideDelay: 3,
-                startSpaceBetweenButtons: 7,
-                spaceBetweenButtons: 8,
-                scrubbersOffsetWidth: 2,
-                mainScrubberOffestTop: 14,
-                timeOffsetLeftWidth: 5,
-                timeOffsetRightWidth: 3,
-                timeOffsetTop: 0,
-                volumeScrubberHeight: 80,
-                volumeScrubberOfsetHeight: 12,
-                timeColor: "#868686",
-                youtubeQualityButtonNormalColor: "#919191",
-                youtubeQualityButtonSelectedColor: "#000000",
-                //embed window and info window
-                embedAndInfoWindowCloseButtonMargins: 0,
-                borderColor: "#CDCDCD",
-                mainLabelsColor: "#000000",
-                secondaryLabelsColor: "#444444",
-                shareAndEmbedTextColor: "#777777",
-                inputBackgroundColor: "#c0c0c0",
-                inputColor: "#333333",
-                //ads
-                openNewPageAtTheEndOfTheAds: "no",
-                adsButtonsPosition: "left",
-                skipToVideoText: "You can skip to video in: ",
-                skipToVideoButtonText: "Skip Ad",
-                adsTextNormalColor: "#888888",
-                adsTextSelectedColor: "#000000",
-                adsBorderNormalColor: "#AAAAAA",
-                adsBorderSelectedColor: "#000000"
-            });
-            registerAPI();
-            $(window).resize(function () {
-                VideoOverlaySize();
-            });
-        });
-
-    }
-    else
-    {
-        //iPad doesn't like javascript video. So we are using there native video player, with some CSS trickery to make it look nice.
-        var ipadScript = document.createElement("script");
-        ipadScript.type = "text/javascript";
-        ipadScript.src = portalPath+"/scripts/videoplayerjs/iPadOveride.js";
-        // Use any selector
-        $("head").append(ipadScript);
-    }
-
-    $(window).resize(function () {
-        VideoOverlaySize();
-    });
-    var registerAPIInterval;
-    function registerAPI() {
-        clearInterval(registerAPIInterval);
-        if (window.player1) {
-            player1.addListener(FWDUVPlayer.READY, readyHandler);
-            player1.addListener(FWDUVPlayer.PLAY, playHandler);
-            player1.addListener(FWDUVPlayer.PAUSE, pauseHandler);
-            player1.addListener(FWDUVPlayer.STOP, stopHandler);
-            player1.addListener(FWDUVPlayer.UPDATE_TIME, updateTimeHandler);
-            player1.addListener(FWDUVPlayer.PLAY_COMPLETE, playCompleteHandler);
-            player1.addListener(FWDUVPlayer.GO_FULLSCREEN, fullScreenHandler);
-            player1.addListener(FWDUVPlayer.GO_NORMALSCREEN, normalScreenHandler);
-        } else {
-            registerAPIInterval = setInterval(registerAPI, 100);
-        }
-    };
-    function readyHandler(e) {
-        SetupVideoOverlay();
-    }
-    function playHandler(e) {
-        $(".video-overlay").hide();
-        //setTimeout(trackView, 5000);
-    }
-    function fullScreenHandler(e)
-    {
-        //Weird issue that video goes about 15px lower in full screen...
-        //$( "#videoPlayer div" ).first().css("margin-top", "-15px");
-
-    }
-    function normalScreenHandler(e)
-    {
-        $( "#videoPlayer div" ).first().css("margin-top", "0");
-    }
-    function pauseHandler(e) {
-        $(".video-overlay").fadeIn(1500);
-
-        var stopTime = TimeStringToSeconds(player1.getCurrentTime());
-        var duration = TimeStringToSeconds(player1.getTotalTime());
-        trackPause(stopTime, duration, false)
-
-    }
-    function updateTimeHandler(e){
-
-        //Calculate if video has played for at least 5 seconds if so track the view
-        var seconds = TimeStringToSeconds(e.currentTime);
-        if(seconds >5 && hasBeenTracked==false)
-        {
-            hasBeenTracked=true;
-            trackView();
-        }
-    }
-
-    function stopHandler(e) {
-        //console.log("API -- stop");
-    }
-    function playCompleteHandler(e) {
-        var duration = TimeStringToSeconds(player1.getTotalTime());
-        trackPause(duration, duration, true)
-    }
-    function SetupVideoOverlay()
-    {
-        $(".video-overlay").fadeIn();
-        VideoOverlaySize();
-
-    }
-    function TimeStringToSeconds(timeString)
-    {
-        //timeString is a string that is either formated in MM:SS or HH:MM:SS
-        //following code is to turn that string into seconds
-        var a = timeString.split(':'); // split it at the colons
-        var colonNumber = (timeString.match(/:/g) || []).length;
-        if(colonNumber == 1)
-        {
-            // minutes are worth 60 seconds.
-            var seconds = (+a[0]) * 60 + (+a[1]);
-        }
-        else
-        {
-            if(colonNumber==2)
-            {
-                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-            }
-        }
-        return seconds;
-    }
-    function VideoOverlaySize()
-    {
-        var playerWidth = $("#videoPlayer").width();
-        playerWidth = parseInt(playerWidth);
-
-        var titleLength = $("#video-title h1").text().length;
-
-        $(".video-overlay").width(playerWidth);
-
-        if (playerWidth < 734) {
-            if (playerWidth < 420)
-            {
-                if(playerWidth<360)
-                {
-
-                    $("#video-title h1").css("font-size", "21px");
-                    $("#video-title h1").css("height", "35px");
-                    $("#video-title").css("margin-top", "3%");
-                    $( "#videoPlayer div" ).first().css("margin-top", "0");
-                    $("#video-title").css("margin-left", "0%");
-                    $(".logo img").css("width", "40px");
-                    $(".logo").css("right", "5px");
-                    if(titleLength>19)
-                    {
+            } else {
+                //iPad doesn't like javascript video. So we are using there native video player, with some CSS trickery to make it look nice.
+                var ipadScript = document.createElement("script");
+                ipadScript.type = "text/javascript";
+                ipadScript.src = portalPath + "/scripts/videoplayerjs/iPadOveride.js";
+                // Use any selector
+                $("head").append(ipadScript);
+                }
+                $(document).ready(function() {
+                    $(window).load(function () {
+                
+                        $("#videoPlayer div").first().css("margin-top", "0");
+                        $("#video-title").css("margin-left", "0");
+                        $("#video-title").css("margin-left", "0");
                         $("#video-title h1").css("border", "none");
-                        $("#video-title h1").css("height", "67px");
-                    }
-                    else
-                    {
-                        $("#video-title h1").css("border-bottom", "#234d64 5px solid");
-                        $("#video-title h1").css("height", "35px");
-                    }
-                }
-                else{
+                        VideoOverlaySize();
+                    });
+                    $(window).resize(function() {
+                        VideoOverlaySize();
+                    });
+                });
 
-                    $("#video-title").css("margin-left", "1%");
-                    $("#video-title h1").css("font-size", "22px");
-                    $("#video-title h1").css("height", "29px");
-                    $("#video-title").css("margin-top", "13%");
-                    $(".logo img").css("width", "45px");
-                    $(".logo").css("right", "8px");
+            
+            var registerAPIInterval;
+
+            function registerAPI() {
+                clearInterval(registerAPIInterval);
+                if (window.player1) {
+                    player1.addListener(FWDUVPlayer.READY, readyHandler);
+                    player1.addListener(FWDUVPlayer.PLAY, playHandler);
+                    player1.addListener(FWDUVPlayer.PAUSE, pauseHandler);
+                    player1.addListener(FWDUVPlayer.STOP, stopHandler);
+                    player1.addListener(FWDUVPlayer.UPDATE_TIME, updateTimeHandler);
+                    player1.addListener(FWDUVPlayer.PLAY_COMPLETE, playCompleteHandler);
+                    player1.addListener(FWDUVPlayer.GO_FULLSCREEN, fullScreenHandler);
+                    player1.addListener(FWDUVPlayer.GO_NORMALSCREEN, normalScreenHandler);
+                } else {
+                    registerAPIInterval = setInterval(registerAPI, 100);
                 }
+            };
+
+            function readyHandler(e) {
+                SetupVideoOverlay();
+            }
+
+            function playHandler(e) {
+                $(".video-overlay").hide();
+                $('#videoPlayer > div > div:nth-child(1) > div:nth-child(1) > video').css('width', '');
+                //setTimeout(trackView, 5000);
+            }
+
+            function fullScreenHandler(e) {
+                //Weird issue that video goes about 15px lower in full screen...
+                //$( "#videoPlayer div" ).first().css("margin-top", "-15px");
 
             }
-            else
-            {
 
-                $("#video-title").css("margin-left", "2%");
-                $("#video-title h1").css("font-size", "25px");
-                $("#video-title h1").css("height", "45px");
-                $("#video-title").css("margin-top", "2%");
+            function normalScreenHandler(e) {
+                $("#videoPlayer div").first().css("margin-top", "0");
+            }
+
+            function pauseHandler(e) {
+                $(".video-overlay").fadeIn(1500);
+
+                var stopTime = TimeStringToSeconds(player1.getCurrentTime());
+                var duration = TimeStringToSeconds(player1.getTotalTime());
+                trackPause(stopTime, duration, false);
 
             }
 
-        }
-        else
-        {
+            function updateTimeHandler(e) {
 
-            $("#video-title").css("margin-left", "2.5%");
-            $("#video-title h1").css("font-size", "45px");
-            $("#video-title h1").css("height", "58px");
-            $(".logo img").css("width", "65px");
-            $("#video-title").css("margin-top", "2%");
-        }
-    }
-    function trackView()
-    {
+                //Calculate if video has played for at least 5 seconds if so track the view
+                var seconds = TimeStringToSeconds(e.currentTime);
+                if (seconds > 5 && hasBeenTracked == false) {
+                    hasBeenTracked = true;
+                    trackView();
+                }
+            }
 
-        var serviceId = @Model.Id;
-        var postData = {id: serviceId};
-        var postUrl = "/Services/TrackVideoViews";
-        var posting = $.ajax({
-            url: postUrl,
-            type: "POST",
-            dataType: "json",
-            traditional: true,
-            data: postData
-        });
-        posting.done(function(data)
-        {
-            analyticId = data.Id;
-        });
-        playCount = playCount + 1;
+            function stopHandler(e) {
+                //console.log("API -- stop");
+            }
 
-    }
-    function trackPause(stopTime, duration, completed)
-    {
-        //If analyticId is 0 something went wrong
-        if(analyticId !=0)
-        {
+            function playCompleteHandler(e) {
+                var duration = TimeStringToSeconds(player1.getTotalTime());
+                trackPause(duration, duration, true)
+            }
 
-            var postData = {id: analyticId, stopTime: stopTime, duration: duration, completed:completed};
-            var postUrl = "/Services/UpdateAnalytics";
-            var posting = $.ajax({
-                url: postUrl,
-                type: "POST",
-                dataType: "json",
-                traditional: true,
-                data: postData
-            });
-        }
-    }
+            function SetupVideoOverlay() {
+                $(".video-overlay").fadeIn();
 
+            }
+
+            function TimeStringToSeconds(timeString) {
+                //timeString is a string that is either formated in MM:SS or HH:MM:SS
+                //following code is to turn that string into seconds
+                var a = timeString.split(':'); // split it at the colons
+                var colonNumber = (timeString.match(/:/g) || []).length;
+                if (colonNumber == 1) {
+                    // minutes are worth 60 seconds.
+                    var seconds = (+a[0]) * 60 + (+a[1]);
+                } else {
+                    if (colonNumber == 2) {
+                        var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+                    }
+                }
+                return seconds;
+            }
+
+                function VideoOverlaySize() {
+                    var playerWidth = $("#videoPlayer").width() || 0;
+                    playerWith = parseInt(playerWidth);
+                
+                var titleLength = $("#video-title h1").text().length;
+                $(".video-overlay").width(playerWidth);
+                $("#videoPlayer").width($(document).contents().width());
+                if (playerWidth < 420) {
+                    if (titleLength > 10) {
+                        $("#video-title h1").css("font-size", "3px !important");
+                    } else {
+                        $("#video-title h1").css("font-size", "5px  !important");
+                    }
+                }
+                else if (playerWidth > 420 && playerWidth < 734) {
+                    if (titleLength < 20) {
+                        $("#video-title h1").css("font-size", "14px  !important");
+                    } else {
+                        $("#video-title h1").css("font-size", "18px  !important");
+                    }
+                }
+                else if (playerWidth > 734) {
+                    if (titleLength < 20) {
+                        $("#video-title h1").css("font-size", "18px  !important");
+                    } else {
+                        $("#video-title h1").css("font-size", "21px  !important");
+                    }
+                } else {
+                    $("#video-title h1").css("font-size", "10px  !important");
+                }
+                /*var playerWidth = $("#videoPlayer").width();
+                playerWidth = parseInt(playerWidth);
+
+                var titleLength = $("#video-title h1").text().length;
+
+                $(".video-overlay").width(playerWidth);
+
+                if (playerWidth < 734) {
+                    if (playerWidth < 420) {
+                        if (playerWidth < 360) {
+
+                            $("#video-title h1").css("font-size", "21px");
+                            $("#video-title h1").css("height", "35px");
+                            $("#video-title").css("margin-top", "3%");
+                            $("#videoPlayer div").first().css("margin-top", "0");
+                            $("#video-title").css("margin-left", "0%");
+                            $(".logo img").css("width", "40px");
+                            $(".logo").css("right", "5px");
+                            if (titleLength > 19) {
+                                $("#video-title h1").css("border", "none");
+                                $("#video-title h1").css("height", "67px");
+                            } else {
+                                $("#video-title h1").css("border-bottom", "#234d64 5px solid");
+                                $("#video-title h1").css("height", "35px");
+                            }
+                        } else {
+
+                            $("#video-title").css("margin-left", "1%");
+                            $("#video-title h1").css("font-size", "22px");
+                            $("#video-title h1").css("height", "29px");
+                            $("#video-title").css("margin-top", "13%");
+                            $(".logo img").css("width", "45px");
+                            $(".logo").css("right", "8px");
+                        }
+
+                    } else {
+
+                        $("#video-title").css("margin-left", "2%");
+                        $("#video-title h1").css("font-size", "25px");
+                        $("#video-title h1").css("height", "45px");
+                        $("#video-title").css("margin-top", "2%");
+
+                    }
+
+                } else {
+
+                    $("#video-title").css("margin-left", "2.5%");
+                    $("#video-title h1").css("font-size", "45px");
+                    $("#video-title h1").css("height", "58px");
+                    $(".logo img").css("width", "65px");
+                    $("#video-title").css("margin-top", "2%");
+                }*/
+            }
+
+            function trackView() {
+
+                var serviceId = @Model.Id;
+                var postData = {
+                    id: serviceId
+                };
+                var postUrl = "/Services/TrackVideoViews";
+                var posting = $.ajax({
+                    url: postUrl,
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    data: postData
+                });
+                posting.done(function(data) {
+                    analyticId = data.Id;
+                });
+                playCount = playCount + 1;
+
+            }
+
+            function trackPause(stopTime, duration, completed) {
+                //If analyticId is 0 something went wrong
+                if (analyticId != 0) {
+
+                    var postData = {
+                        id: analyticId,
+                        stopTime: stopTime,
+                        duration: duration,
+                        completed: completed
+                    };
+                    var postUrl = "/Services/UpdateAnalytics";
+                    var posting = $.ajax({
+                        url: postUrl,
+                        type: "POST",
+                        dataType: "json",
+                        traditional: true,
+                        data: postData
+                    });
+                }
+            }
             </script>
         }
     </head>
@@ -459,7 +487,6 @@
         <div class="viewing-video-container">
             @if (_conversionFinsihed)
             {
-
                 <div id="videoPlayer"></div>
                 <div class="video-overlay" style="display:none;">
                     <div id="video-title"><h1>@(Model.VideoTitle != null ? Model.VideoTitle : Model.FirstName + " " + Model.LastName + "'s Service")</h1></div>
@@ -471,7 +498,7 @@
                     }
                 </div>
                 @*<source src="@(System.Configuration.ConfigurationManager.AppSettings[" videocdn"] +" />videos/"+Model.Video.ConvertedFilePath)" type='video/mp4' />*@
-                        }
+            }
 
         </div>
 
@@ -502,7 +529,7 @@
                                 <p class="minimalWhiteVideoMainDesc">@Model.Obituary</p>
                                 <p class="minimalWhiteLink">This service is being hosted by <a href="http://www.midweststreams.com/" target="_blank">Midwest Streams, Funeral Webcasting</a></p>
                             </div>
-                        </div>
+                        </div></div>
                 </li>
             </ul>
             {
@@ -574,12 +601,10 @@
                                 @if (_conversionFinsihed)
                                 {
                                     <div id="vidContainer">
-                                        <video id="iframeVideo" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
-                                               data-setup="{}">
+                                        <video id="iframeVideo" class="video-js vjs-default-skin" controls preload="none" width="100%" height="100%" data-setup="{}">
 
                                             <source src="@(System.Configuration.ConfigurationManager.AppSettings[" videocdn"] +"/videos/"+Model.Video.ConvertedFilePath)" type='video/mp4' />
-                                            @*
-                                                <source src="http://videos.midweststreams.com/rawVideoFiles/7127-pedersen-1.mp4" type="video/mp4">*@
+                                            @*<source src="http://videos.midweststreams.com/rawVideoFiles/7127-pedersen-1.mp4" type="video/mp4">*@
                                         </video>
                                         <div id="custom-message">@Model.FirstName  @Model.LastName Service</div>
                                     </div>
