@@ -1,0 +1,163 @@
+﻿.video-js {
+    font-family: 'Lato';
+}
+
+.myvideo-title-overlay-container > span {
+    display: inline-block;
+    color: #eaeaea;
+    padding: 3px 18px;
+    margin-top: 2%;
+    margin-left: 4%;
+    border-radius: 8px;
+    background: #2b2b2b;
+    font-weight: 300;
+    font-family: 'Lato';
+    padding-top: 5px;
+    padding-bottom: 10px;
+}        
+
+.vjs-fullscreen {
+    padding-top: 0
+}
+
+.vjs-nofull .vjs-fullscreen-control {
+    display: none;
+}
+
+.video-js .vjs-control-bar {
+    position: absolute;
+    overflow: visible;
+    border: none;
+    line-height: 1;
+    background: url(../../content/videoplayer/minimal_skin_white/controller-background.png);
+    backface-visibility: hidden;
+    z-index: 1;
+    transform: translate3d(0px, 0px, 0px);
+    height: 37px;
+}
+
+.video-js .vjs-big-play-button {
+    width: 100px;
+    height: 80px;
+    background: none;
+    line-height: 70px;
+    border: none;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -40px;
+    background-image: url(../../content/videoplayer/minimal_skin_white/large-play.png);
+    background-position: center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    backface-visibility: hidden;
+    background-size: 100%;
+}
+
+.video-js .vjs-big-play-button:before {
+    content: "";
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.video-js .vjs-big-play-button:hover {
+    background-image: url(../../content/videoplayer/minimal_skin_white/large-play-over.png);
+}
+
+.video-js:hover .vjs-control-bar,
+.video-js:hover .vjs-big-play-button,
+.video-js:hover .vjs-menu-button .vjs-menu-content {
+    background-color: transparent;
+}
+
+/* responsive design for different screen resolutions */
+
+@media screen and (max-width: 320px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 15px !important;
+        height: 30px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 30px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 40px;
+        height: 30px;
+        margin-left: -20px;
+        margin-top: -15px;
+    }
+}
+
+@media screen and (min-width: 360px) and (max-width: 640px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 21px !important;
+        height: 40px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 50px;
+        height: 40px;
+        margin-left: -25px;
+        margin-top: -20px;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 960px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 21px !important;
+        height: 40px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 50px;
+        height: 40px;
+        margin-left: -25px;
+        margin-top: -20px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 35px !important;
+        height: 50px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 60px;
+        height: 50px;
+        margin-left: -30px;
+        margin-top: -25px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1920px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 35px !important;
+        height: 50px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 150px;
+        height: 100px;
+        margin-left: -75px;
+        margin-top: -50px;
+    }
+}
