@@ -7,361 +7,118 @@
     {
         _conversionFinsihed = true;
     }
+    <style>
+
+        .viewing-video-container {
+            position: relative;
+        }
+    </style>
     string _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
     string _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
     string _portalPath = System.Configuration.ConfigurationManager.AppSettings["portalPath"];
     string _pagePath = _portalPath + "/services/view/" + Model.Id;
+    string videoTitle = (Model.VideoTitle != null ? Model.VideoTitle : Model.FirstName + " " + Model.LastName + "'s Service");
 }
 @section Styles
 {
-@if(_conversionFinsihed)
-{
-    <meta property="fb:app_id" content="888507064518588">
-    <meta property="og:url" content="@_pagePath">
-    <meta property="og:title" content="@Model.VideoTitle">
-    <meta property="og:description" content="@Model.Obituary">
-    <meta property="og:type" content="video">
-    <meta property="og:image" content="@_thumbnailPath">
-    <meta property="og:video" content="@_videoPath">
-    <meta property="og:video:type" content="video/mp4">
-    <meta property="og:video:height" content="720" />
-    <meta property="og:video:width" content="1280" />
-    <meta property="og:site_name" content="Midwest Streams">
+    @if (_conversionFinsihed)
+    {
+        <meta property="fb:app_id" content="888507064518588">
+        <meta property="og:url" content="@_pagePath">
+        <meta property="og:title" content="@Model.VideoTitle">
+        <meta property="og:description" content="@Model.Obituary">
+        <meta property="og:type" content="video">
+        <meta property="og:image" content="@_thumbnailPath">
+        <meta property="og:video" content="@_videoPath">
+        <meta property="og:video:type" content="video/mp4">
+        <meta property="og:video:height" content="720" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:site_name" content="Midwest Streams">
+    }
+
 }
-
-
-    <style>
-    #video-title {
-        display: inline-block;
-        color: #eaeaea;
-        padding: 3px 18px;
-        margin-top: 2%;
-        margin-left: 4%;
-        border-radius: 8px;
-        background: #2b2b2b;
-    }
-
-        #video-title h1 {
-    font-weight: 300;
-    font-size: 45px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    border-bottom: 0px;
-    /*font-size: 35px !important;*/
-    height: 45px !important;
-        }
-
-    .viewing-video-container {
-        position: relative;
-    }
-
-        .viewing-video-container .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            pointer-events: none;
-        }
-
-    .logo {
-        position: absolute;
-        right: 26px;
-        bottom: 51px;
-        background: rgba(0, 0, 0, 0);
-    }
-
-        .logo img {
-            width: 68px;
-        }
-</style>
-    
-    }
-<!--The following code constructs the video player. It is only executed if the video is available-->
 @if (_conversionFinsihed)
 {
+    @Scripts.Render("~/bundles/jquery")
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/videojs/videojs.logobrand.css">
+    <link rel="stylesheet" type="text/css" href="~/content/videojs/videoglobal.css" />
+    <style type="text/css">
+        .video-js {
+            font-family: 'Lato';
+        }
 
-    <link rel="stylesheet" type="text/css" href="../../content/videoplayer/global.css" />
-<script src="~/Scripts/fwduvnonmin.js"></script>
-    @*<script type="text/javascript" src="../../Scripts/FWDUVPlayer.js"></script>*@
+        .myvideo-title-overlay-container > span {
+            display: inline-block;
+            color: #eaeaea;
+            padding: 3px 18px;
+            margin-top: 2%;
+            margin-left: 4%;
+            border-radius: 8px;
+            background: #2b2b2b;
+            font-weight: 300;
+            font-family: 'Lato';
+            padding-top: 5px;
+            padding-bottom: 10px;
+        }
 
-        <!-- Setup video player-->
-    <script type="text/javascript">
-        var hasBeenTracked = false;
-        var playCount = 0;
-        var analyticId = 0;
-        FWDUVPUtils.onReady(function () {
+        .vjs-fullscreen {
+            padding-top: 0
+        }
 
+        .vjs-nofull .vjs-fullscreen-control {
+            display: none;
+        }
 
+        .video-js .vjs-control-bar {
+            position: absolute;
+            overflow: visible;
+            border: none;
+            line-height: 1;
+            background: url(../../content/videoplayer/minimal_skin_white/controller-background.png);
+            backface-visibility: hidden;
+            z-index: 1;
+            transform: translate3d(0px, 0px, 0px);
+            height: 37px;
+        }
 
-            new FWDUVPlayer({
-                //main settings
-                useYouTube: "no",
-                useVimeo: "no",
-                instanceName: "player1",
-                parentId: "videoPlayer",
-                playlistsId: "playlists",
-                mainFolderPath: "../../content/videoplayer",
-                skinPath: "minimal_skin_white",
-                displayType: "responsive",
-                facebookAppId: "",
-                useDeepLinking: "no",
-                rightClickContextMenu: "default",
-                addKeyboardSupport: "yes",
-                autoScale: "yes",
-                showButtonsToolTip: "yes",
-                stopVideoWhenPlayComplete: "no",
-                autoPlay: "no",
-                loop: "no",
-                shuffle: "no",
-                maxWidth: 980,
-                maxHeight: 552,
-                volume: .8,
-                buttonsToolTipHideDelay: 1.5,
-                backgroundColor: "#f9faf9",
-                videoBackgroundColor: "#f9faf9",
-                posterBackgroundColor: "#f9faf9",
-                buttonsToolTipFontColor: "#000000",
-                //logo settings
-                showLogo: "no",
-                hideLogoWithController: "yes",
-                logoPosition: "topRight",
-                logoLink: "http://www.midweststreams.com",
-                logoMargins: 5,
-                //playlists/categories settings
-                showPlaylistsButtonAndPlaylists: "no",
-                showPlaylistsByDefault: "no",
-                thumbnailSelectedType: "opacity",
-                startAtPlaylist: 0,
-                buttonsMargins: 0,
-                thumbnailMaxWidth: 350,
-                thumbnailMaxHeight: 350,
-                horizontalSpaceBetweenThumbnails: 40,
-                verticalSpaceBetweenThumbnails: 40,
-                //playlist settings
-                showPlaylistButtonAndPlaylist: "no",
-                playlistPosition: "right",
-                showPlaylistByDefault: "no",
-                showPlaylistName: "no",
-                showSearchInput: "no",
-                showLoopButton: "no",
-                showShuffleButton: "no",
-                showNextAndPrevButtons: "no",
-                forceDisableDownloadButtonForFolder: "yes",
-                addMouseWheelSupport: "yes",
-                startAtRandomVideo: "no",
-                folderVideoLabel: "VIDEO ",
-                playlistRightWidth: 310,
-                playlistBottomHeight: 599,
-                startAtVideo: 0,
-                maxPlaylistItems: 50,
-                thumbnailWidth: 70,
-                thumbnailHeight: 70,
-                spaceBetweenControllerAndPlaylist: 2,
-                spaceBetweenThumbnails: 2,
-                scrollbarOffestWidth: 8,
-                scollbarSpeedSensitivity: .5,
-                playlistBackgroundColor: "#BBBBBB",
-                playlistNameColor: "#000000",
-                thumbnailNormalBackgroundColor: "#ebebeb",
-                thumbnailHoverBackgroundColor: "#dcdcdc",
-                thumbnailDisabledBackgroundColor: "#c0c0c0",
-                searchInputBackgroundColor: "#c0c0c0",
-                searchInputColor: "#333333",
-                youtubeAndFolderVideoTitleColor: "#000000",
-                youtubeOwnerColor: "#919191",
-                youtubeDescriptionColor: "#919191",
-                //controller settings
-                showControllerWhenVideoIsStopped: "yes",
-                showNextAndPrevButtonsInController: "no",
-                showVolumeButton: "yes",
-                showTime: "yes",
-                showYoutubeQualityButton: "no",
-                showInfoButton: "no",
-                showShareButton:"no",
-                showDownloadButton: "no",
-                showFacebookButton: "no",
-                showEmbedButton: "no",
-                showFullScreenButton: "yes",
-                repeatBackground: "yes",
-                controllerHeight: 37,
-                controllerHideDelay: 3,
-                startSpaceBetweenButtons: 7,
-                spaceBetweenButtons: 8,
-                scrubbersOffsetWidth: 2,
-                mainScrubberOffestTop: 14,
-                timeOffsetLeftWidth: 5,
-                timeOffsetRightWidth: 3,
-                timeOffsetTop: 0,
-                volumeScrubberHeight: 80,
-                volumeScrubberOfsetHeight: 12,
-                timeColor: "#868686",
-                youtubeQualityButtonNormalColor: "#919191",
-                youtubeQualityButtonSelectedColor: "#000000",
-                //embed window and info window
-                embedAndInfoWindowCloseButtonMargins: 0,
-                borderColor: "#CDCDCD",
-                mainLabelsColor: "#000000",
-                secondaryLabelsColor: "#444444",
-                shareAndEmbedTextColor: "#777777",
-                inputBackgroundColor: "#c0c0c0",
-                inputColor: "#333333",
-                //ads
-                openNewPageAtTheEndOfTheAds: "no",
-                adsButtonsPosition: "left",
-                skipToVideoText: "You can skip to video in: ",
-                skipToVideoButtonText: "Skip Ad",
-                adsTextNormalColor: "#888888",
-                adsTextSelectedColor: "#000000",
-                adsBorderNormalColor: "#AAAAAA",
-                adsBorderSelectedColor: "#000000"
-            });
-            registerAPI();
-            $(window).resize(function () {
-                VideoOverlaySize();
-            });
-        });
+        .video-js .vjs-big-play-button:before {
+            content: "";
+            border: none !important;
+            box-shadow: none !important;
+        }
 
-        var registerAPIInterval;
-        function registerAPI() {
-            clearInterval(registerAPIInterval);
-            if (window.player1) {
-                player1.addListener(FWDUVPlayer.READY, readyHandler);
-                player1.addListener(FWDUVPlayer.PLAY, playHandler);
-                player1.addListener(FWDUVPlayer.PAUSE, pauseHandler);
-                player1.addListener(FWDUVPlayer.STOP, stopHandler);
-                player1.addListener(FWDUVPlayer.UPDATE_TIME, updateTimeHandler);
-                player1.addListener(FWDUVPlayer.PLAY_COMPLETE, playCompleteHandler);
-            } else {
-                registerAPIInterval = setInterval(registerAPI, 100);
+        .video-js .vjs-big-play-button {
+            background-image: url(../../content/videoplayer/minimal_skin_white/large-play.png);
+            position: absolute;
+            overflow: hidden;
+            border: none;
+            top: 50%;
+            left: 50%;
+            /*height: 150px;*/
+            background-color: transparent;
+            backface-visibility: hidden;
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+            .video-js .vjs-big-play-button:hover {
+                background-image: url(../../content/videoplayer/minimal_skin_white/large-play-over.png);
+                position: absolute;
+                overflow: hidden;
+                border: none;
+                background-color: transparent;
+                backface-visibility: hidden;
             }
-        };
-        function readyHandler(e) {
-            SetupVideoOverlay();
-        }
-        function playHandler(e) {
-            $(".video-overlay").hide();
-            //setTimeout(trackView, 5000);
-        }
 
-        function pauseHandler(e) {
-            $(".video-overlay").fadeIn(1500);
-            
-            var stopTime = TimeStringToSeconds(player1.getCurrentTime());
-            var duration = TimeStringToSeconds(player1.getTotalTime());
-            trackPause(stopTime, duration, false)
-           
+        .video-js:hover .vjs-control-bar,
+        .video-js:hover .vjs-big-play-button,
+        .video-js:hover .vjs-menu-button .vjs-menu-content {
+            background-color: transparent;
         }
-        function updateTimeHandler(e){
-
-            //Calculate if video has played for at least 5 seconds if so track the view
-            var seconds = TimeStringToSeconds(e.currentTime);
-            if(seconds >5 && hasBeenTracked==false)
-            {
-               
-                hasBeenTracked=true;
-                trackView();
-            }
-        }
-
-        function stopHandler(e) {
-            //console.log("API -- stop");
-        }
-        function playCompleteHandler(e) {
-            var duration = TimeStringToSeconds(player1.getTotalTime());
-            trackPause(duration, duration, true)
-        }
-        function SetupVideoOverlay()
-        {
-            $(".video-overlay").fadeIn();
-            VideoOverlaySize();
-          
-        }
-        function TimeStringToSeconds(timeString)
-        {
-            //timeString is a string that is either formated in MM:SS or HH:MM:SS 
-            //following code is to turn that string into seconds
-            var a = timeString.split(':'); // split it at the colons
-            var colonNumber = (timeString.match(/:/g) || []).length;
-            if(colonNumber == 1)
-            {
-                // minutes are worth 60 seconds. 
-                var seconds = (+a[0]) * 60 + (+a[1]); 
-            }
-            else
-            {
-                if(colonNumber==2)
-                {
-                    var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]); 
-                }
-            }
-            return seconds;
-        }
-        function VideoOverlaySize()
-        {
-            var playerWidth = $(".video-overlay").width();
-            if (playerWidth < 734) {
-                if (playerWidth < 580)
-                {
-                    $("#video-title h1").css("font-size", "28px");
-                    $("#video-title h1").css("height", "35px");
-                }
-                else
-                {
-                    $("#video-title h1").css("font-size", "35px");
-                    $("#video-title h1").css("height", "45px");
-    
-                }
-                $(".logo img").css("width", "55px");
-            }
-            else
-            {
-                $("#video-title h1").css("font-size", "45px");
-                $("#video-title h1").css("height", "58px");
-                $(".logo img").css("width", "65px");
-            }
-        }
-        function trackView()
-        {
-        
-            var serviceId = @Model.Id;
-            var postData = {id: serviceId};
-            var postUrl = "/Services/TrackVideoViews";
-            var posting = $.ajax({
-                url: postUrl,
-                type: "POST",
-                dataType: "json",
-                traditional: true,
-                data: postData
-            });
-            posting.done(function(data)
-            {
-                console.log("Data: " + data);
-                console.log(data.Id);
-                analyticId = data.Id;
-            });
-            playCount = playCount + 1;
-
-        }
-        function trackPause(stopTime, duration, completed)
-        {
-            //If analyticId is 0 something went wrong
-            if(analyticId !=0)
-            {
-                console.log(stopTime, duration, completed);
-                var postData = {id: analyticId, stopTime: stopTime, duration: duration, completed:completed};
-                var postUrl = "/Services/UpdateAnalytics";
-                var posting = $.ajax({
-                    url: postUrl,
-                    type: "POST",
-                    dataType: "json",
-                    traditional: true,
-                    data: postData
-                });
-            }
-        }
-    </script>
+    </style>
 }
 <div class="row">
     @{
@@ -375,64 +132,160 @@
         <!--The following code is the video player HTML. It's only displayed if the video is avaiable-->
         @if (_conversionFinsihed)
         {
-   
-            <div id="videoPlayer"></div>
-            <div class="video-overlay" style="display:none;">
-                @if (Model.VideoTitle != null)
-                {
-                    <div id="video-title"><h1>@Model.VideoTitle</h1></div>
-                }
-                else
-                {
-                    <div id="video-title"><h1>@Model.FirstName @Model.LastName's Service</h1></div>
-                }
-                
-               @{
-            if (Model.FuneralHome.Setting != null && Model.FuneralHome.Setting.WhiteLabel == false)
-            {
-                <div class="logo"><img src="~/Content/videoplayer/minimal_skin_white/FullLogo_White.png" /></div>
-            }
-            }
-                    
+
+            <div align="center" class="embed-responsive embed-responsive-16by9">
+                <video id="myvideo" class="video-js vjs-default-skin embed-responsive-item" controls
+                       preload="auto" poster="@_thumbnailPath"
+                       data-setup="{}">
+                    <source src="@_videoPath" type='video/mp4'>
+                </video>
             </div>
-            @*<source src="@(System.Configuration.ConfigurationManager.AppSettings["videoCDN"] +"/videos/"+Model.Video.ConvertedFilePath)" type='video/mp4' />*@
+            <input type="hidden" id="videoTitle" value="@videoTitle" />
         }
         else
         {
 
             <h1>The servers are still processing this service</h1>
         }
+        <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/videojs/videojs-overlay.js"></script>
+        <script src="~/Scripts/videojs/videojs.logobrand.v5.js"></script>
+
+        <script type="text/javascript">
+    var portalPath = "@(System.Configuration.ConfigurationManager.AppSettings["portalPath"])";
+    var playCount = 0;
+    var analyticId = 0;
+    var duration = 0;
+    var html5_video_started = false;
+    var title = $('#videoTitle').val();
+
+    var options = {
+        title: title,
+        floatPosition: 'left',
+        margin: '15px',
+        fontSize: '15px',
+        debug: true
+    }
+
+    $(function () {
+
+        $('#myvideo_vjs1').on('contextmenu', function(e) { e.preventDefault(); } );
+        var html5Player = videojs('myvideo');
+
+
+
+        html5Player.ready(function () {
+
+            html5Player.titleoverlay(options);
+
+            html5Player.logobrand({
+                image:portalPath + "/Content/videoplayer/minimal_skin_white/FullLogo_White.png",
+                destination: "http://www.midweststreams.com",
+                autoHide: false,
+                width: '100px',
+                opacity: 0.7,
+                position: 'absolute',
+                top: '90%',
+                right: '30px'
+            });
+
+            html5Player.on('play', function() {
+                if(!html5_video_started) {
+                    html5_video_started = true;
+                    trackView();
+                }
+                $('.vjs-big-play-button').hide();
+            });
+
+
+            html5Player.on('ended', function() {
+                duration = this.duration();
+                trackPause(duration, duration, true);
+            });
+
+            html5Player.on('pause', function () {
+                var stopTime = TimeStringToSeconds(this.currentTime());
+                var duration = TimeStringToSeconds(this.duration());
+                trackPause(stopTime, duration, false);
+                $('.vjs-big-play-button').show();
+            });
+
+        });
+
+    });
+
+    function TimeStringToSeconds(timeString) {
+
+        var a = timeString.toString().split(':');
+        var colonNumber = (timeString.toString().match(/:/g) || []).length;
+        if (colonNumber == 1) {
+            var seconds = (+a[0]) * 60 + (+a[1]);
+        } else {
+            if (colonNumber == 2) {
+                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+            }
+        }
+        return seconds;
+    }
+
+    function trackView() {
+
+        var serviceId = @Model.Id;
+        var postData = {
+            id: serviceId
+        };
+        var postUrl = "/Services/TrackVideoViews";
+        var posting = $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: "json",
+            traditional: true,
+            data: postData
+        });
+        posting.done(function(data) {
+            analyticId = data.Id;
+        });
+        playCount = playCount + 1;
+
+    }
+
+    function trackPause(stopTime, duration, completed) {
+        //If analyticId is 0 something went wrong
+        if (analyticId != 0) {
+
+            var postData = {
+                id: analyticId,
+                stopTime: stopTime,
+                duration: duration,
+                completed: completed
+            };
+            var postUrl = "/Services/UpdateAnalytics";
+            var posting = $.ajax({
+                url: postUrl,
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: postData
+            });
+        }
+    }
+
+    function resize_video() {
+        var height = $(window).height();
+        var width = $(window).width();
+
+        var html5Player = videojs('myvideo');
+        html5Player.dimensions(width, height);
+    }
+
+    resize_video();
+
+    setTimeout(resize_video, 500);
+    $(window).resize(resize_video);
+
+
+
+
+        </script>
     </div>
 </div>
-
-@if (_conversionFinsihed)
-{
-
-    <!--  Playlists -->
-    <ul id="playlists" style="display:none;">
-        <li data-source="playlist1" data-playlist-name="Service" data-thumbnail-path="">
-        </li>
-    </ul>
-
-    <!--  HTML playlist -->
-    <ul id="playlist1" style="display:none;">
-        <li data-thumb-source="@_thumbnailPath" data-video-source="@_videoPath" data-poster-source="@_thumbnailPath" data-downloadable="no">
-
-            @*<li data-thumb-source="https://mwsvideocdn.blob.core.windows.net/video-thumbnails/@Model.Video.ImagePath" data-video-source="https://mwsvideocdn.blob.core.windows.net/videos/@Model.Video.ConvertedFilePath" data-poster-source="https://mwsvideocdn.blob.core.windows.net/video-thumbnails/@Model.Video.ImagePath" data-downloadable="no">*@
-            <div data-video-short-description="">
-                <div>
-                    <p class="minimalWhiteThumbnailTitle">@Model.FirstName @Model.LastName Service</p>
-                    <p class="minimalWhiteThumbnailDesc"></p>
-                </div>
-            </div>
-            <div data-video-long-description="">
-                <div>
-                    <div>
-                        <p class="minimalWhiteVideoTitleDesc">@Model.FirstName @Model.LastName's Service</p>
-                        <p class="minimalWhiteVideoMainDesc">@Model.Obituary</p>
-                        <p class="minimalWhiteLink">This service is being hosted by <a href="http://www.midweststreams.com/" target="_blank">Midwest Streams, Funeral Webcasting</a></p>
-                    </div>
-                </div></div>
-        </li>
-    </ul>
-}

@@ -1,0 +1,80 @@
+﻿@media screen and (max-width: 320px)  {
+    #myvideo-title-overlay-container > span {
+        font-size: 15px !important;
+        height: 30px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 30px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 40px;
+        font-size: 15px;
+        height: 80px;
+    }
+}
+@media screen and (min-width: 360px) and (max-width: 640px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 21px !important;
+        height: 40px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 50px;
+        font-size: 15px;
+        height: 80px;
+    }
+}
+@media screen and (min-width: 600px) and (max-width: 960px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 21px !important;
+        height: 40px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 50px;
+        font-size: 15px;
+        height: 80px
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 35px !important;
+        height: 50px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 60px;
+        font-size: 15px;
+        height: 80px;
+    }
+}
+@media (min-width: 1024px) and (max-width: 1920px) {
+    #myvideo-title-overlay-container > span {
+        font-size: 35px !important;
+        height: 50px;
+    }
+
+    img#vjs-logobrand-image {
+        width: 50px;
+    }
+
+    .video-js .vjs-big-play-button {
+        width: 150px;
+        height: 150px;
+        font-size: 15px;
+    }
+}

@@ -19,11 +19,11 @@
         floatPosition: 'right',
         margin: '10px',
         fontSize: '1em'
-    }
+    };
 
-    var init = function (options) {
+    var init = function(options) {
         this.titleoverlay = new TitleOverlayPlugin(this, options);
-    }
+    };
 
     var TitleOverlayPlugin = function (player, options) {
         this.logger = options.logger;
@@ -79,6 +79,9 @@
             this.titleOverlayTextContainer.style.margin = options.margin || title_defaults.margin;
             this.titleOverlayTextContainer.style.fontSize = options.fontSize || title_defaults.fontSize;
             this.titleOverlayTextContainer.style.textShadow = '0 0 5px #000';
+            //background: #2b2b2b;
+            this.titleOverlayTextContainer.style.background = '#2b2b2b';
+
             showOverlay_();
         }.bind(this);
 
