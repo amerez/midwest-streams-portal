@@ -114,7 +114,7 @@ namespace VideoManager.Controllers
            // }
            // ADVM.PopularHomeOfTheWeek = mostViewedHome;
             //ADVM.PopularHomeNumOfViews = HighestVIews;
-            ADVM.ServicesBarChartArray = Admin.GetServicesBarChart(Services, DateTime.Now.AddMonths(-3), DateTime.Now);
+            //ADVM.ServicesBarChartArray = Admin.GetServicesBarChart(Services, DateTime.Now.AddMonths(-3), DateTime.Now);
             //AVM.Details = addresses;
             //CalculateAnalytics.PageViews(ref ADVM, Analytics, Homes);
            // CalculateAnalytics.AverageTime(ref AVM, Analytics);
