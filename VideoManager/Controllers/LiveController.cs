@@ -8,13 +8,14 @@ using VideoManager.Models.Data;
 
 namespace VideoManager.Controllers
 {
+    [Authorize]
     public class LiveController : BaseController
     {
         // GET: Live
         public ActionResult Index(int? id)
         {
             Service service = db.Services.Find(id);
-            if (service == null)
+            if (!Authorize(service))
             {
                 return View("NotFound");
             }
@@ -28,6 +29,10 @@ namespace VideoManager.Controllers
         public ActionResult SetServiceTime(int serviceId, string serviceTime)
         {
             Service service = db.Services.Find(serviceId);
+            if (!Authorize(service))
+            {
+                return Json(new { result = "fail" });
+            }
             if (service != null)
             {
                 DateTime serviceDate = DateTime.Now;
@@ -35,13 +40,17 @@ namespace VideoManager.Controllers
                 service.ServiceDate = serviceDate;
                 db.SaveChanges();
             }
-            return Json(new { result = "fail" });
+            return Json(new { result = "success" });
         }
 
         [HttpPost]
         public ActionResult Create(int serviceId)
         {
             Service service = db.Services.Find(serviceId);
+            if (!Authorize(service))
+            {
+                return Json(new { result = "fail" });
+            }
             if (service != null)
             {
                 if (service.LiveStream == null)
@@ -56,6 +65,10 @@ namespace VideoManager.Controllers
         public ActionResult Start(int serviceId)
         {
             Service service = db.Services.Find(serviceId);
+            if (!Authorize(service))
+            {
+                return Json(new { result = "fail" });
+            }
             if (service != null)
             {
                 if (service.LiveStream != null)
@@ -82,6 +95,10 @@ namespace VideoManager.Controllers
         public ActionResult EmailStream(int serviceId)
         {
             Service service = db.Services.Find(serviceId);
+            if (!Authorize(service))
+            {
+                return Json(new { result = "fail" });
+            }
             if (service != null)
             {
                 if (service.LiveStream != null)
@@ -138,6 +155,10 @@ namespace VideoManager.Controllers
         public ActionResult view(int id)
         {
             Service service = db.Services.Find(id);
+            if (!Authorize(service, true))
+            {
+                return View("NotFound");
+            }
             if (service != null)
             {
                 if (service.LiveStream != null)

@@ -3,12 +3,15 @@
     ViewBag.Title = "View";
     Layout = "~/Views/Shared/_Layout.cshtml";
     bool _conversionFinsihed = false;
+        string _thumbnailPath = "";
+    string _videoPath = "";
     if (Model.Video != null && Model.Video.Status == VideoManager.Models.Data.VideoStatus.ConversionFinished)
     {
         _conversionFinsihed = true;
+             _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
+     _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
     }
-    string _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
-    string _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+
     string _portalPath = System.Configuration.ConfigurationManager.AppSettings["portalPath"];
     string _pagePath = _portalPath + "/services/view/" + Model.Id;
 }

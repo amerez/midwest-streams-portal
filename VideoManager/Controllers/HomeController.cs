@@ -75,6 +75,15 @@ namespace VideoManager.Controllers
 						ModelState.AddModelError("Username", "This user is invalid. Contact support.");
 						return RedirectToAction("Index", "Home", null);
 					}
+                    //If there is a video that is finished, the live stream should be over.
+                    if(serv.Video!=null && serv.Video.Status==VideoStatus.ConversionFinished)
+                    {
+                        return RedirectToAction("View", "Services", new { Id = serv.Id });
+                    }
+                    if(serv.LiveStream!=null)
+                    {
+                        return RedirectToAction("View", "Live", new { Id = serv.Id });
+                    }
 					return RedirectToAction("View", "Services", new { Id = serv.Id });
 
                 }
