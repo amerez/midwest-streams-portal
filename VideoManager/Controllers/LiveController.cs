@@ -138,7 +138,7 @@ namespace VideoManager.Controllers
             ViewBag.Status = "Unable to Start Stream.";
             return View();
         }
-
+        [AllowAnonymous]
         public ActionResult iframe(int id)
         {
             Service service = db.Services.Find(id);

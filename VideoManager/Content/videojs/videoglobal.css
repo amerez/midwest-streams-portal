@@ -70,6 +70,11 @@
     background-color: transparent;
 }
 
+img#vjs-logobrand-image {
+    bottom: 39px;
+    right: 10px;
+}
+
 /* responsive design for different screen resolutions */
 
 @media screen and (max-width: 320px) {
@@ -87,6 +92,10 @@
         height: 30px;
         margin-left: -20px;
         margin-top: -15px;
+    }
+    .myvideo-title-overlay-container > span
+    {
+        float:none!important;
     }
 }
 

@@ -16,9 +16,9 @@
         .viewing-video-container {
             position: relative;
         }
+
     </style>
-    string _thumbnailPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/video-thumbnails/" + Model.Video.ImagePath;
-    string _videoPath = System.Configuration.ConfigurationManager.AppSettings["videoCDN"] + "/videos/" + Model.Video.ConvertedFilePath;
+
     string _portalPath = System.Configuration.ConfigurationManager.AppSettings["portalPath"];
     string _pagePath = _portalPath + "/services/view/" + Model.Id;
     string videoTitle = (Model.VideoTitle != null ? Model.VideoTitle : Model.FirstName + " " + Model.LastName + "'s Service");
@@ -110,13 +110,13 @@
 
             html5Player.logobrand({
                 image:portalPath + "/Content/videoplayer/minimal_skin_white/FullLogo_White.png",
-                destination: "http://www.midweststreams.com",
-                autoHide: false,
-                width: '100px',
+                destination: "https://www.midweststreams.com",
+                autoHide: true,
+                width: '50px',
                 opacity: 0.7,
                 position: 'absolute',
-                top: '90%',
-                right: '30px'
+                bottom: '55px',
+                right: '10px'
             });
 
             html5Player.on('play', function() {
