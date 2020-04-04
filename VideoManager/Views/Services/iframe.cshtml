@@ -38,17 +38,11 @@
 <body style="margin: 0; padding: 0">
     @if (_conversionFinsihed)
     {
-        <div class="wrapper" style="margin: 0; padding: 0">
-            <div style="margin: 0; padding: 0">
-                <div id="myvideo_vjs1" class="video-js vjs-default-skin vjs-big-play-centered" style="margin: 0; padding: 0">
-                    <video id="myvideo" class="video-js vjs-default-skin" controls
-                           preload="auto" poster="@_thumbnailPath"
-                           data-setup="{}">
-                        <source src="@_videoPath" type='video/mp4'>
-                    </video>
-                </div>
-            </div>
-        </div>
+        <video id="myvideo" class="video-js vjs-default-skin vjs-big-play-centered" controls
+                preload="auto" poster="@_thumbnailPath"
+                data-setup="{}">
+            <source src="@_videoPath" type='video/mp4'>
+        </video>
         <input type="hidden" id="videoTitle" value="@videoTitle" />
     }
     else
