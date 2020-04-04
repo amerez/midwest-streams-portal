@@ -36,7 +36,7 @@
     height: 37px;
 }
 
-.video-js .vjs-big-play-button {
+.video-js.vjs-big-play-centered .vjs-big-play-button {
     width: 100px;
     height: 80px;
     background: none;
@@ -54,13 +54,13 @@
     background-size: 100%;
 }
 
-.video-js .vjs-big-play-button:before {
+.video-js.vjs-big-play-centered .vjs-big-play-button:before {
     content: "";
     border: none !important;
     box-shadow: none !important;
 }
 
-.video-js .vjs-big-play-button:hover {
+.video-js.vjs-big-play-centered .vjs-big-play-button:hover {
     background-image: url(../../content/videoplayer/minimal_skin_white/large-play-over.png);
 }
 
@@ -82,7 +82,7 @@
         width: 30px;
     }
 
-    .video-js .vjs-big-play-button {
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
         width: 40px;
         height: 30px;
         margin-left: -20px;
@@ -100,7 +100,7 @@
         width: 50px;
     }
 
-    .video-js .vjs-big-play-button {
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
         width: 50px;
         height: 40px;
         margin-left: -25px;
@@ -118,7 +118,7 @@
         width: 50px;
     }
 
-    .video-js .vjs-big-play-button {
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
         width: 50px;
         height: 40px;
         margin-left: -25px;
@@ -136,7 +136,7 @@
         width: 50px;
     }
 
-    .video-js .vjs-big-play-button {
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
         width: 60px;
         height: 50px;
         margin-left: -30px;
@@ -154,7 +154,7 @@
         width: 50px;
     }
 
-    .video-js .vjs-big-play-button {
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
         width: 150px;
         height: 100px;
         margin-left: -75px;
