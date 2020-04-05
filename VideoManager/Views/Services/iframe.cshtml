@@ -76,6 +76,15 @@
         debug: true
     }
 
+    $(document).ready(function() {
+        $(window).load(function () {
+            VideoOverlaySize();
+        });
+        $(window).resize(function() {
+            VideoOverlaySize();
+        });
+    });
+
     $(function () {
 
         $('#myvideo_vjs1').on('contextmenu', function(e) { e.preventDefault(); } );
@@ -84,6 +93,8 @@
 
 
         html5Player.ready(function () {
+
+            VideoOverlaySize();
 
             html5Player.titleoverlay(options);
 
@@ -122,6 +133,37 @@
         });
 
     });
+
+    function VideoOverlaySize() {
+        var videOverlayTitleSelector = ".myvideo-title-overlay-container.title-overlay-container span";
+        var playerWidth = $("video#myvideo").width() || 0;
+        playerWith = parseInt(playerWidth);
+                
+        var titleLength = $(videOverlayTitleSelector).text().length;
+        if (playerWidth < 420) {
+            if (titleLength > 10) {
+                $(videOverlayTitleSelector).css("font-size", "3px !important");
+            } else {
+                $(videOverlayTitleSelector).css("font-size", "5px  !important");
+            }
+        }
+        else if (playerWidth > 420 && playerWidth < 734) {
+            if (titleLength < 20) {
+                $(videOverlayTitleSelector).css("font-size", "14px  !important");
+            } else {
+                $(videOverlayTitleSelector).css("font-size", "18px  !important");
+            }
+        }
+        else if (playerWidth > 734) {
+            if (titleLength < 20) {
+                $(videOverlayTitleSelector).css("font-size", "18px  !important");
+            } else {
+                $(videOverlayTitleSelector).css("font-size", "21px  !important");
+            }
+        } else {
+            $(videOverlayTitleSelector).css("font-size", "10px  !important");
+        }        
+    }
 
     function TimeStringToSeconds(timeString) {
 
