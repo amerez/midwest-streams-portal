@@ -12,7 +12,7 @@
         string imgPath = System.Configuration.ConfigurationManager.AppSettings["portalpath"] + "/PDFs/displaythumbnail/" + Model.Id;
         string altText = Model.FirstName + " " + Model.LastName + " Memorial Folder";
     }
-@if (Model.FuneralHome.Setting.WebsiteProvider == VideoManager.Models.Data.Enums.WebsiteProvider.DJ)
+@if (Model.FuneralHome.Setting.WebsiteProvider == VideoManager.Models.Data.Enums.WebsiteProvider.GenericIframe)
 {
     <a href="@pdfPath" target="_blank"><img style="border:2px outset silver; width: 93px;  margin-top:-71px;" src="@imgPath" alt="@altText"><br />@Model.PDF.TitleText</a>
 }
