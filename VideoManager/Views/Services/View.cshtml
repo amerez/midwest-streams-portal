@@ -93,7 +93,7 @@
         title: title,
         floatPosition: 'left',
         margin: '15px',
-        fontSize: '15px',
+        fontSize: '40px',
         debug: true
     }
 
@@ -108,16 +108,23 @@
 
             html5Player.titleoverlay(options);
 
-            html5Player.logobrand({
-                image:portalPath + "/Content/videoplayer/minimal_skin_white/FullLogo_White.png",
-                destination: "https://www.midweststreams.com",
-                autoHide: true,
-                width: '50px',
-                opacity: 0.7,
-                position: 'absolute',
-                bottom: '55px',
-                right: '10px'
-            });
+        @{
+                    if (Model.FuneralHome.Setting != null && Model.FuneralHome.Setting.WhiteLabel == false)
+                    {
+                        <text>
+                        html5Player.logobrand({
+                            image:portalPath + "/Content/videoplayer/minimal_skin_white/FullLogo_White.png",
+                            destination: "https://www.midweststreams.com",
+                            autoHide: false,
+                            width: '58px',
+                            opacity: 0.7,
+                            position: 'absolute',
+                            top: '90%',
+                            right: '30px'
+                         });
+                        </text>
+                    }
+        }
 
             html5Player.on('play', function() {
                 if(!html5_video_started) {
@@ -128,15 +135,16 @@
             });
 
 
-            html5Player.on('ended', function() {
-                duration = this.duration();
-                trackPause(duration, duration, true);
-            });
+
 
             html5Player.on('pause', function () {
-                var stopTime = TimeStringToSeconds(this.currentTime());
-                var duration = TimeStringToSeconds(this.duration());
-                trackPause(stopTime, duration, false);
+                var stopTime = this.currentTime().toFixed(0);
+                var duration = this.duration().toFixed(0);
+                var completed = false;
+                if (stopTime == duration) {
+                    completed = true;
+                }
+                trackPause(stopTime, duration, completed);
                 $('.vjs-big-play-button').show();
             });
 
@@ -144,19 +152,6 @@
 
     });
 
-    function TimeStringToSeconds(timeString) {
-
-        var a = timeString.toString().split(':');
-        var colonNumber = (timeString.toString().match(/:/g) || []).length;
-        if (colonNumber == 1) {
-            var seconds = (+a[0]) * 60 + (+a[1]);
-        } else {
-            if (colonNumber == 2) {
-                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-            }
-        }
-        return seconds;
-    }
 
     function trackView() {
 

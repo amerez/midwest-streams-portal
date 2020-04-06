@@ -30,7 +30,7 @@ namespace VideoManager.Controllers
 
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Dashboard", "Analytics", null);
+                    return RedirectToAction("Index", "FuneralHomes", null);
                 }
                 else if (User.IsInRole("FuneralHome"))
                 {

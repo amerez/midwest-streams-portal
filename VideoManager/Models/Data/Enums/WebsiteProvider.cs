@@ -13,12 +13,13 @@ namespace VideoManager.Models.Data.Enums
         Frazer,
         Beyondfunerals,
         FuneralFuturistWebsites,
-        Other,
+        AzureRawLink,
         CFS,
         WordPress,
-        OtherIframe,
+        GenericIframe,
         Aurora,
-        DJ,
-        Hamiltons
+        IframeLink,
+        Button,
+        ViewingLink
     }
 }

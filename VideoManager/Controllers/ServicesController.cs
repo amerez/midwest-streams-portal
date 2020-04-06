@@ -531,7 +531,7 @@ namespace VideoManager.Controllers
                 {
                     return Json(new { foo = "fail" });
                 }
-                Random rand = new Random();
+
                 Service service = db.Services.Find(id);
                 if (service == null)
                 {
@@ -543,21 +543,8 @@ namespace VideoManager.Controllers
                     return Json(new { foo = "fail" });
                 }
                 int currentPageHits = video.PageHits;
-                if (currentPageHits != null)
-                {
-                    if (rand.Next(0, 2) == 0)
-                    {
-                        currentPageHits = video.PageHits + 1;
-                    }
-                    else
-                    {
-                        currentPageHits = video.PageHits + 2;
-                    }
-                }
-                else
-                {
-                    currentPageHits = 1;
-                }
+                //Track view
+                currentPageHits = video.PageHits + 1;
                 string strIpAddress = string.Empty;
                 strIpAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
@@ -686,7 +673,7 @@ namespace VideoManager.Controllers
             analytic.Completed = completed;
             analytic.Duration = duration;
             //Take the longest duration and record it
-            if (stopTime > analytic.Stop && stopTime < duration)
+            if (stopTime > analytic.Stop)
             {
                 analytic.Stop = stopTime;
             }

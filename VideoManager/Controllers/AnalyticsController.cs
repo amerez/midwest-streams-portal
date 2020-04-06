@@ -141,18 +141,19 @@ namespace VideoManager.Controllers
             AnalyticViewModel AVM = new AnalyticViewModel();
             if(id==null)
             {
-              
+               
                 if (User.IsInRole("FuneralHome"))
                 {
                     var userId = User.Identity.GetUserId();
                     FuneralHome fh = db.FuneralHomes.Where(u => u.UserId == userId).FirstOrDefault();
                     Analytics.AddRange(db.Analytics.Where(a => a.Video.Service.FuneralHome.Id == fh.Id).ToList());
                     homes.Add(fh);
+                    CalculateAnalytics.PageViews(ref AVM, Analytics, homes);
                 }
                 else
                 {
-                    homes.AddRange(db.FuneralHomes.Where(f => f.DevHome == false).ToList());
-                    Analytics.AddRange(db.Analytics.ToList());
+                    //homes.AddRange(db.FuneralHomes.Where(f => f.DevHome == false).ToList());
+                    //Analytics.AddRange(db.Analytics.ToList());
                 }
             }
             else
@@ -162,10 +163,13 @@ namespace VideoManager.Controllers
                 {
                     return View("NotFound");
                 }
+                
                 AVM.FirstName = serv.FirstName;
                 AVM.LastName = serv.LastName;
                 homes.Add(db.FuneralHomes.Where(f=>f.Id==serv.FuneralHome.Id).FirstOrDefault());
                 Analytics.AddRange(db.Analytics.Where(a => a.Video.Service.Id==serv.Id).ToList());
+                CalculateAnalytics.PageViewsForService(ref AVM, Analytics);
+                AVM.TotalVideoViews = Analytics.Count();
             }
             
           
@@ -221,7 +225,7 @@ namespace VideoManager.Controllers
             }
 
             AVM.Details = addresses;
-            CalculateAnalytics.PageViews(ref AVM, Analytics, homes);
+        
             CalculateAnalytics.AverageTime(ref AVM, Analytics);
             CalculateAnalytics.linechart(ref AVM, Analytics, false);
             return View(AVM);
@@ -243,7 +247,7 @@ namespace VideoManager.Controllers
             else
             {
                 services.AddRange(db.Services.Where(h=>h.FuneralHome.DevHome==false).ToList());
-                Analytics.AddRange(db.Analytics.ToList());
+                //Analytics.AddRange(db.Analytics.ToList());
             }
             
              avim = analyticsClass.GetAverageViewsPerService(Analytics, services);
@@ -328,12 +332,14 @@ namespace VideoManager.Controllers
         [HttpGet]
         public ActionResult AnalyticAPI()
         {
+
+            //THIS METHOD IS DISABLED. WE CAN NO LONGER GET A SELECT * on the analytic table
             DateTime today = DateTime.Today;
             DateTime week = DateTime.Today.AddDays(-7);
-            /* UNCOMMENT WHEN THE NULL PROBLEM IS FIXED */
-            //List<Analytic> Analytics = db.Analytics.Where(a => a.CreateDate < today && a.CreateDate > week).ToList();
-            List<Analytic> Analytics = db.Analytics.ToList();
-            
+
+            //List<Analytic> Analytics = db.Analytics.ToList();
+
+            List<Analytic> Analytics = new List<Analytic>();
             // get the number of families taht we have conected this week
             int numFamilies = db.Analytics.Where(a => a.CreateDate < today && a.CreateDate > week).Count();
 

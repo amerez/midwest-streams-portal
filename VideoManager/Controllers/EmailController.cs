@@ -36,12 +36,12 @@ namespace VideoManager.Controllers
             Service service = db.Services.Find(id);
             if (service == null)
             {
-                Email.sendAdminMessage("Upload Finished Service is Null. Id="+id.ToString());
+                Email.sendAdminMessage("Upload Finished Service is Null. Id=" + id.ToString());
                 return View("NotFound");
             }
             string path = ConfigurationManager.AppSettings["portalPath"];
 
-    
+
             string videoEmbedCode = ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + id.ToString();
             if (service.FuneralHome.Setting != null)
             {
@@ -53,7 +53,7 @@ namespace VideoManager.Controllers
                             videoEmbedCode = ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + id.ToString();
                             break;
                         }
-                    case WebsiteProvider.Other:
+                    case WebsiteProvider.AzureRawLink:
                         {
                             videoEmbedCode = ConfigurationManager.AppSettings["portalPath"] + "/services/displayvideo/" + id.ToString();
                             break;
@@ -66,6 +66,16 @@ namespace VideoManager.Controllers
                     case WebsiteProvider.Frazer:
                         {
                             videoEmbedCode = "<iframe src=\"" + ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + id.ToString() + "\" scrolling=\"no\" style=\"width: 103%; height: 400px;\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen style=\"margin-left:auto; margin-right:auto; display:block;\"> </iframe>";
+                            break;
+                        }
+                    case WebsiteProvider.CFS:
+                        {
+                            videoEmbedCode = "<div class=\"embed-responsive embed-responsive-16by9\"><iframe class=\"embed-responsive-item\" src=\"" + ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + id.ToString() + "\" scrolling=\"no\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen \"> </iframe></div>";
+                            break;
+                        }
+                    case WebsiteProvider.Batesville:
+                        {
+                            videoEmbedCode = "<iframe  src=\"" + ConfigurationManager.AppSettings["portalPath"] + "/services/iframe/" + id.ToString() + "\" scrolling=\"no\" frameborder=\"0\" style=\"margin-left: auto; margin-right: auto; display: block; width: 100%;\" height=\"400\" webkitallowfullscreen mozallowfullscreen allowfullscreen \"> </iframe>";
                             break;
                         }
                     default:
@@ -87,7 +97,7 @@ namespace VideoManager.Controllers
             //Email.sendAdminMessage("Received a post. Email: " + email + "funeralhomename: " + funeralhomename);
             //For some reason if promocode is null it takes the value of funeralhome name.
             string webcastingNotes = "Auto Created Via Leadpages. No promo code was entered.";
-            if (promocode!=funeralhomename)
+            if (promocode != funeralhomename)
             {
                 webcastingNotes = "Auto Created Via Leadpages. Promo Code: " + promocode;
             }
@@ -113,8 +123,8 @@ namespace VideoManager.Controllers
             var rndNum = new Random(DateTime.Now.Second);
             var rawPW = System.Web.Security.Membership.GeneratePassword(8, 0);
             rawPW = Regex.Replace(rawPW, @"[^a-zA-Z0-9]", m => rndNum.Next(0, 10).ToString());
-            var result = fhh.CreateFuneralHome(fh, fh.Email, WebsiteProvider.OtherIframe, rawPW);
-            if(result.Success==true && result.FuneralHome!=null)
+            var result = fhh.CreateFuneralHome(fh, fh.Email, WebsiteProvider.GenericIframe, rawPW);
+            if (result.Success == true && result.FuneralHome != null)
             {
                 CRMFuneralHome crmFh = new CRMFuneralHome()
                 {
@@ -146,7 +156,7 @@ namespace VideoManager.Controllers
                 Email.sendErrorMessage("Someone signed up on lead pages and something went wrong creating their account. Email: " + email + " Funeral Home Name: " + funeralhomename + " Promo Code: " + promocode + " Errors: " + result.FuneralHomeErrors + " " + result.UserErrors);
                 Email.sendMail("admin@midweststreams.com", email, "Welcome To Midwest Streams", "Welcome to Midwest Streams. A representative will be contacting you soon!", null);
             }
-         
+
             return Json(new { foo = "success" });
         }
         public ActionResult NotifyFamily(int? id, string message, string link)
@@ -297,15 +307,15 @@ namespace VideoManager.Controllers
             Service service = db.Services.Find(serviceId);
             if (service != null)
             {
-                if(service.ViewingPassword==null)
+                if (service.ViewingPassword == null)
                 {
                     SecuredServiceHelper secured = new SecuredServiceHelper();
                     secured.MakeServiceSecure(service, db);
                 }
                 foreach (string email in emailList)
                 {
-                   var  noSpaceEmail = email.Replace(" ", "");
-                   Email.sendFamilyNotificationSecure(service, noSpaceEmail);
+                    var noSpaceEmail = email.Replace(" ", "");
+                    Email.sendFamilyNotificationSecure(service, noSpaceEmail);
                 }
             }
             return Json(new { foo = "success" });

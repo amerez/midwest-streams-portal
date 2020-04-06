@@ -199,7 +199,7 @@ namespace VideoManager.Controllers
             if (ModelState.IsValid)
             {
                 var fhh = new FuneralHomeHelper();
-                var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.Email, WebsiteProvider.Other, viewModel.Password);
+                var fhresult = fhh.CreateFuneralHome(funeralHome, viewModel.Email, WebsiteProvider.GenericIframe, viewModel.Password);
                 if (fhresult.Success == true)
                 {
                     var user = UserManager.Find(viewModel.UserName, viewModel.Password);

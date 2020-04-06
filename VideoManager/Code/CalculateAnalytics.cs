@@ -272,6 +272,21 @@ namespace VideoManager.Code
             avm.MonthViews = monthViews;
         }
 
+        public static void PageViewsForService(ref AnalyticViewModel avm, List<Analytic> analytics)
+        {
+
+            DateTime today = DateTime.Now;
+
+            int totalViews = analytics.Count();
+            int todayViews = analytics.Where(a => a.CreateDate > today.AddDays(-1) && a.CreateDate < today).Count();
+            int weekViews = analytics.Where(a => a.CreateDate > today.AddDays(-7) && a.CreateDate < today).Count();
+            int monthViews = analytics.Where(a => a.CreateDate > today.AddMonths(-1) && a.CreateDate < today).Count();
+
+            avm.TodayViews = todayViews;
+            avm.WeekViews = weekViews;
+            avm.MonthViews = monthViews;
+        }
+
         public static void AverageTime(ref AnalyticViewModel avm, List<Analytic> analytics)
         {
             double totalTimeWatched = 0.0;
